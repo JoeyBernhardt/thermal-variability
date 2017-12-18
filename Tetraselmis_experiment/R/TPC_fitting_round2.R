@@ -43,7 +43,8 @@ dat.full_raw <- all_r %>%
 	filter(temperature < 33)
 
 dat.full <- bind_rows(dat.full_raw, growth_32) %>% 
-	mutate(curve.id = as.factor(curve.id))
+	mutate(curve.id = as.factor(curve.id)) %>% 
+	filter(curve.id == "v")
 
 str(dat.full)
 
@@ -182,8 +183,12 @@ for(i in 1:length(curve.id.list)){
 fits_constant_variable <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list) 
 summary(bestmod)
 constant_TPC_params <- tidy(bestmod)
+variable_TPC_params <- tidy(bestmod)
 write_csv(constant_TPC_params, "Tetraselmis_experiment/data-processed/constant_TPC_params.csv")
+write_csv(variable_TPC_params, "Tetraselmis_experiment/data-processed/variable_TPC_params.csv")
 write_csv(fits_constant_variable, "Tetraselmis_experiment/data-processed/fits_constant_variable.csv")
+
+fits_constant_variable <- read_csv("Tetraselmis_experiment/data-processed/fits_constant_variable.csv")
 
 fits$tmax<-fits$z.list+(fits$w.list/2)
 fits$tmin<-fits$z.list-(fits$w.list/2)
@@ -302,6 +307,20 @@ TPC_plot <- p +
 	theme(text = element_text(size=14, family = "Helvetica")) + geom_vline(xintercept = 16.59, color = "grey")+
 	geom_vline(xintercept = 24.55, color = "grey", linetype = "dashed")  +
 	annotate("text", x = 11.7, y = 0.055, label = "Inflection point", size = 3) +
+	annotate("text", x = 24.5, y = 0.070, label = "TOpt", size = 3) +
+	annotate("segment", x = 14, xend = 16, y = 0.05, yend = 0.045, colour="black", size=0.5) +ylim(0, 0.075)
+
+sample_plot <- p + 
+	# geom_point(aes(x = temperature, y = growth.rate, color = curve.id), data = dat.full, size = 0.5, alpha = 1) +
+	stat_function(fun = nbcurve_constant, color = "black", size = 1.3) + theme_bw() + xlim(0, 32) +
+	theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+				panel.background = element_blank()) + 
+	theme(axis.title.y=element_text(face="italic"))+
+	# scale_x_reverse(limits = c(-10, 50)) + ylim(0,10)
+	ylab("P") + xlab(expression("Temperature (" *degree * "C)")) +
+	theme(text = element_text(size=14, family = "Helvetica")) + geom_vline(xintercept = 16.59, color = "grey")+
+	geom_vline(xintercept = 24.55, color = "grey", linetype = "dashed")  +
+	annotate("text", x = 11.7, y = 0.055, label = "Inflection point", size = 3) +
 	annotate("text", x = 24, y = 0.070, label = "Pmax", size = 3) +
 	annotate("segment", x = 14, xend = 16, y = 0.05, yend = 0.045, colour="black", size=0.5) +ylim(0, 0.075)
 
@@ -315,7 +334,7 @@ sd_plot <- sder %>%
 	ylab("P''") + xlab(expression("Temperature (" *degree * "C)")) + geom_hline(yintercept = 0) +
 	theme(text = element_text(size=14, family = "Helvetica")) +
 	theme(axis.title.y=element_text(face="italic")) + geom_vline(xintercept = 16.59, color = "grey")+
-	geom_vline(xintercept = 24.55, color = "grey", linetype = "dashed")
+	geom_vline(xintercept = 24.55, color = "grey", linetype = "dashed") +ylim(-0.004, 0.0005)
 
 
 fd_plot <- fder %>% 
@@ -331,8 +350,12 @@ fd_plot <- fder %>%
 
 ## now plot them all together
 
-predictions_plot <- plot_grid(TPC_plot, fd_plot, sd_plot, labels = c("A", "B", "C"), align = "v", ncol = 1)
-save_plot("Tetraselmis_experiment/figures/figure1_predictions.pdf", predictions_plot, ncol = 1, base_height = 7, base_width = 4)
+
+# predictions plot --------------------------------------------------------
+
+
+predictions_plot <- plot_grid(TPC_plot, sd_plot, labels = c("A", "B"), align = "v", ncol = 1)
+save_plot("Tetraselmis_experiment/figures/figure1_predictions.png", predictions_plot, ncol = 1, base_height = 7, base_width = 6.2)
 
 
 # let’s get the second derivative at a specific point ---------------------

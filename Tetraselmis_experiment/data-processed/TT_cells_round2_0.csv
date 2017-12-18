@@ -1,0 +1,16 @@
+file_name,temperature,sample_day,replicate,cell_density,start_time
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-1-1_summary,0,1,1,1756,2017-03-18  16:18:54
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-1-3_summary,0,1,3,2443,2017-03-18  16:23:23
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-2-2_summary,0,2,2,1913,2017-03-18  16:17:46
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-2-3_summary,0,2,3,2008,2017-03-18  16:25:06
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-3-4_summary,0,3,4,1606,2017-03-18  16:20:01
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-4-3_summary,0,4,3,1469,2017-03-18  16:22:16
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-5-2_summary,0,5,2,1407,2017-03-18  16:26:29
+Tetraselmis_experiment/data-raw/flowcam-summaries-mar18/0-5-3_summary,0,5,3,2146,2017-03-18  16:21:09
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-4-1_summary,0,4,1,3462,2017-05-01  11:07:21
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-4-2_summary,0,4,2,4416,2017-05-01  11:09:08
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-4-3_summary,0,4,3,3195,2017-05-01  11:10:47
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-4-4_summary,0,4,4,2195,2017-05-01  11:12:44
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-5-1_summary,0,5,1,3238,2017-05-01  11:14:40
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-5-2_summary,0,5,2,2335,2017-05-01  11:16:34
+Tetraselmis_experiment/data-raw/flowcam-summaries-may01/0-5-3_summary,0,5,3,3537,2017-05-01  11:18:10

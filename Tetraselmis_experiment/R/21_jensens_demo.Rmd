@@ -1,0 +1,22 @@
+---
+title: "Jensens_demo"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, fig.show = "animate"}
+library(tidyverse)
+library(gganimate)
+predicted_growth <- read_csv("~/Documents/Thermal_variability/Tetraselmis_experiment/R/jensens_demo.csv")
+ q <- ggplot(predicted_growth, aes(x = temperature, y = predicted_r, frame = time)) +
+	geom_point() 
+
+gganimate(q, title_frame = FALSE)
+
+
+```
+

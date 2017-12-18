@@ -72,7 +72,7 @@ EqnS.3 <- function(sample_size){
 	data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
 }
 	
-samples <- rep(1, 100)
+samples <- rep(1, 1000)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -239,7 +239,7 @@ boot_limits <- all_predictions %>%
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) 
-write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits.csv")	
+write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant.csv")	
 
 ## plot it! (bands look super skinny now??). I think this is what we are after.
 data_full %>% 
@@ -247,6 +247,11 @@ data_full %>%
 	geom_line(aes(x = x, y = mean), data = boot_limits) +
 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5), fill = "grey", alpha = 0.7, data = boot_limits) +
 	theme_bw() + ylab("growth rate") + xlab("Temperature")
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+
+p + geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5), fill = "grey", alpha = 0.7, data = boot_limits) +
+	geom_line(aes(x = x, y = mean), data = boot_limits) + theme_bw()
 
 
 ### now try with the upper and lower limits of the paramaters themselves (I don't think this is the right thing to do here)

@@ -1,0 +1,1056 @@
+curve code,isolate code,study notes,year of publication,growth metric,light metric,light level original units,light level microeinsteins,daylight hours,salinity,pH
+1,303,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+2,305,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+3,306,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+4,304,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+5,267,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+6,307,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+7,309,Butterwick et al. (2005),2005,k,microeinsteins/m2/s,100,100,24,NA,NA
+8,413,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+9,416,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+10,430,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+11,430,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,130,130,14,NA,NA
+12,439,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+13,411,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+14,412,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+15,436,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+16,408,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+17,409,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,130,130,14,NA,NA
+18,425,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+19,435,Montagnes & Franklin (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+20,210,Karentz & Smayda (1984) from Teng (unpubl.),1984,k,NA,NA,NA,NA,NA,NA
+21,215,Yoder (1979),1979,k,NA,optimal at each temp,optimal at each temp,12,NA,NA
+22,339,Karentz & Smayda (1984) from Braarud (1961),1984,% max growth rate,NA,NA,NA,NA,NA,NA
+23,381,Ahlgren (1987),1987,mu,NA,optimal at each temp,NA,NA,NA,NA
+24,397,Ahlgren (1987),1987,mu,NA,optimal at each temp,NA,NA,NA,NA
+25,124,Imai et al. (2009a),2009,mu,microeinsteins/m2/s,60,60,12,NA,NA
+26,125,Imai et al. (2009a),2009,mu,microeinsteins/m2/s,60,60,12,NA,NA
+27,167,Watanabe & Oishi (1985),1985,mu,microeinsteins/m2/s,30.1,30.1,24,NA,NA
+28,449,Collins & Boylen (1982),1982,mu,NA,NA,NA,NA,NA,NA
+29,226,Rhee & Gotham (1981),1981,mu,NA,NA,NA,NA,NA,NA
+30,375,Rhee & Gotham (1981),1981,mu,NA,NA,NA,NA,NA,NA
+31,278,van Donk & Kilham (1990),1990,mu,microeinsteins/m2/s,100,100,14,NA,NA
+32,275,van Donk & Kilham (1990),1990,mu,microeinsteins/m2/s,100,100,14,NA,NA
+33,273,van Donk & Kilham (1990),1990,mu,microeinsteins/m2/s,100,100,14,NA,NA
+34,313,Foy (1983),1983,k,microeinsteins/m2/s,180-200,190,3,NA,NA
+35,393,Foy (1983),1983,k,microeinsteins/m2/s,180-200,190,3,NA,NA
+36,388,Kratz & Myers (1955),1955,mu in log10 units,foot-candles,350,51.1,NA,NA,NA
+37,400,Kratz & Myers (1955),1955,mu in log10 units,foot-candles,350,51.1,NA,NA,NA
+38,398,Kratz & Myers (1955),1955,mu in log10 units,foot-candles,450,65.7,NA,NA,NA
+39,184,Coles & Jones (2000),2000,mu,NA,NA,NA,NA,NA,NA
+40,183,Coles & Jones (2000),2000,mu,NA,NA,NA,NA,NA,NA
+41,185,Coles & Jones (2000),2000,mu,NA,NA,NA,NA,NA,NA
+42,182,Coles & Jones (2000),2000,mu,NA,optimal at each temp,NA,24,NA,NA
+43,140,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+44,160,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,14,NA,NA
+45,146,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+46,154,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+47,235,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+48,234,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+49,361,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+50,362,Suzuki & Takahashi (1995),1995,mu,NA,optimal at each temp,NA,24,NA,NA
+51,218,Fawley (1984),1984,k,microeinsteins/m2/s,208,208,14,NA,NA
+52,218,Fawley (1984),1984,k,microeinsteins/m2/s,117,117,14,NA,NA
+53,218,Fawley (1984),1984,k,microeinsteins/m2/s,54,54,14,NA,NA
+54,218,Fawley (1984),1984,k,microeinsteins/m2/s,24,24,14,NA,NA
+55,218,Fawley (1984),1984,k,microeinsteins/m2/s,7,7,14,NA,NA
+60,94,Moore et al. (1995),1995,mu,microeinsteins/m2/s,90,90,14,NA,NA
+61,231,Moore et al. (1995),1995,mu,microeinsteins/m2/s,90,90,14,NA,NA
+62,89,Moore et al. (1995),1995,mu,microeinsteins/m2/s,90,90,14,NA,NA
+63,296,Richardson et al. (2000),2000,mu,NA,optimal at each temp,NA,NA,NA,NA
+64,297,Richardson et al. (2000),2000,mu,NA,optimal at each temp,NA,NA,NA,NA
+65,161,Chu et al. (2007),2007,mu,lux,2000,28,12,NA,NA
+66,164,Chu et al. (2007),2007,mu,lux,2000,28,12,NA,NA
+67,143,Nalewajko & Murphy (2001),2001,k,NA,NA,NA,NA,NA,NA
+68,141,Nalewajko & Murphy (2001),2001,k,NA,NA,NA,NA,NA,NA
+69,142,Tsujimura et al. (2001),2001,mu,microeinsteins/m2/s,20,20,14,NA,NA
+70,142,Tsujimura et al. (2001),2001,mu,microeinsteins/m2/s,50,50,14,NA,NA
+71,142,Tsujimura et al. (2001),2001,mu,microeinsteins/m2/s,150,150,14,NA,NA
+72,376,Novak & Brune (1985),1985,mu per hour,foot-candles,600,87.6,NA,NA,NA
+73,376,Novak & Brune (1985),1985,mu per hour,foot-candles,420,61.32,NA,NA,NA
+74,376,Novak & Brune (1985),1985,mu per hour,foot-candles,250,36.5,NA,NA,NA
+75,111,Novak & Brune (1985),1985,mu per hour,foot-candles,600,87.6,NA,NA,NA
+76,111,Novak & Brune (1985),1985,mu per hour,foot-candles,420,61.32,NA,NA,NA
+77,111,Novak & Brune (1985),1985,mu per hour,foot-candles,250,36.5,NA,NA,NA
+78,395,Novak & Brune (1985),1985,mu per hour,foot-candles,600,87.6,NA,NA,NA
+79,395,Novak & Brune (1985),1985,mu per hour,foot-candles,420,61.32,NA,NA,NA
+80,395,Novak & Brune (1985),1985,mu per hour,foot-candles,250,36.5,NA,NA,NA
+81,382,Novak & Brune (1985),1985,mu per hour,foot-candles,600,87.6,NA,NA,NA
+82,382,Novak & Brune (1985),1985,mu per hour,foot-candles,420,61.32,NA,NA,NA
+83,382,Novak & Brune (1985),1985,mu per hour,foot-candles,250,36.5,NA,NA,NA
+84,389,Novak & Brune (1985),1985,mu per hour,foot-candles,600,87.6,NA,NA,NA
+85,389,Novak & Brune (1985),1985,mu per hour,foot-candles,420,61.32,NA,NA,NA
+86,389,Novak & Brune (1985),1985,mu per hour,foot-candles,250,36.5,NA,NA,NA
+87,101,Novak & Brune (1985),1985,mu per hour,foot-candles,600,87.6,NA,NA,NA
+88,101,Novak & Brune (1985),1985,mu per hour,foot-candles,420,61.32,NA,NA,NA
+89,101,Novak & Brune (1985),1985,mu per hour,foot-candles,250,36.5,NA,NA,NA
+90,391,Post et al. (1985),1985,mu per hour,W/m2,28,128.52,16,NA,NA
+91,391,Post et al. (1985),1985,mu per hour,W/m2,8,36.72,16,NA,NA
+92,391,Post et al. (1985),1985,mu per hour,W/m2,4,18.36,16,NA,NA
+93,391,Post et al. (1985) compiled from Zevenboom (1980),1985,mu per hour,NA,NA,NA,24,NA,NA
+94,316,Foy & Gibson (1993),1993,k,microeinsteins/m2/s,155,155,3,NA,NA
+95,315,Foy & Gibson (1993),1993,k,microeinsteins/m2/s,155,155,3,NA,NA
+96,312,Foy & Gibson (1993),1993,k,microeinsteins/m2/s,155,155,3,NA,NA
+97,357,Rapala & Sivonen (1998),1998,mu,microeinsteins/m2/s,42,42,NA,NA,NA
+98,356,Rapala & Sivonen (1998),1998,mu,microeinsteins/m2/s,42,42,NA,NA,NA
+99,355,Rapala & Sivonen (1998),1998,mu,microeinsteins/m2/s,42,42,NA,NA,NA
+100,354,Rapala & Sivonen (1998),1998,mu,microeinsteins/m2/s,42,42,NA,NA,NA
+101,401,Miyamoto et al. (1979),1979,mu per hour,ergs/cm2/s,1.5 x 10^4 ,68.85,NA,NA,NA
+102,135,Yamamoto & Nakahara (2005),2005,mu,microeinsteins/m2/s,90,90,14,NA,NA
+105,137,Yamamoto & Nakahara (2005),2005,mu,microeinsteins/m2/s,90,90,14,NA,NA
+108,136,Yamamoto & Nakahara (2005),2005,mu,microeinsteins/m2/s,90,90,14,NA,NA
+111,49,Hulburt & Guillard (1968),1968,k,foot-candles,1000,146,NA,NA,NA
+112,50,Hulburt & Guillard (1968),1968,k,foot-candles,500,73,NA,NA,NA
+113,265,Cloern (1977),1977,mu,NA,optimal at each temp,NA,15,NA,NA
+114,384,Fan et al. (1994),1994,mu per hour,microeinsteins/m2/s,130,130,NA,NA,NA
+115,418,Sosik & Mitchell (1994),1994,mu,microeinsteins/m2/s,165,165,NA,NA,NA
+117,280,Qin & Li (2006),2006,mu,W/m2,30,137.7,12,NA,NA
+118,190,Senft et al. (1981),1981,k,microeinsteins/m2/s,512,512,14,NA,NA
+119,208,Senft et al. (1981),1981,k,microeinsteins/m2/s,512,512,14,NA,NA
+120,241,Morgan & Kalff (1979),1979,k,NA,optimal at each temp,NA,NA,NA,NA
+121,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,5,NA
+122,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,10,NA
+123,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,15,NA
+124,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,20,NA
+125,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,25,NA
+126,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,30,NA
+127,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,35,NA
+128,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,40,NA
+129,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,45,NA
+130,212,Tomas (1978),1978,k,Langleys/min,0.038,121.623066,12,50,NA
+131,104,Bouterfas et al. (2002),2002,mu,NA,optimal at each temp,NA,NA,NA,NA
+132,102,Bouterfas et al. (2002),2002,mu,NA,optimal at each temp,NA,NA,NA,NA
+133,103,Bouterfas et al. (2002),2002,mu,NA,optimal at each temp,NA,NA,NA,NA
+134,410,Cho et al. (2007),2007,mu,microeinsteins/m2/s,31,31,24,10,NA
+135,410,Cho et al. (2007),2007,mu,microeinsteins/m2/s,31,31,24,20,NA
+136,410,Cho et al. (2007),2007,mu,microeinsteins/m2/s,31,31,24,30,NA
+137,433,Cho et al. (2007),2007,mu,microeinsteins/m2/s,31,31,24,10,NA
+138,433,Cho et al. (2007),2007,mu,microeinsteins/m2/s,31,31,24,20,NA
+139,433,Cho et al. (2007),2007,mu,microeinsteins/m2/s,31,31,24,30,NA
+140,319,Jørgensen (1968),1968,k,lux,3000,42,NA,NA,NA
+141,415,Paasche (1968),1968,k,cal/cm2/min,0.12,384.07284,16,NA,NA
+142,63,Thomas (1966),1966,k,foot-candles,1600,233.6,NA,NA,NA
+144,63,Thomas (1966),1966,k,foot-candles,1500,219,NA,NA,NA
+146,68,Thomas (1966),1966,k,foot-candles,1175,171.55,NA,NA,NA
+148,68,Thomas (1966),1966,k,foot-candles,1250,182.5,NA,NA,NA
+150,69,Thomas (1966),1966,k,foot-candles,1450,211.7,NA,NA,NA
+152,62,Thomas (1966),1966,k,foot-candles,1400,204.4,NA,NA,NA
+154,62,Thomas (1966),1966,k,foot-candles,1450,211.7,NA,NA,NA
+156,379,Dauta et al. (1990),1990,mu,NA,optimal at each temp,NA,NA,NA,NA
+157,249,Dauta et al. (1990),1990,mu,NA,optimal at each temp,NA,NA,NA,NA
+158,248,Dauta et al. (1990),1990,mu,NA,optimal at each temp,NA,NA,NA,NA
+159,399,Dauta et al. (1990),1990,mu,NA,optimal at each temp,NA,NA,NA,NA
+160,38,Renaud et al. (2002),2002,mu,microeinsteins/m2/s,80,80,12,NA,NA
+161,43,Renaud et al. (2002),2002,mu,microeinsteins/m2/s,80,80,12,NA,NA
+162,42,Renaud et al. (2002),2002,mu,microeinsteins/m2/s,80,80,12,NA,NA
+163,36,Renaud et al. (2002),2002,mu,microeinsteins/m2/s,80,80,12,NA,NA
+164,35,Renaud et al. (2002),2002,mu,microeinsteins/m2/s,80,80,12,NA,NA
+165,174,Lomas & Glibert (1999),1999,mu,microeinsteins/m2/s,180,180,14,NA,NA
+166,177,Lomas & Glibert (1999),1999,mu,microeinsteins/m2/s,180,180,14,NA,NA
+167,176,Lomas & Glibert (1999),1999,mu,microeinsteins/m2/s,180,180,14,NA,NA
+168,175,Lomas & Glibert (1999),1999,mu,microeinsteins/m2/s,180,180,14,NA,NA
+169,198,Berges et al. (2002),2002,mu,microeinsteins/m2/s,150,150,24,NA,NA
+170,373,Uehlinger (1981),1981,mu per hour,microeinsteins/m2/s,220,220,NA,NA,NA
+171,419,Eppley & Sloan (1966),1966,k,cal/cm2/min,0.035,112.021245,NA,NA,NA
+172,419,Eppley & Sloan (1966),1966,k,cal/cm2/min,0.07,224.04249,NA,NA,NA
+173,419,Eppley & Sloan (1966),1966,k,cal/cm2/min,0.018,57.610926,NA,NA,NA
+174,419,Eppley & Sloan (1966),1966,k,cal/cm2/min,0.14,448.08498,NA,NA,NA
+175,419,Eppley & Sloan (1966),1966,k,cal/cm2/min,0.24,768.14568,NA,NA,NA
+176,40,Renaud et al. (1995),1995,mu,microeinsteins/m2/s,80,80,12,NA,NA
+177,41,Renaud et al. (1995),1995,mu,microeinsteins/m2/s,80,80,12,NA,NA
+178,34,Renaud et al. (1995),1995,mu,microeinsteins/m2/s,80,80,12,NA,NA
+179,38,Renaud et al. (1995),1995,mu,microeinsteins/m2/s,80,80,12,NA,NA
+180,191,Maddux & Jones (1964),1964,k,lux,1883,26.362,14,NA,NA
+181,191,Maddux & Jones (1964),1964,k,lux,860,12.04,14,NA,NA
+182,108,Maddux & Jones (1964),1964,k,lux,1883,26.362,14,NA,NA
+183,108,Maddux & Jones (1964),1964,k,lux,860,12.04,14,NA,NA
+184,310,Talling (1955),1955,mu,NA,saturating,NA,NA,NA,NA
+185,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,3
+186,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,3.5
+187,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,4
+188,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,4.5
+189,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,5
+190,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,5.5
+191,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,6
+192,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,6.5
+193,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,7
+194,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,7.5
+195,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,8
+196,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,8.5
+197,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,9
+198,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,9.5
+199,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,10
+200,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,10.3
+201,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,10.4
+202,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,10.5
+203,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,10.7
+204,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,11
+205,377,Mayo (1997),1997,mu,lux,6000,84,NA,NA,11.5
+206,21,Vincent & Silvester (1979),1979,k,lux,6000,84,NA,NA,NA
+207,21,Vincent & Silvester (1979),1979,k,lux,2000,28,NA,NA,NA
+208,22,Vincent & Silvester (1979),1979,k,lux,6000,84,NA,NA,NA
+209,22,Vincent & Silvester (1979),1979,k,lux,2000,28,NA,NA,NA
+210,186,Ogata et al. (1987),1987,mu,lux,3000,42,16,NA,NA
+211,70,Zargar et al. (2006),2006,mu,microeinsteins/m2/s,35,35,12,NA,NA
+212,395,Reynolds et al. (1975),1975,mu,NA,NA,NA,NA,NA,NA
+213,378,Zargar & Ghosh (2007),2007,mu,microeinsteins/m2/s,35,35,12,NA,NA
+214,67,Babel et al. (2002),2002,mu per hour,lux,7000-8000,105,12,NA,NA
+215,172,Jiménez & Niell (1991),1991,mu,microeinsteins/m2/s,150,150,12,NA,NA
+216,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,180,180,12,120,NA
+217,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,180,180,12,190,NA
+218,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,180,180,12,260,NA
+219,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,126,126,12,120,NA
+220,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,126,126,12,190,NA
+221,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,126,126,12,260,NA
+222,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,54,54,12,120,NA
+223,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,54,54,12,190,NA
+224,16,Chang et al. (1986),1986,k,microeinsteins/m2/s,54,54,12,260,NA
+225,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,180,180,12,120,NA
+226,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,180,180,12,190,NA
+227,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,180,180,12,260,NA
+228,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,126,126,12,120,NA
+229,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,126,126,12,190,NA
+230,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,126,126,12,260,NA
+231,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,54,54,12,120,NA
+232,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,54,54,12,190,NA
+233,17,Chang et al. (1986),1986,k,microeinsteins/m2/s,54,54,12,260,NA
+234,261,Healey (1983),1983,k,microeinsteins/m2/s,110,110,12,NA,NA
+235,261,Healey (1983),1983,k,microeinsteins/m2/s,73,73,12,NA,NA
+236,261,Healey (1983),1983,k,microeinsteins/m2/s,48,48,12,NA,NA
+237,261,Healey (1983),1983,k,microeinsteins/m2/s,32,32,12,NA,NA
+238,261,Healey (1983),1983,k,microeinsteins/m2/s,26,26,12,NA,NA
+239,261,Healey (1983),1983,k,microeinsteins/m2/s,20,20,12,NA,NA
+240,261,Healey (1983),1983,k,microeinsteins/m2/s,16,16,12,NA,NA
+241,261,Healey (1983),1983,k,microeinsteins/m2/s,11,11,12,NA,NA
+242,385,Kappers (1984) thesis,1984,mu per hour,NA,optimal at each temp,NA,NA,NA,NA
+243,385,Kappers (1984) thesis,1984,mu per hour,NA,optimal at each temp,NA,NA,NA,NA
+244,300,Foy et al. (1976),1976,k,lux,1600,22.4,NA,NA,NA
+245,311,Foy et al. (1976),1976,k,lux,1600,22.4,NA,NA,NA
+246,302,Foy et al. (1976),1976,k,lux,1600,22.4,NA,NA,NA
+247,313,Foy et al. (1976),1976,k,lux,1600,22.4,NA,NA,NA
+248,419,Eppley (1972),1972,k,NA,NA,NA,NA,7.3,NA
+249,419,Eppley (1972),1972,k,NA,NA,NA,NA,14.61,NA
+250,419,Eppley (1972),1972,k,NA,NA,NA,NA,29.22,NA
+251,419,Eppley (1972),1972,k,NA,NA,NA,NA,58.43,NA
+252,419,Eppley (1972),1972,k,NA,NA,NA,NA,87.65,NA
+253,421,Paasche (1967),1967,k,cal/cm2/min,0.07,224.04249,24,NA,NA
+254,421,Paasche (1967),1967,k,cal/cm2/min,0.07,224.04249,16,NA,NA
+255,421,Paasche (1967),1967,k,cal/cm2/min,0.07,224.04249,10,NA,NA
+256,421,Paasche (1967),1967,k,cal/cm2/min,0.07,224.04249,6,NA,NA
+257,31,van der Westhuizen & Eloff (1985),1985,k,microeinsteins/m2/s,200,200,NA,NA,NA
+258,150,Lee et al. (2007b),2007,mu,microeinsteins/m2/s,100,100,14,NA,NA
+259,151,Lee et al. (2007b),2007,mu,microeinsteins/m2/s,100,100,14,NA,NA
+260,152,Lee et al. (2007b),2007,mu,microeinsteins/m2/s,100,100,14,NA,NA
+261,20,Popovich & Gayoso (1999),1999,mu,NA,optimal at each temp,NA,12,NA,NA
+262,363,Lovejoy et al. (2007),2007,mu,microeinsteins/m2/s,10,10,12,NA,NA
+263,363,Lovejoy et al. (2007),2007,mu,microeinsteins/m2/s,50,50,12,NA,NA
+264,363,Lovejoy et al. (2007),2007,mu,microeinsteins/m2/s,100,100,12,NA,NA
+265,122,Sabour et al. (2009),2009,mu,NA,optimal at each temp,NA,NA,NA,NA
+266,121,Sabour et al. (2009),2009,mu,NA,optimal at each temp,NA,NA,NA,NA
+267,169,Barker (1935),1935,% daily increase,NA,saturating,NA,NA,NA,NA
+268,171,Barker (1935),1935,% daily increase,NA,saturating,NA,NA,NA,NA
+271,170,Barker (1935),1935,% daily increase,NA,saturating,NA,NA,NA,NA
+275,237,Dyer & Gafford (1961),1961,k,foot-candles,400,58.4,NA,NA,NA
+276,237,Dyer & Gafford (1961),1961,k,foot-candles,1500,219,NA,NA,NA
+277,116,Thomas et al. (1973),1973,k,lux,2800,39.2,24,NA,NA
+278,116,Thomas et al. (1973),1973,k,lux,5500,77,24,NA,NA
+279,116,Thomas et al. (1973),1973,k,lux,8800,123.2,24,NA,NA
+280,116,Thomas et al. (1973),1973,k,lux,9900,138.6,24,NA,NA
+281,116,Thomas et al. (1973),1973,k,lux,15200,212.8,24,NA,NA
+282,417,Thomas & Dodson (1974),1974,mu,NA,NA,NA,NA,NA,NA
+283,116,Thomas & Dodson (1974),1974,mu,NA,NA,NA,NA,NA,NA
+284,230,Konopka & Brock (1978),1978,% max growth rate,lux,2500,35,NA,NA,NA
+285,227,Konopka & Brock (1978),1978,% max growth rate,lux,2500,35,NA,NA,NA
+286,228,Konopka & Brock (1978),1978,% max growth rate,lux,2500,35,NA,NA,NA
+287,394,Talbot et al. (1991),1991,mu,NA,optimal at each temp,NA,NA,NA,NA
+288,189,Talbot et al. (1991),1991,mu,NA,NA,NA,NA,NA,NA
+291,264,Kain & Fogg (1958a),1958,% of control growth rate,lux,5000-9000,98,NA,NA,NA
+294,298,Kain & Fogg (1958b),1958,% of control growth rate,lux,5000-9000,98,NA,NA,NA
+297,329,Nielsen (1996),1996,mu,NA,NA,NA,NA,10,NA
+298,329,Nielsen (1996),1996,mu,NA,NA,NA,NA,14,NA
+299,329,Nielsen (1996),1996,mu,NA,NA,NA,NA,19,NA
+300,329,Nielsen (1996),1996,mu,NA,NA,NA,NA,24,NA
+301,329,Nielsen (1996),1996,mu,NA,NA,NA,NA,29,NA
+302,329,Nielsen (1996),1996,mu,NA,NA,NA,NA,34,NA
+303,434,Blankley & Lewin (1976),1976,mu per hour,NA,NA,NA,NA,NA,NA
+305,422,Mjaaland (1956),1956,k,lux,550,7.7,NA,NA,NA
+306,423,Mjaaland (1956),1956,k,lux,550,7.7,NA,NA,NA
+307,358,Mjaaland (1956),1956,k,lux,550,7.7,NA,NA,NA
+308,320,Jensen & Moestrup (1997),1997,k,microeinsteins/m2/s,45,45,12,NA,NA
+310,193,Ryther (1954),1954,k,NA,NA,NA,NA,NA,NA
+311,195,Ryther (1954),1954,k,NA,NA,NA,NA,NA,NA
+312,194,Ryther (1954),1954,k,NA,NA,NA,NA,NA,NA
+313,429,Spencer (1954),1954,k,NA,NA,NA,NA,NA,NA
+314,282,Eddy (1956),1956,k,NA,NA,NA,NA,NA,NA
+315,386,Eddy (1956),1956,k,NA,NA,NA,NA,NA,NA
+316,387,Eddy (1956),1956,k,NA,NA,NA,NA,NA,NA
+317,441,Eddy (1956),1956,k,NA,NA,NA,NA,NA,NA
+318,442,Eddy (1956),1956,k,NA,NA,NA,NA,NA,NA
+319,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,5,NA
+320,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,10,NA
+321,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,15,NA
+322,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,20,NA
+323,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,25,NA
+324,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,30,NA
+325,214,Ignatiades & Smayda (1970),1970,k,foot-candles,200,29.2,NA,35,NA
+326,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,5,NA
+327,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,10,NA
+328,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,15,NA
+329,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,20,NA
+330,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,25,NA
+331,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,30,NA
+332,214,Ignatiades & Smayda (1970),1970,k,foot-candles,600,87.6,NA,35,NA
+333,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,5,NA
+334,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,10,NA
+335,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,15,NA
+336,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,20,NA
+337,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,25,NA
+338,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,30,NA
+339,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1200,175.2,NA,35,NA
+340,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,5,NA
+341,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,10,NA
+342,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,15,NA
+343,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,20,NA
+344,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,25,NA
+345,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,30,NA
+346,214,Ignatiades & Smayda (1970),1970,k,foot-candles,1800,262.8,NA,35,NA
+347,206,Curl & McLeod (1961),1961,k,lux,10000,140,NA,NA,NA
+348,206,Curl & McLeod (1961),1961,k,lux,10000,140,NA,NA,NA
+349,206,Curl & McLeod (1961),1961,k,lux,10000,140,NA,NA,NA
+350,206,Curl & McLeod (1961),1961,k,lux,10000,140,NA,NA,NA
+351,25,Cannon (1993),1993,k,microeinsteins/m2/s,50,50,NA,NA,NA
+352,330,Nielsen & Tønseth (1991),1991,k,microeinsteins/m2/s,255,255,NA,17.8,NA
+353,330,Nielsen & Tønseth (1991),1991,k,microeinsteins/m2/s,255,255,NA,22.3,NA
+354,330,Nielsen & Tønseth (1991),1991,k,microeinsteins/m2/s,255,255,NA,28.8,NA
+355,330,Nielsen & Tønseth (1991),1991,k,microeinsteins/m2/s,255,255,NA,34,NA
+356,173,Anderson (1985),1985,k,microeinsteins/m2/s,350,350,NA,14,NA
+357,99,Sorokin (1960),1960,k,foot-candles,1600,233.6,NA,NA,NA
+358,99,Sorokin (1960),1960,k,foot-candles,440,64.24,NA,NA,NA
+359,445,Sorokin (1960),1960,k,foot-candles,1600,233.6,NA,NA,NA
+360,445,Sorokin (1960),1960,k,foot-candles,440,64.24,NA,NA,NA
+361,266,Baars (1986),1986,k,lux,4000,56,14,NA,NA
+363,198,Ferguson (1976),1976,k,lux,1100,15.4,NA,NA,NA
+364,198,Ferguson (1976),1976,k,lux,2200,30.8,NA,NA,NA
+365,198,Ferguson (1976),1976,k,lux,4300,60.2,NA,NA,NA
+366,431,Li (1980),1980,mu,NA,NA,NA,NA,NA,NA
+367,209,Fogg et al. (1959),1959,mu,lux,3700,51.8,NA,NA,NA
+368,209,Fogg et al. (1959),1959,mu,lux,15000,210,NA,NA,NA
+369,426,Weiler & Eppley (1979),1979,mu,quanta/cm2/s,1.59 x 10^16,265,12,NA,NA
+371,224,Mechling (1982),1982,k,microeinsteins/m2/s,100,100,14,NA,NA
+372,224,Mechling (1982),1982,k,microeinsteins/m2/s,100,100,14,NA,NA
+373,426,Meeson (1982),1982,k,NA,saturating,NA,14,NA,NA
+374,127,Meeson (1982),1982,k,NA,saturating,NA,14,NA,NA
+375,58,Usup et al. (1994),1994,k,NA,NA,NA,14,NA,NA
+376,157,Lee (2007a),2007,mu,microeinsteins/m2/s,100,100,24,NA,NA
+377,159,Lee (2007a),2007,mu,microeinsteins/m2/s,100,100,24,NA,NA
+378,144,Lee (2007a),2007,mu,microeinsteins/m2/s,100,100,24,NA,NA
+379,156,Lee (2007a),2007,mu,microeinsteins/m2/s,100,100,24,NA,NA
+380,155,Lee (2007a),2007,mu,microeinsteins/m2/s,100,100,24,NA,NA
+381,148,Kim et al. (2008),2008,mu,microeinsteins/m2/s,60,60,24,NA,NA
+382,153,Kim et al. (2008),2008,mu,microeinsteins/m2/s,60,60,24,NA,NA
+383,149,Kim et al. (2008),2008,mu,microeinsteins/m2/s,60,60,24,NA,NA
+384,341,Larsen & Bryant (1998),1998,k,microeinsteins/m2/s,230,230,14,NA,NA
+385,321,Larsen & Bryant (1998),1998,k,microeinsteins/m2/s,230,230,14,NA,NA
+386,268,Larsen & Bryant (1998),1998,k,microeinsteins/m2/s,230,230,14,NA,NA
+387,342,Larsen & Bryant (1998),1998,k,microeinsteins/m2/s,230,230,14,NA,NA
+388,19,Larsen & Bryant (1998),1998,k,microeinsteins/m2/s,230,230,14,NA,NA
+389,263,Larsen & Bryant (1998),1998,k,microeinsteins/m2/s,230,230,14,NA,NA
+390,85,Band-Schmidt (2004),2004,mu,microeinsteins/m2/s,230,230,10,NA,NA
+391,84,Bollmann et al. (2010),2010,k,microeinsteins/m2/s,175,175,14,NA,NA
+392,158,Bollmann et al. (2010),2010,k,microeinsteins/m2/s,175,175,14,NA,NA
+393,83,Bollmann et al. (2010),2010,k,microeinsteins/m2/s,175,175,14,NA,NA
+394,168,Bollmann et al. (2010),2010,k,microeinsteins/m2/s,175,175,14,NA,NA
+395,238,Bollmann et al. (2010),2010,k,microeinsteins/m2/s,175,175,14,NA,NA
+396,178,Bollmann et al. (2010),2010,k,microeinsteins/m2/s,175,175,14,NA,NA
+397,219,Watras et al. (1982),1982,mu,microeinsteins/m2/s,170,170,14,25.5,NA
+398,219,Watras et al. (1982),1982,mu,microeinsteins/m2/s,170,170,14,35.5,NA
+399,242,Lewis (1993),1993,k,microeinsteins/m2/s,80 - 180 ,130,12,NA,NA
+400,126,Miller & Kamykowski (1986a),1986,mu,microeinsteins/m2/s,140,140,12,8,NA
+401,126,Miller & Kamykowski (1986a),1986,mu,microeinsteins/m2/s,140,140,12,15,NA
+402,126,Miller & Kamykowski (1986a),1986,mu,microeinsteins/m2/s,140,140,12,20,NA
+403,126,Miller & Kamykowski (1986a),1986,mu,microeinsteins/m2/s,140,140,12,26,NA
+404,126,Miller & Kamykowski (1986a),1986,mu,microeinsteins/m2/s,140,140,12,32,NA
+405,126,Miller & Kamykowski (1986b),1986,mu,microeinsteins/m2/s,30,30,12,8,NA
+406,126,Miller & Kamykowski (1986b),1986,mu,microeinsteins/m2/s,30,30,12,15,NA
+407,126,Miller & Kamykowski (1986b),1986,mu,microeinsteins/m2/s,30,30,12,20,NA
+408,126,Miller & Kamykowski (1986b),1986,mu,microeinsteins/m2/s,30,30,12,26,NA
+409,126,Miller & Kamykowski (1986b),1986,mu,microeinsteins/m2/s,30,30,12,32,NA
+410,107,Watabe & Wilbur (1966),1966,k,lux,5380,75.32,NA,NA,NA
+411,107,Watabe & Wilbur (1966),1966,k,lux,3540,49.56,NA,NA,NA
+412,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,5,NA
+413,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,10,NA
+414,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,15,NA
+415,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,20,NA
+416,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,25,NA
+417,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,30,NA
+418,211,Smayda (1969),1969,k,foot-candles,200,29.2,NA,35,NA
+419,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,5,NA
+420,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,10,NA
+421,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,15,NA
+422,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,20,NA
+423,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,25,NA
+424,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,30,NA
+425,211,Smayda (1969),1969,k,foot-candles,600,87.6,NA,35,NA
+426,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,5,NA
+427,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,10,NA
+428,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,15,NA
+429,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,20,NA
+430,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,25,NA
+431,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,30,NA
+432,211,Smayda (1969),1969,k,foot-candles,1200,175.2,NA,35,NA
+433,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,5,NA
+434,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,10,NA
+435,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,15,NA
+436,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,20,NA
+437,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,25,NA
+438,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,30,NA
+439,211,Smayda (1969),1969,k,foot-candles,1800,262.8,NA,35,NA
+440,198,Guillard & Ryther (1962),1962,k,lux,4500,63,NA,NA,NA
+441,200,Guillard & Ryther (1962),1962,k,lux,4500,63,NA,NA,NA
+442,207,Guillard & Ryther (1962),1962,k,lux,4500,63,NA,NA,NA
+443,188,Guillard & Ryther (1962),1962,k,lux,4500,63,NA,NA,NA
+444,120,Guillard & Ryther (1962),1962,k,lux,4500,63,NA,NA,NA
+445,211,Guillard & Ryther (1962),1962,k,lux,11000,154,NA,NA,NA
+446,203,Van Auken & McNulty (1973),1973,k,lux,5350,74.9,20,NA,NA
+447,161,Fujimoto et al. (1997),1997,mu,quanta/cm2/s,0.39 * 10^16,65,NA,NA,NA
+448,161,Fujimoto et al. (1997),1997,mu,quanta/cm2/s,0.39 * 10^16,65,NA,NA,NA
+449,165,Fujimoto et al. (1997),1997,mu,quanta/cm2/s,0.39 * 10^16,65,NA,NA,NA
+450,165,Fujimoto et al. (1997),1997,mu,quanta/cm2/s,0.39 * 10^16,65,NA,NA,NA
+451,1,Vona (2004),2004,mu,microeinsteins/m2/s,130,130,24,NA,NA
+452,99,Vona (2004),2004,mu,microeinsteins/m2/s,130,130,24,NA,NA
+453,98,Baker et al. (2007),2007,mu,microeinsteins/m2/s,217,217,NA,17.8,NA
+454,179,Iriarte & Purdie (1993),1993,mu per hour,microeinsteins/m2/s,10,10,12,NA,NA
+455,179,Iriarte & Purdie (1993),1993,mu per hour,microeinsteins/m2/s,25,25,12,NA,NA
+456,179,Iriarte & Purdie (1993),1993,mu per hour,microeinsteins/m2/s,55,55,12,NA,NA
+457,147,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+461,198,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+465,406,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+470,88,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+474,259,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+477,420,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+481,318,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+485,38,Thompson (1992),1992,mu,microeinsteins/m2/s,220,220,NA,NA,NA
+489,215,Langdon (1988),1988,k,NA,NA,NA,14,NA,NA
+490,212,Langdon (1988),1988,k,NA,NA,NA,14,NA,NA
+491,402,Langdon (1988),1988,k,NA,NA,NA,14,NA,NA
+492,349,Goldman (1979),1979,mu,Langleys/min,0.025,80.015175,24,NA,NA
+493,215,Falkowski (1977),1977,k,Langleys/min,0.05,160.03035,24,NA,NA
+494,447,Cook (1966),1966,k,NA,NA,NA,NA,NA,NA
+495,383,Cook (1966),1966,k,NA,NA,NA,NA,NA,NA
+496,60,Findlay (1972),1972,k,lux,5500-8000,94.5,NA,NA,NA
+497,201,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,6,NA,NA
+498,201,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,12,NA,NA
+499,201,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,18,NA,NA
+500,298,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,6,NA,NA
+501,298,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,12,NA,NA
+502,298,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,18,NA,NA
+503,204,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,6,NA,NA
+504,204,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,12,NA,NA
+505,204,Hobson (1974),1974,k,cal/cm2/min,0.1,320.0607,18,NA,NA
+506,336,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+507,350,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+508,337,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+509,335,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+510,328,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+511,359,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+512,332,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+513,351,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+514,327,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+515,333,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+516,333,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+517,334,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+518,360,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+519,338,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+520,331,Throndsen (1976),1976,k,lux,4000 - 7000,77,NA,NA,NA
+521,427,Yanase & Imai (1968),1968,mu,lux,1500,21,NA,NA,NA
+522,427,Yanase & Imai (1968),1968,mu,lux,4500,63,NA,NA,NA
+523,427,Yanase & Imai (1968),1968,mu,lux,8000,112,NA,NA,NA
+524,427,Yanase & Imai (1968),1968,mu,lux,12500,175,NA,NA,NA
+525,438,Yanase & Imai (1968),1968,mu,lux,1500,21,NA,NA,NA
+526,438,Yanase & Imai (1968),1968,mu,lux,4500,63,NA,NA,NA
+527,438,Yanase & Imai (1968),1968,mu,lux,8000,112,NA,NA,NA
+528,438,Yanase & Imai (1968),1968,mu,lux,12500,175,NA,NA,NA
+529,414,Yanase & Imai (1968),1968,mu,lux,1500,21,NA,NA,NA
+530,414,Yanase & Imai (1968),1968,mu,lux,4500,63,NA,NA,NA
+531,414,Yanase & Imai (1968),1968,mu,lux,8000,112,NA,NA,NA
+532,414,Yanase & Imai (1968),1968,mu,lux,12500,175,NA,NA,NA
+533,404,Yanase & Imai (1968),1968,mu,lux,1500,21,NA,NA,NA
+534,404,Yanase & Imai (1968),1968,mu,lux,4500,63,NA,NA,NA
+535,404,Yanase & Imai (1968),1968,mu,lux,8000,112,NA,NA,NA
+536,404,Yanase & Imai (1968),1968,mu,lux,12500,175,NA,NA,NA
+537,205,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+538,257,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+539,256,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+541,222,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+542,220,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+543,223,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+544,221,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+545,51,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+546,57,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+547,54,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+548,55,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+549,56,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+550,53,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+551,52,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+552,109,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+553,145,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+554,181,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+555,180,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+556,110,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+557,92,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+558,91,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+559,93,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+560,90,Hulburt (1982),1982,k,foot-candles,1000,146,NA,NA,NA
+561,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,10,NA
+562,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,15,NA
+563,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,20,NA
+564,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,25,NA
+565,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,30,NA
+566,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,35,NA
+567,87,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,40,NA
+568,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,10,NA
+569,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,15,NA
+570,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,20,NA
+571,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,25,NA
+572,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,30,NA
+573,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,35,NA
+574,217,Krawiec (1982),1982,k,Langleys/min,0.025,80.015175,12,40,NA
+575,440,Schöne (1972),1972,k,lux,1200,16.8,NA,NA,NA
+576,440,Schöne (1972),1972,k,lux,2400,33.6,NA,NA,NA
+577,269,Bruning (1991),1991,mu,microeinsteins/m2/s,2.5,2.5,NA,NA,NA
+578,269,Bruning (1991),1991,mu,microeinsteins/m2/s,5,5,NA,NA,NA
+579,269,Bruning (1991),1991,mu,microeinsteins/m2/s,10,10,NA,NA,NA
+580,269,Bruning (1991),1991,mu,microeinsteins/m2/s,20,20,NA,NA,NA
+581,269,Bruning (1991),1991,mu,microeinsteins/m2/s,40,40,NA,NA,NA
+582,269,Bruning (1991),1991,mu,microeinsteins/m2/s,80,80,NA,NA,NA
+583,269,Bruning (1991),1991,mu,microeinsteins/m2/s,160,160,NA,NA,NA
+584,446,Tamiya et al. (1955),1955,k,lux,400,5.6,6,NA,NA
+585,446,Tamiya et al. (1955),1955,k,lux,400,5.6,12,NA,NA
+586,446,Tamiya et al. (1955),1955,k,lux,400,5.6,18,NA,NA
+587,446,Tamiya et al. (1955),1955,k,lux,400,5.6,24,NA,NA
+588,446,Tamiya et al. (1955),1955,k,lux,2000,28,6,NA,NA
+589,446,Tamiya et al. (1955),1955,k,lux,2000,28,12,NA,NA
+590,446,Tamiya et al. (1955),1955,k,lux,2000,28,18,NA,NA
+591,446,Tamiya et al. (1955),1955,k,lux,2000,28,24,NA,NA
+592,446,Tamiya et al. (1955),1955,k,lux,10000,140,6,NA,NA
+593,446,Tamiya et al. (1955),1955,k,lux,10000,140,12,NA,NA
+594,446,Tamiya et al. (1955),1955,k,lux,10000,140,18,NA,NA
+595,446,Tamiya et al. (1955),1955,k,lux,10000,140,24,NA,NA
+596,352,Schouten et al. (2006),2006,mu,microeinsteins/m2/s,300,300,16,25,NA
+597,352,Schouten et al. (2006),2006,mu,microeinsteins/m2/s,300,300,16,29,NA
+598,352,Schouten et al. (2006),2006,mu,microeinsteins/m2/s,300,300,16,35.1,NA
+599,424,Schouten et al. (2006),2006,mu,microeinsteins/m2/s,300,300,16,24.8,NA
+600,424,Schouten et al. (2006),2006,mu,microeinsteins/m2/s,300,300,16,29,NA
+601,424,Schouten et al. (2006),2006,mu,microeinsteins/m2/s,300,300,16,35.1,NA
+602,201,Strzepek & Price (2000),2000,mu,microeinsteins/m2/s,135,135,24,NA,NA
+603,201,Strzepek & Price (2000),2000,mu,microeinsteins/m2/s,135,135,24,NA,NA
+604,187,Ogata et al. (1989),1989,mu,lux,4000,56,NA,NA,NA
+605,66,Ogata et al. (1989),1989,mu,lux,4000,56,NA,NA,NA
+606,130,Ogata et al. (1989),1989,mu,lux,4000,56,NA,NA,NA
+607,73,Schöne (1982),1982,k,lux,200,2.8,12,NA,NA
+608,72,Schöne (1982),1982,k,lux,200,2.8,12,NA,NA
+609,74,Schöne (1982),1982,k,lux,200,2.8,12,NA,NA
+610,75,Schöne (1982),1982,k,lux,200,2.8,12,NA,NA
+611,117,Yamatogi (2005),2005,mu,NA,NA,NA,NA,16,NA
+612,117,Yamatogi (2005),2005,mu,NA,NA,NA,NA,20,NA
+613,117,Yamatogi (2005),2005,mu,NA,NA,NA,NA,24,NA
+614,117,Yamatogi (2005),2005,mu,NA,NA,NA,NA,28,NA
+615,117,Yamatogi (2005),2005,mu,NA,NA,NA,NA,32,NA
+616,117,Yamatogi (2005),2005,mu,NA,NA,NA,NA,36,NA
+617,118,Yamatogi (2005),2005,mu,NA,NA,NA,NA,16,NA
+618,118,Yamatogi (2005),2005,mu,NA,NA,NA,NA,20,NA
+619,118,Yamatogi (2005),2005,mu,NA,NA,NA,NA,24,NA
+620,118,Yamatogi (2005),2005,mu,NA,NA,NA,NA,28,NA
+621,118,Yamatogi (2005),2005,mu,NA,NA,NA,NA,32,NA
+622,118,Yamatogi (2005),2005,mu,NA,NA,NA,NA,36,NA
+623,119,Yamatogi (2005),2005,mu,NA,NA,NA,NA,16,NA
+624,119,Yamatogi (2005),2005,mu,NA,NA,NA,NA,20,NA
+625,119,Yamatogi (2005),2005,mu,NA,NA,NA,NA,24,NA
+626,119,Yamatogi (2005),2005,mu,NA,NA,NA,NA,28,NA
+627,119,Yamatogi (2005),2005,mu,NA,NA,NA,NA,32,NA
+628,119,Yamatogi (2005),2005,mu,NA,NA,NA,NA,36,NA
+629,129,Yamatogi (2005),2005,mu,NA,NA,NA,NA,16,NA
+630,129,Yamatogi (2005),2005,mu,NA,NA,NA,NA,20,NA
+631,129,Yamatogi (2005),2005,mu,NA,NA,NA,NA,24,NA
+632,129,Yamatogi (2005),2005,mu,NA,NA,NA,NA,28,NA
+633,129,Yamatogi (2005),2005,mu,NA,NA,NA,NA,32,NA
+634,129,Yamatogi (2005),2005,mu,NA,NA,NA,NA,36,NA
+635,218,Kudo et al. (2000),2000,mu,microeinsteins/m2/s,80-90,85,24,NA,NA
+636,218,Kudo et al. (2000),2000,mu,microeinsteins/m2/s,80-90,85,24,NA,NA
+637,437,Mortain-Bertrand et al. (1988),1988,k,microeinsteins/m2/s,40,40,24,NA,NA
+638,15,Buitenhuis et al. (2008),2008,mu,microeinsteins/m2/s,180,NA,14,NA,NA
+639,23,Buitenhuis et al. (2008),2008,mu,microeinsteins/m2/s,180,NA,14,NA,NA
+640,33,Buitenhuis et al. (2008),2008,mu,microeinsteins/m2/s,300,NA,14,NA,NA
+641,26,Buitenhuis et al. (2008),2008,mu,microeinsteins/m2/s,300,NA,14,NA,NA
+642,32,Buitenhuis et al. (2008),2008,mu,microeinsteins/m2/s,180,NA,14,NA,NA
+643,196,Buitenhuis et al. (2008),2008,mu,microeinsteins/m2/s,180,NA,14,NA,NA
+644,64,Meier et al. (2004),2004,k,microeinsteins/m2/s,60-90,75,12,NA,NA
+645,59,Meier et al. (2004),2004,k,microeinsteins/m2/s,60-90,75,12,NA,NA
+646,61,Meier et al. (2004),2004,k,microeinsteins/m2/s,60-90,75,12,NA,NA
+647,44,Meier et al. (2004),2004,k,microeinsteins/m2/s,60-90,75,12,NA,NA
+649,45,Meier et al. (2004),2004,k,microeinsteins/m2/s,60-90,75,12,NA,NA
+650,132,Nishikawa & Yamaguchi (2006),2006,k,NA,optimal at each temp,NA,NA,NA,NA
+651,232,Grzebyk & Berland (1996),1996,k,microeinsteins/m2/s,30-500,NA,24,NA,NA
+661,308,Saxby-Rouen et al. (1997),1997,mu,microeinsteins/m2/s,230,230,24,NA,NA
+662,258,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+663,250,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+664,279,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+665,46,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+666,29,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+667,76,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+668,71,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+669,392,Briand et al. (2004),2004,mu,microeinsteins/m2/s,30,30,16,NA,NA
+670,250,Shafik et al. (2001),2001,mu,microeinsteins/m2/s,100,100,24,NA,NA
+671,250,Shafik et al. (2001),2001,mu,microeinsteins/m2/s,100,100,24,NA,NA
+672,250,Shafik et al. (2001),2001,mu,microeinsteins/m2/s,100,100,24,NA,NA
+673,225,Bravo & Anderson (1994),1994,k,microeinsteins/m2/s,150,150,14,NA,NA
+674,371,Krüger & Eloff (1978),1978,mu,microeinsteins/m2/s,20,20,24,NA,NA
+675,31,Krüger & Eloff (1978),1978,mu,microeinsteins/m2/s,20,20,24,NA,NA
+676,374,Krüger & Eloff (1978),1978,mu,microeinsteins/m2/s,20,20,24,NA,NA
+677,229,Krüger & Eloff (1978),1978,mu,microeinsteins/m2/s,33,33,24,NA,NA
+678,229,Krüger & Eloff (1978),1978,mu,microeinsteins/m2/s,20,20,24,NA,NA
+679,100,Krüger & Eloff (1978),1978,mu,microeinsteins/m2/s,33,33,24,NA,NA
+680,347,Nordli (1957),1957,k,NA,NA,NA,NA,NA,NA
+681,345,Nordli (1957),1957,k,NA,NA,NA,NA,NA,NA
+682,344,Nordli (1957),1957,k,NA,NA,NA,NA,NA,NA
+683,346,Nordli (1957),1957,k,NA,NA,NA,NA,NA,NA
+684,340,Ahlgren (1978),1978,mu,microeinsteins/m2/s,37,37,NA,NA,NA
+686,364,Johnson (2006),2006,mu,microeinsteins/m2/s,66,66,14,NA,NA
+687,365,Johnson (2006),2006,mu,microeinsteins/m2/s,66,66,14,NA,NA
+688,231,Johnson (2006),2006,mu,microeinsteins/m2/s,66,66,14,NA,NA
+689,366,Johnson (2006),2006,mu,microeinsteins/m2/s,66,66,14,NA,NA
+690,287,van Liere (1979),1979,mu per hour,W/m2,7,32.13,NA,NA,NA
+693,65,Falcón (2005),2005,mu,microeinsteins/m2/s,100,100,12,NA,NA
+694,78,Falcón (2005),2005,mu,microeinsteins/m2/s,100,100,12,NA,NA
+695,79,Falcón (2005),2005,mu,microeinsteins/m2/s,100,100,12,NA,NA
+696,396,Martínez et al. (1999),1999,mu per hour,lux,11334,158.676,24,NA,NA
+697,254,Müller (1971),1971,k,lux,5000,70,NA,NA,NA
+698,253,Müller (1971),1971,k,lux,5000,70,NA,NA,NA
+699,252,Müller (1971),1971,k,lux,5000,70,NA,NA,NA
+700,251,Müller (1971),1971,k,lux,5000,70,NA,NA,NA
+701,255,Müller (1971),1971,k,lux,5000,70,NA,NA,NA
+702,134,Breitbarth et al. (2007),2007,mu,NA,NA,NA,NA,NA,NA
+703,114,Malinsky-Rushansky et al. (2002),2002,mu,NA,NA,NA,NA,NA,NA
+704,115,Malinsky-Rushansky et al. (2002),2002,mu,NA,NA,NA,NA,NA,NA
+705,113,Malinsky-Rushansky et al. (2002),2002,mu,NA,NA,NA,NA,NA,NA
+706,407,Mortensen et al. (1988),1988,mu per hour,microeinsteins/m2/s,714,714,24,NA,NA
+707,2,Teoh et al. (2004),2004,mu,microeinsteins/m2/s,42,42,12,NA,NA
+708,4,Teoh et al. (2004),2004,mu,microeinsteins/m2/s,42,42,12,NA,NA
+709,3,Teoh et al. (2004),2004,mu,microeinsteins/m2/s,42,42,12,NA,NA
+710,240,El-Sabaawi & Harrison (2006),2006,mu,microeinsteins/m2/s,20,20,24,NA,NA
+711,240,El-Sabaawi & Harrison (2006),2006,mu,microeinsteins/m2/s,50,50,24,NA,NA
+712,240,El-Sabaawi & Harrison (2006),2006,mu,microeinsteins/m2/s,100,100,24,NA,NA
+713,240,El-Sabaawi & Harrison (2006),2006,mu,microeinsteins/m2/s,150,150,24,NA,NA
+714,8,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+715,8,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+716,8,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+717,8,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+718,13,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+719,13,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+720,13,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+721,13,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+722,10,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+723,10,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+724,10,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+725,10,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+726,11,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+727,11,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+728,11,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+729,11,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+730,9,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+731,9,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+732,9,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+733,9,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+734,12,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+735,12,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+736,12,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+737,12,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+738,7,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,46,46,24,NA,NA
+739,7,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,72,72,24,NA,NA
+740,7,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,155,155,24,NA,NA
+741,7,Fiala & Oriol (1990),1990,mu,microeinsteins/m2/s,220,220,24,NA,NA
+742,6,Reay et al. (1999),1999,mu per hour,microeinsteins/m2/s,200,200,24,NA,NA
+743,6,Reay et al. (1999),1999,mu per hour,microeinsteins/m2/s,200,200,24,NA,NA
+744,405,Reay et al. (1999),1999,mu per hour,microeinsteins/m2/s,200,200,24,NA,NA
+745,405,Reay et al. (1999),1999,mu per hour,microeinsteins/m2/s,200,200,24,NA,NA
+746,343,Reay et al. (1999),1999,mu per hour,microeinsteins/m2/s,200,200,24,NA,NA
+747,343,Reay et al. (1999),1999,mu per hour,microeinsteins/m2/s,200,200,24,NA,NA
+748,134,Chappell & Webb (2010),2010,mu,microeinsteins/m2/s,140,140,NA,NA,NA
+749,37,Chappell & Webb (2010),2010,mu,microeinsteins/m2/s,140,140,NA,NA,NA
+750,77,Chappell & Webb (2010),2010,mu,microeinsteins/m2/s,140,140,NA,NA,NA
+751,112,Mitrovic et al. (2010),2010,mu,microeinsteins/m2/s,200,200,14,NA,NA
+752,28,Mitrovic et al. (2010),2010,mu,microeinsteins/m2/s,200,200,14,NA,NA
+753,288,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+754,289,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+755,293,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+756,281,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+757,291,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+758,290,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+759,192,Mehnert et al. (2010),2010,mu,microeinsteins/m2/s,80,80,12,NA,NA
+760,138,Baek et al. (2008),2008,mu,NA,saturating,NA,NA,NA,NA
+761,139,Baek et al. (2008),2008,mu,NA,saturating,NA,NA,NA,NA
+762,7,Jacques (1983),1983,k,W/m2,30,137.7,24,NA,NA
+763,10,Jacques (1983),1983,k,W/m2,30,137.7,24,NA,NA
+764,11,Jacques (1983),1983,k,W/m2,30,137.7,24,NA,NA
+765,27,Hadas et al. (2002),2002,mu,microeinsteins/m2/s,50,50,12,NA,NA
+766,380,Ojala (1993),1993,mu,NA,optimal at each temp,NA,NA,NA,NA
+767,301,Ojala (1993),1993,mu,NA,optimal at each temp,NA,NA,NA,NA
+768,390,Kishimoto et al. (1998),1998,mu,microeinsteins/m2/s,114,114,14,NA,NA
+769,390,Kishimoto et al. (1998),1998,mu,microeinsteins/m2/s,11.4,11.4,14,NA,NA
+770,236,McCombie (1960),1960,mu,foot-candles,150,21.9,24,NA,NA
+771,236,McCombie (1960),1960,mu,foot-candles,110,16.06,24,NA,NA
+772,236,McCombie (1960),1960,mu,foot-candles,75,10.95,24,NA,NA
+773,443,Tedesco & Duerr (1989),1989,k,NA,NA,NA,NA,NA,NA
+774,448,Islam et al. (2003),2003,mu,NA,NA,NA,NA,NA,NA
+775,444,Islam et al. (2003),2003,mu,NA,NA,NA,NA,NA,NA
+776,294,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+777,294,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+778,294,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+779,295,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+780,295,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+781,295,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+782,270,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+783,270,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+784,270,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+785,271,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+786,271,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+787,271,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+788,272,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+789,272,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+790,272,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+791,284,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+792,284,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+793,284,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+794,285,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+795,285,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+796,285,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+797,283,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+798,283,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+799,283,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+800,286,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+801,286,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+802,286,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+803,276,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+804,276,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+805,276,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+806,277,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+807,277,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+808,277,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+809,274,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,8,8,16,NA,NA
+810,274,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,22,22,16,NA,NA
+811,274,Coesel & Wardenaar (1990),1990,mu,microeinsteins/m2/s,85,85,16,NA,NA
+812,97,McKay et al. (2006),2006,mu,microeinsteins/m2/s,100,100,12,NA,NA
+813,86,McKay et al. (2006),2006,mu,microeinsteins/m2/s,100,100,12,NA,NA
+814,98,Baker et al. (2009),2009,mu,microeinsteins/m2/s,150,150,12,0.5,NA
+816,98,Baker et al. (2009),2009,mu,microeinsteins/m2/s,150,150,12,1,NA
+818,98,Baker et al. (2009),2009,mu,microeinsteins/m2/s,150,150,12,4,NA
+820,372,Binder & Anderson (1987),1987,mu,microeinsteins/m2/s,450,450,14,NA,NA
+821,47,Wang et al. (2010),2010,mu,microeinsteins/m2/s,350,350,NA,NA,NA
+822,5,Wang et al. (2010),2010,mu,microeinsteins/m2/s,350,350,NA,NA,NA
+823,428,Wang et al. (2010),2010,mu,microeinsteins/m2/s,350,350,NA,NA,NA
+824,95,James et al. (1989),1989,k,microeinsteins/m2/s,140,140,NA,NA,NA
+828,96,James et al. (1989),1989,k,microeinsteins/m2/s,140,140,NA,NA,NA
+832,30,Conte et al. (1998),1998,k,microeinsteins/m2/s,100,100,16,NA,NA
+834,353,Conte et al. (1998),1998,k,microeinsteins/m2/s,100,100,16,NA,NA
+835,348,Conte et al. (1998),1998,k,microeinsteins/m2/s,100,100,16,NA,NA
+836,24,Conte et al. (1998),1998,k,microeinsteins/m2/s,100,100,16,NA,NA
+838,106,Conte et al. (1998),1998,k,microeinsteins/m2/s,100,100,16,NA,NA
+839,260,Conte et al. (1998),1998,k,microeinsteins/m2/s,100,100,16,NA,NA
+840,24,Rhodes et al. (1995),1995,k,microeinsteins/m2/s,100,100,14,NA,NA
+841,14,Rhodes et al. (1995),1995,k,microeinsteins/m2/s,100,100,14,NA,NA
+842,324,Sundström et al. (2009),2009,k,microeinsteins/m2/s,50,50,14,NA,NA
+843,317,Grimm & Weisse (1985),1985,k,NA,NA,NA,NA,NA,NA
+845,262,Johnston (1996),1996,k,microeinsteins/m2/s,100,100,14,NA,NA
+846,233,Etheridge & Roesler (2005),2005,mu,microeinsteins/m2/s,100,100,14,NA,NA
+847,239,Etheridge & Roesler (2005),2005,mu,microeinsteins/m2/s,100,100,14,NA,NA
+848,243,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,100,100,12,NA,NA
+849,243,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,40,40,12,NA,NA
+850,243,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,25,NA
+851,243,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,15,NA
+852,243,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,10,NA
+853,244,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,100,100,12,NA,NA
+854,244,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,40,40,12,NA,NA
+855,244,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,25,NA
+856,244,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,15,NA
+857,244,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,5,NA
+858,246,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,100,100,12,NA,NA
+859,246,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,40,40,12,NA,NA
+860,246,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,25,NA
+861,246,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,15,NA
+862,246,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,12.5,NA
+863,245,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,100,100,12,NA,NA
+864,245,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,40,40,12,NA,NA
+865,245,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,25,NA
+866,245,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,15,NA
+867,245,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,12.5,NA
+868,247,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,100,100,12,NA,NA
+869,247,Seguel (1957) dissertation,1957,mu,microeinsteins/m2/s,40,40,12,NA,NA
+870,247,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,25,NA
+871,247,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,15,NA
+872,247,Seguel (1957) dissertation,1957,mu,NA,NA,NA,NA,5,NA
+873,197,Montressor & Tomas (1988),1988,k,microeinsteins/m2/s,60-70,65,12,NA,NA
+874,299,de Boer et al. (2005),2005,mu,microeinsteins/m2/s,35,35,16,NA,NA
+875,128,de Boer et al. (2005),2005,mu,microeinsteins/m2/s,35,35,16,NA,NA
+876,18,de Boer et al. (2005),2005,mu,microeinsteins/m2/s,35,35,16,NA,NA
+877,216,Durbin (1974),1974,k,Langleys/min,0.011,35.206677,15,NA,NA
+878,216,Durbin (1974),1974,k,Langleys/min,0.027,86.416389,15,NA,NA
+879,216,Durbin (1974),1974,k,Langleys/min,0.066,211.240062,15,NA,NA
+880,216,Durbin (1974),1974,k,Langleys/min,0.11,352.06677,15,NA,NA
+881,216,Durbin (1974),1974,k,Langleys/min,0.011,35.206677,12,NA,NA
+882,216,Durbin (1974),1974,k,Langleys/min,0.027,86.416389,12,NA,NA
+883,216,Durbin (1974),1974,k,Langleys/min,0.066,211.240062,12,NA,NA
+884,216,Durbin (1974),1974,k,Langleys/min,0.11,352.06677,12,NA,NA
+885,216,Durbin (1974),1974,k,Langleys/min,0.011,35.206677,9,NA,NA
+886,216,Durbin (1974),1974,k,Langleys/min,0.027,86.416389,9,NA,NA
+887,216,Durbin (1974),1974,k,Langleys/min,0.066,211.240062,9,NA,NA
+888,216,Durbin (1974),1974,k,Langleys/min,0.11,352.06677,9,NA,NA
+889,292,Khan (1996),1996,k,microeinsteins/m2/s,60,60,NA,NA,NA
+890,81,Chin (1965),1965,mu,NA,NA,NA,NA,NA,NA
+891,80,Chin (1965),1965,k,NA,NA,NA,NA,NA,NA
+892,82,Chin (1965),1965,k,NA,NA,NA,NA,NA,NA
+893,123,Yamaguchi (1989),1989,k,NA,NA,NA,NA,15,NA
+894,123,Yamaguchi (1989),1989,k,NA,NA,NA,NA,20,NA
+895,123,Yamaguchi (1989),1989,k,NA,NA,NA,NA,25,NA
+896,123,Yamaguchi (1989),1989,k,NA,NA,NA,NA,30,NA
+897,131,Nakamura (1983),1983,mu,Langleys/min,0.04,128.02428,12,NA,NA
+898,105,Kahn (1998),1998,k,microeinsteins/m2/s,60,60,12,30,NA
+899,133,Ono (2000),2000,mu,microeinsteins/m2/s,60,60,12,30,NA
+900,325,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+901,325,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+902,326,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+903,326,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+904,326,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+905,322,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+906,322,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+907,322,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+908,322,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+909,322,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+910,323,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+911,323,Edvardsen (1992),1992,k,microeinsteins/m2/s,150,150,12,NA,NA
+912,367,Juhl (2005),2005,mu,microeinsteins/m2/s,275,275,14,20,NA
+913,367,Juhl (2005),2005,mu,microeinsteins/m2/s,275,275,14,33,NA
+914,368,Zinser et al. (2007),2007,mu,microeinsteins/m2/s,66,66,14,NA,NA
+915,369,Zinser et al. (2007),2007,mu,microeinsteins/m2/s,66,66,14,NA,NA
+916,432,Raimbault (1984),1984,mu,NA,135,NA,12,NA,NA
+917,403,Raimbault (1984),1984,mu,NA,135,NA,12,NA,NA
+918,370,Nishikawa & Yamaguchi (2008),2008,k,NA,optimal at each temp,NA,NA,NA,NA
+919,370,Nishikawa & Yamaguchi (2008),2008,k,NA,optimal at each temp,NA,NA,NA,NA
+920,450,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+921,451,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+922,452,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+923,453,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+924,454,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+925,455,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+926,456,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+927,457,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+928,458,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+929,459,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+930,460,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+931,461,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+932,462,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+933,463,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+934,464,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+935,465,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+936,466,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+937,467,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+938,468,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+939,469,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+940,470,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+941,471,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+942,472,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+943,473,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+944,474,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+945,475,Kaeriyama et al. (2011),2011,mu,microeinsteins/m2/s,150,150,14,NA,NA
+946,476,Navarro et al. (2006),2006,k,microeinsteins/m2/s,59.53,59.53,14,NA,NA
+947,259,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,5,NA
+948,259,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,15,NA
+949,259,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,33,NA
+950,259,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,50,NA
+951,259,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,70,NA
+952,262,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,5,NA
+953,262,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,15,NA
+954,262,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,33,NA
+955,262,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,50,NA
+956,262,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,70,NA
+957,477,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,5,NA
+958,477,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,15,NA
+959,477,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,33,NA
+960,477,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,50,NA
+961,477,Kräbs et al. (2011),2011,k,microeinsteins/m2/s,35,35,16,70,NA
+962,478,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+963,479,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+964,480,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+965,481,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+966,482,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+967,483,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+968,484,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+969,485,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+970,486,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+971,487,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+972,488,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+973,489,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+974,490,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+975,604,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+976,382,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+977,396,Lürling et al. (2013),2013,mu,microeinsteins/m2/s,80,80,16,NA,NA
+978,480,Soares et al. (2013),2013,mu,microeinsteins/m2/s,35,35,14,NA,NA
+979,491,Teoh et al. (2013),2013,mu,microeinsteins/m2/s,42,42,12,NA,NA
+980,492,Teoh et al. (2013),2013,mu,microeinsteins/m2/s,42,42,12,NA,NA
+981,493,Venter et al. (2003),2003,mu,microeinsteins/m2/s,15,15,NA,NA,NA
+982,231,Kulk et al (2012),2012,mu,microeinsteins/m2/s,50,50,12,35,NA
+983,369,Kulk et al (2012),2012,mu,microeinsteins/m2/s,50,50,12,35,NA
+984,494,Kulk et al (2012),2012,mu,microeinsteins/m2/s,50,50,12,35,NA
+985,495,Kulk et al (2012),2012,mu,microeinsteins/m2/s,50,50,12,35,NA
+986,443,Lodi et al. (2003),2003,mu,microeinsteins/m2/s,40,40,NA,NA,NA
+987,496,Huisman et al. (1980),1980,mu,W/m2,07-Aug,34.425,16,NA,NA
+988,497,Komárek & Ruzicka (1969),1969,mu,cal/cm2/min,0.06,192.0364,NA,NA,NA
+989,498,Fujimoto et al. (1994),1994,mu,microeinsteins/m2/s,64,64,NA,NA,NA
+990,499,Ohkubo et al. (1991),1991,mu,lux,2000,28,12,NA,NA
+991,500,Ohkubo et al. (1991),1991,mu,lux,2000,28,12,NA,NA
+992,500,Ohkubo et al. (1991),1991,mu,lux,2000,28,24,NA,NA
+993,501,Ohkubo et al. (1991),1991,mu,lux,2000,28,24,NA,NA
+994,502,Ohkubo et al. (1991),1991,mu,lux,2000,28,24,NA,NA
+995,503,Tsujimura et al. (2003a),2003,mu,microeinsteins/m2/s,150,150,14,NA,NA
+996,503,Tsujimura et al. (2003a),2003,mu,microeinsteins/m2/s,50,50,14,NA,NA
+997,503,Tsujimura et al. (2003a),2003,mu,microeinsteins/m2/s,20,20,14,NA,NA
+998,504,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,10,10,14,NA,NA
+999,504,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,40,40,14,NA,NA
+1000,504,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,70,70,14,NA,NA
+1001,504,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1002,505,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,10,10,14,NA,NA
+1003,505,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,40,40,14,NA,NA
+1004,505,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,70,70,14,NA,NA
+1005,505,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1006,506,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,10,10,14,NA,NA
+1007,506,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,40,40,14,NA,NA
+1008,506,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,70,70,14,NA,NA
+1009,506,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1010,507,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,10,10,14,NA,NA
+1011,507,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,40,40,14,NA,NA
+1012,507,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,70,70,14,NA,NA
+1013,507,Tsujimura et al. (2003b),2003,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1014,508,Lürling et al. (1999),1999,mu,microeinsteins/m2/s,125,125,24,NA,NA
+1015,509,Tasaka et al. (1996),1996,mu,NA,NA,NA,NA,NA,NA
+1016,99,Lee et al. (1985),1985,mu per hour,NA,NA,NA,NA,NA,NA
+1017,510,Lee et al. (1985),1985,mu per hour,NA,NA,NA,NA,NA,NA
+1018,511,Hu et al. (2008),2008,mu,microeinsteins/m2/s,100,100,24,NA,NA
+1019,512,Bouarab et al. (2002),2002,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1020,513,Sánchez et al. (2008b),2008,mu per hour,NA,optimal at each temp,optimal at each temp,NA,NA,NA
+1021,514,Dauta (1982a),1982,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1022,515,Dauta (1982a),1982,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1023,516,Dauta (1982a),1982,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1024,154,Hayakawa et al. (1994),1994,mu,microeinsteins/m2/s,200,200,14,NA,NA
+1025,517,Benider et al. (2001),2001,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1026,518,Benider et al. (2001),2001,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1027,519,Benider et al. (2001),2001,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1028,520,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1029,521,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1030,522,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1031,523,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1032,524,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1033,525,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1034,526,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1035,527,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1036,382,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1037,528,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1038,529,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1039,530,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1040,531,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1041,532,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1042,533,Moss (1973),1973,k,lux,3000,42,15,NA,NA
+1043,534,Seaburg et al. (1981),1981,k,microeinsteins/m2/s,75,75,24,NA,NA
+1044,535,Seaburg et al. (1981),1981,k,microeinsteins/m2/s,75,75,24,NA,NA
+1045,536,Seaburg et al. (1981),1981,k,microeinsteins/m2/s,75,75,24,NA,NA
+1046,537,Seaburg et al. (1981),1981,k,microeinsteins/m2/s,75,75,24,NA,NA
+1047,538,Ukeles et al. (1961),1961,mu,NA,NA,NA,NA,NA,NA
+1048,539,Bouchamma et al. (2004),2004,mu,NA,optimal at each temp,optimal at each temp,NA,NA,NA
+1049,540,Bouchamma et al. (2004),2004,mu,NA,optimal at each temp,optimal at each temp,NA,NA,NA
+1050,541,Bouchamma et al. (2004),2004,mu,NA,optimal at each temp,optimal at each temp,NA,NA,NA
+1051,542,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1052,543,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1053,544,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1054,545,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1055,546,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1056,547,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1057,548,Boyd et al. (2013),2013,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1058,549,Boyd et al. (2013),2013,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1059,550,Boyd et al. (2013),2013,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1060,551,Boyd et al. (2013),2013,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1061,552,Boyd et al. (2013),2013,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1062,198,Boyd et al. (2013),2013,mu,microeinsteins/m2/s,100,100,14,NA,NA
+1063,553,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1064,554,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1065,555,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1066,556,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1067,557,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1068,558,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1069,37,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1070,559,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1071,560,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1072,561,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1073,562,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1074,563,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1075,564,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1076,565,Boyd et al. (2013),2013,mu,NA,saturating,saturating,NA,NA,NA
+1077,566,Csavina et al. (2011),2011,k,microeinsteins/m2/s,150,150,18,NA,NA
+1078,566,Csavina et al. (2011),2011,k,microeinsteins/m2/s,100,100,18,NA,NA
+1079,567,Csavina et al. (2011),2011,k,microeinsteins/m2/s,80,80,18,NA,NA
+1080,567,Csavina et al. (2011),2011,k,microeinsteins/m2/s,60,60,18,NA,NA
+1081,568,Nishibori et al. (1991),1991,mu,NA,NA,NA,NA,NA,NA
+1082,569,Wilken et al. (2013),2013,mu,NA,optimal at each temp,optimal at each temp,24,NA,NA
+1083,570,Rhodes & Burke (1996),1996,k,NA,NA,NA,NA,NA,NA
+1084,571,Rhodes & Burke (1996),1996,k,NA,NA,NA,NA,NA,NA
+1085,572,Rhodes & Burke (1996),1996,k,NA,NA,NA,NA,NA,NA
+1086,573,Rhodes & Burke (1996),1996,k,NA,NA,NA,NA,NA,NA
+1087,574,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1088,575,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1089,576,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1090,577,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1091,578,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1092,579,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1093,580,Saker & Griffiths (2000),2000,k,microeinsteins/m2/s,50,50,12,NA,NA
+1094,574,Saker et al. (1999),1999,k,microeinsteins/m2/s,50,50,12,NA,NA
+1095,575,Saker et al. (1999),1999,k,microeinsteins/m2/s,50,50,12,NA,NA
+1096,581,Fogg (1987) ,1987,k in log10 units,NA,NA,NA,24,NA,NA
+1097,582,Gerloff-Elias et al. (2006),2006,mu,microeinsteins/m2/s,100,100,16,NA,NA
+1098,583,Xianghu (2002),2002,k in log10 units,NA,NA,NA,NA,NA,NA
+1099,584,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1100,585,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1101,586,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1102,587,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1103,588,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1104,589,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1105,590,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1106,591,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1107,592,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1108,593,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1109,594,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1110,595,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1111,596,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1112,597,Kasai & Ichimura (1990),1990,mu,microeinsteins/m2/s,40,40,12,NA,NA
+1113,598,Bao-Yu et al. (2003),2003,mu,microeinsteins/m2/s,50,50,12,NA,NA
+1114,599,Bao-Yu et al. (2003),2003,mu,microeinsteins/m2/s,50,50,12,NA,NA
+1115,600,Bao-Yu et al. (2003),2003,mu,microeinsteins/m2/s,50,50,12,NA,NA
+1116,601,Bao-Yu et al. (2003),2003,mu,microeinsteins/m2/s,50,50,12,NA,NA
+1117,602,Derraz et al. (1995),1995,mu,NA,optimal at each temp,optimal at each temp,15,NA,NA
+1118,370,Nishikawa et al. (2000),2000,mu,microeinsteins/m2/s,35,35,8,35,NA
+1119,603,Sandnes et al. (2005),2005,mu,microeinsteins/m2/s,80,80,24,35,NA
+1120,605,Boumnich et al. (2001),2001,mu,NA,optimal at each temp,optimal at each temp,15,35,NA
+1121,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,7,7,14,25,NA
+1122,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,14,14,14,25,NA
+1123,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,20,20,14,25,NA
+1124,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,22,22,14,25,NA
+1125,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,30,30,14,25,NA
+1126,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,47,47,14,25,NA
+1127,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,63,63,14,25,NA
+1128,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,77,77,14,25,NA
+1129,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,88,88,14,25,NA
+1130,606,Skjelbred et al. (2012),2012,mu,microeinsteins/m2/s,97,97,14,25,NA
+1131,607,Stamenkovi? et al. (2013),2013,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1132,608,Stamenkovi? et al. (2013),2013,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1133,609,Stamenkovi? et al. (2013),2013,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1134,610,Stamenkovi? et al. (2013),2013,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1135,611,Stamenkovi? et al. (2013),2013,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1136,612,Stamenkovi? et al. (2013),2013,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1137,613,Rengefors et al. (2012),2012,mu,microeinsteins/m2/s,30,30,14,NA,NA
+1138,614,Rengefors et al. (2012),2012,mu,microeinsteins/m2/s,30,30,14,NA,NA

@@ -41,7 +41,11 @@ cell_files <- c(list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-ju
 								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun18-eve", full.names = TRUE),
 								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun18-midday", full.names = TRUE),
 								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun18-morn", full.names = TRUE),
-								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun19-morn", full.names = TRUE))
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun19-morn", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun23", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun24", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun26", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun28", full.names = TRUE))
 
 names(cell_files) <- cell_files %>% 
 	gsub(pattern = ".csv$", replacement = "")
@@ -66,4 +70,49 @@ TT_cells <- all_cells %>%
 				 cell_density = `Particles / ml`,
 				 cell_volume = `Volume (ABD)`) 
 write_csv(TT_cells, "Tetraselmis_experiment/data-processed/TT_cells_round3.csv")
+
+
+
+### new 0C and 32C data
+
+cell_files <- c(list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun23", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun24", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun26", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-jun28", full.names = TRUE))
+
+names(cell_files) <- cell_files %>% 
+	gsub(pattern = ".csv$", replacement = "")
+
+all_cells <- map_df(cell_files, read_csv, n_max = 6, col_names = c("obs_type", "value"), .id = "file_name")
+
+
+TT_extremes <- all_cells %>% 
+	filter(obs_type %in% c("List File", "Start Time", "Particles / ml")) %>% 
+	spread(obs_type, value) %>% 
+	separate(`List File`, into = c("temperature", "sample_day", "replicate"), sep = "[:punct:]") %>% 
+	separate(temperature, into = c("temp", "variability"), sep = -2) %>%
+	rename(start_time = `Start Time`,
+				 cell_density = `Particles / ml`) 
+write_csv(TT_extremes, "Tetraselmis_experiment/data-processed/TT_cells_round3_extremes.csv")
+
+
+### now bring in the 0C data from round 1
+cell_files <- c(list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-mar18", full.names = TRUE),
+								list.files("Tetraselmis_experiment/data-raw/flowcam-summaries-may01", full.names = TRUE))
+
+names(cell_files) <- cell_files %>% 
+	gsub(pattern = ".csv$", replacement = "")
+
+all_cells <- map_df(cell_files, read_csv, n_max = 6, col_names = c("obs_type", "value"), .id = "file_name")
+
+
+TT_0 <- all_cells %>% 
+	filter(obs_type %in% c("List File", "Start Time", "Particles / ml")) %>% 
+	spread(obs_type, value) %>% 
+	filter(grepl("^0", `List File`))%>% 
+	separate(`List File`, into = c("temperature", "sample_day", "replicate"), sep = "[:punct:]") %>% 
+	# separate(temperature, into = c("temp", "variability"), sep = -2) %>%
+	rename(start_time = `Start Time`,
+				 cell_density = `Particles / ml`)
+write_csv(TT_0, "Tetraselmis_experiment/data-processed/TT_cells_round2_0.csv")
 

@@ -15,8 +15,10 @@ library(readr)
 
 # load data ---------------------------------------------------------------
 
-TT_raw <- read.csv("Tetraselmis_experiment/data-processed/TT_cells_round2.csv")
-TT_raw_round2 <- read.csv("Tetraselmis_experiment/data-processed/TT.csv")
+TT_raw <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_round2.csv")
+TT_raw_round2 <- read_csv("Tetraselmis_experiment/data-processed/TT.csv")
+TT_raw_round2_extremes <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_round3_extremes.csv")
+TT_0 <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_round2_0.csv")
 
 TT <- TT_raw %>% 
 	mutate(start_time = ymd_hms(start_time)) %>% 
@@ -31,25 +33,6 @@ TT_round2 <- TT_raw_round2 %>%
 	mutate(total_biovolume = cell_density * cell_volume) %>% 
 	unite(unique, temp, variability, replicate, sep = "-", remove = FALSE)
 
-
-
-
-
-TT1 %>% 
-	group_by(temp) %>% 
-	# filter(temp == 27) %>% 
-	filter(unique != "20-c-4-2") %>% 
-	# filter(variability == "v") %>% 
-	ggplot(aes(x = start_time, y = cell_density, group = unique, color = factor(variability))) + geom_point(size = 3, alpha = 0.7) +
-	facet_wrap( ~ temp) + theme_bw() + xlab("date") + ylab("cell density")
-
-TT$start_time
-
-TT %>% 
-	filter(start_time < "2017-06-08 17:36:45 UTC") %>% 
-	group_by(temp, variability) %>% 
-	summarise(mean_density = mean(cell_density)) %>% 
-	ggplot(aes(x = temp, y = mean_density, color = factor(variability))) + geom_point()
 
 
 ### now get growth rates
@@ -150,12 +133,24 @@ TT6 <- TT2_round2 %>%
 	mutate(temp = as.numeric(temp)) %>% 
 	select(time_since_innoc_hours, temp, variability, cell_density)
 
-TT6 %>% 
+exp_growth <- TT6 %>% 
 	filter(temp == 15) %>% 
-	ggplot(aes(x = time_since_innoc_hours, y = cell_density)) + geom_point()
+	ggplot() + geom_point(size = 4, color = "blue", alpha = 0.5, aes(x = time_since_innoc_hours, y = cell_density,  frame = time_since_innoc_hours, cumulative = TRUE)) +
+	theme_classic() + ylab("Abundance (cells/mL)") + xlab("Time (hours)") +
+	theme(text = element_text(size=20, family = "Helvetica")) 
+library(gganimate)
+library(animation)
+ani.options(interval = 0.2, loop = 1)
+gganimate(exp_growth, interval = 0.2, filename = "Tetraselmis_experiment/figures/exponential_growth.mp4", title_frame = FALSE, ani.width = 600, ani.height = 400, loop = FALSE)
+
 
 all_densities <- bind_rows(TT5, TT6)
 all_densities2 <- bind_rows(TT4, TT6)
+
+
+write_csv(all_densities2, "Tetraselmis_experiment/data-processed/all_cell_densities.csv")
+
+
 all_densities2 %>% 
 	# filter(temp == 24) %>% 
 	ggplot(aes(x = time_since_innoc_hours, y = cell_density, color = variability)) + geom_point(alpha = 0.7) + 
@@ -175,7 +170,7 @@ all_growth <- all_densities2 %>%
 	ungroup() %>%
 	mutate(temp = as.numeric(temp)) %>%
 	mutate(growth_per_day = estimate*24) %>% 
-	mutate(error = std.error*24) %>% 
+	mutate(error = std.error*24) 
 	# filter(temp > 6) %>% 
 	ggplot(aes(x = temp, y = growth_per_day, color = variability)) + geom_point(size = 2, alpha = 0.5) +
 	geom_line() +
@@ -187,7 +182,7 @@ all_growth <- all_densities2 %>%
 
 
 
-extremes <- read.csv("Tetraselmis_experiment/data-processed/all_r_with0.csv")
+extremes <- read_csv("Tetraselmis_experiment/data-processed/all_r_with0.csv")
 extremes2 <- extremes %>% 
 	filter(temp == 0 | temp == 35) %>% 
 	filter(var == "constant temperature") %>% 
@@ -323,5 +318,88 @@ TTg <- TT2 %>%
 write_csv(TTg, "Tetraselmis_experiment/data-processed/TTg.csv")
 
 
+TT_raw_round2_extremes
 
-### June 14 to flowcam: 27V, 20V, 10C and 10V, 5V, 5C
+TT_raw_round2_extremes$start.time <- ymd_hms("2017-06-23 15:07:07 UTC")
+
+TT_raw_round2_extremes$time_since_innoc <- interval(TT_raw_round2_extremes$start.time, TT_raw_round2_extremes$start_time)
+
+
+growth_32 <- TT_raw_round2_extremes %>% 
+	mutate(time_since_innoc_days = time_since_innoc/ddays(1)) %>% 
+	mutate(time_since_innoc_hours = time_since_innoc/dhours(1)) %>% 
+	filter(temp == 32) %>% 
+	group_by(temp) %>% 
+	do(tidy(nls(cell_density ~ 800 * (1+a)^(time_since_innoc_hours),
+							data= .,  start=list(a=0.01),
+							control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
+	ungroup() %>% 
+	mutate(temp = as.numeric(temp)) %>%
+	mutate(growth_per_day = estimate*24) %>% 
+	mutate(error = std.error*24) 
+
+write_csv(growth_32, "Tetraselmis_experiment/data-processed/growth_32.csv")
+
+
+cells_extremes <- TT_raw_round2_extremes %>% 
+	mutate(time_since_innoc_days = time_since_innoc/ddays(1)) %>% 
+	mutate(time_since_innoc_hours = time_since_innoc/dhours(1))
+	
+write_csv(cells_extremes, "Tetraselmis_experiment/data-processed/cells_extremes.csv")
+
+
+### now get growth rates for 0
+
+TT_0$start.time <- ymd_hms("2017-03-18 16:17:46 UTC")
+
+TT_0$time_since_innoc <- interval(TT_0$start.time, TT_0$start_time)
+
+
+
+cells_0 <- TT_0 %>%
+	select(-variability) %>% 
+	mutate(time_since_innoc_days = time_since_innoc/ddays(1)) %>% 
+	mutate(time_since_innoc_hours = time_since_innoc/dhours(1))
+
+
+cells_0 %>%
+	group_by(temperature) %>% 
+		do(tidy(nls(cell_density ~ 800 * (1+a)^(time_since_innoc_hours),
+							data= .,  start=list(a=0.01),
+							control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
+	ungroup() %>%
+	mutate(temp = as.numeric(temperature)) %>%
+	mutate(growth_per_day = estimate*24) %>% 
+	mutate(error = std.error*24)
+
+cells_0 %>% 
+	filter(time_since_innoc_hours < 5) %>% 
+	summarise(mean_density = mean(cell_density))
+
+
+estimate_growth <- function(x, temperature) {
+	cells_0 %>% 
+		rename(temp = temperature) %>% 
+		filter(temp == temperature) %>% 
+		mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+		group_by(time_point) %>% 
+		sample_n(size = x, replace = FALSE) %>% 
+		group_by(temp) %>% 
+		do(tidy(nls(cell_density ~ 1000 * (1+a)^(time_since_innoc_hours),
+								data= .,  start=list(a=0.01),
+								control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
+		ungroup() %>%
+		mutate(temp = as.numeric(temp)) %>%
+		mutate(growth_per_day = estimate*24) %>% 
+		mutate(error = std.error*24)
+}
+
+
+samples_rep <- rep(1, 1000)
+growth_0 <- samples_rep %>% 
+	map_df(.f = estimate_growth, temperature = 0, .id = "run") 
+
+growth_0b <- growth_0 %>% 
+	distinct(growth_per_day, .keep_all = TRUE)
+
+write_csv(growth_0, "Tetraselmis_experiment/data-processed/growth_0_round2.csv")
