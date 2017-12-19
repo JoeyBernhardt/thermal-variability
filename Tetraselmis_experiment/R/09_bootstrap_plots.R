@@ -318,6 +318,7 @@ a <- p + geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = 
 	labs(y = expression ("Population growth rate"~day^-1)) +
 	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7)
 ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png", width = 5, height = 3)
+ggsave("Tetraselmis_experiment/figures/constant_tpc.png", width = 5, height = 3)
 
 
 
@@ -325,12 +326,13 @@ ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png",
 ## plot B
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
 b <- p + geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = ic[60], alpha = 0.5, data = variable_predictions_points) +
-	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
-	theme_bw() +labs(y = expression ("Population growth rate"~day^-1))+
-	stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
-	geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +
-	geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, width = 0.1, color = ic[10]) +
-	geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "black", size = 2) +
+# 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
+# 	theme_bw() +
+#   labs(y = expression ("Population growth rate"~day^-1))+
+# 	stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
+# 	geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +
+# 	geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, width = 0.1, color = ic[10]) +
+# 	geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "black", size = 2) +
 	xlab("") + 
 	theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 				panel.background = element_blank(),
@@ -342,7 +344,8 @@ b <- p + geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growt
 	geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
 	geom_vline(xintercept = 21.41687, color = ic[10], linetype = "dashed", alpha = 0.7)
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data.pdf")
-
+ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band.png", width = 5, height = 3)
+ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band_points.png", width = 5, height = 3)
 
 ## plot C
 
@@ -368,7 +371,9 @@ c <- p +
 	geom_hline(yintercept = 0, color= "grey", linetype = "dotted") +
 	geom_vline(xintercept = 16.96, color = "grey", linetype = "dotted") +
 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
-	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5) 
+	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5)
+ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_together.png", width = 5, height = 3)
+
 	
 	
 
