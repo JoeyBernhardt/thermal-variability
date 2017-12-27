@@ -150,3 +150,6 @@ fits %>%
     geom_vline(xintercept = 20.27451) +
     geom_vline(xintercept = 21.46802) +
     geom_vline(xintercept = 22.52605)
+  
+  all_predictions %>% 
+    ggplot(aes(x = x, y = predictions)) + geom_point()
