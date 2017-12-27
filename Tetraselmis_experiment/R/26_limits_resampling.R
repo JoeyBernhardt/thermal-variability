@@ -42,7 +42,7 @@ fits_v <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 ## split up the fits df by curve id
-fits_split <- fits_v %>% 
+fits_split <- fits %>% 
 	filter(a.list >0) %>% 
 	split(.$curve.id.list)
 
@@ -62,7 +62,7 @@ all_predictions %>%
 ## 31.90, -4.47
 
 all_predictions %>% 
-	group_by(x) %>% View
+	group_by(x) %>% 
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) %>%
@@ -83,3 +83,50 @@ fits_v <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_
 fits_c <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
 
 
+### or do this by taking the tmax associated with the highest and lowest 95% CI on Topt
+
+fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+
+fits %>% 
+  mutate(q2.5=quantile(topt.list, probs=0.025),
+            q97.5=quantile(topt.list, probs=0.975),
+         q50=quantile(topt.list, probs=0.50),
+            mean = mean(topt.list),
+         median = median(topt.list)) %>% 
+  filter(topt.list > 22.52) %>% 
+  filter(topt.list <22.54) %>% View
+  
+### 521 is the lower limit curve, curve.id 81 is the upper limit curve
+
+## ok so now let's get the tmaxes on these 
+
+
+fits %>% 
+  filter(curve.id.list == 81) %>% View
+
+
+fits %>% 
+  filter(curve.id.list == 521) %>% View
+
+  x <- seq(-10, 38, 0.01)
+  predictions <- fits$a.list[fits$curve.id.list==521]*exp(fits$b.list[fits$curve.id.list==521]*x)*(1-((x-fits$z.list[fits$curve.id.list==521])/(fits$w.list[fits$curve.id.list==521]/2))^2)
+  upper_curve <- data.frame(x, predictions)
+  
+  upper_curve %>% 
+    filter(x < 5) %>% View
+  
+  ##tmax is 30.36, tmin is 0.44
+  
+  
+  x <- seq(-20, 38, 0.01)
+  lower_predictions <- fits$a.list[fits$curve.id.list==81]*exp(fits$b.list[fits$curve.id.list==81]*x)*(1-((x-fits$z.list[fits$curve.id.list==81])/(fits$w.list[fits$curve.id.list==81]/2))^2)
+  lower_curve <- data.frame(x, lower_predictions)
+  
+  lower_curve %>% 
+    filter(x < 5) %>% View
+## tmax is 31.08
+
+  
+  lower_curve %>% 
+    ggplot(aes(x = x, y = lower_predictions)) + geom_line() + xlim(-10, 35) + ylim(-0.05, 2) +
+    geom_line(aes(x = x, y = predictions), data = upper_curve)
