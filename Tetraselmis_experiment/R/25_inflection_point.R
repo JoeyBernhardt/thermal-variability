@@ -1,5 +1,6 @@
 
 library(tidyverse)
+library(bbmle)
 
 fits_c <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
 
@@ -209,6 +210,8 @@ variable_upper2 %>%
 	}
 	
 	fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
+	
+	write_csv(fits, "Tetraselmis_experiment/data-processed/upper_lower_curve_constant_fits.csv")
 	
 	curve_lower<-function(x){
 	  res<-fits$a.list[2]*exp(fits$b.list[2]*x)*(1-((x-fits$z.list[2])/(fits$w.list[2]/2))^2)

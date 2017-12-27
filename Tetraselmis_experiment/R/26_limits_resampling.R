@@ -1,13 +1,13 @@
 
 ### get the upper and lower 95% on Tmax
 
-fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
+fits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 ## split up the fits df by curve id
 fits_split <- fits %>% 
-	filter(a.list > 0, z.list > 0) %>%
+	# filter(a.list > 0, z.list > 0) %>%
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {
@@ -30,6 +30,8 @@ all_predictions %>%
 	xlim(-10, 0) + ylim(-0.01, 0.01)
 ## tmax = 31.25, 32.92
 ##tmin = -1.25, 
+
+
 
 
 
@@ -61,12 +63,16 @@ all_predictions %>%
 
 ## 31.90, -4.47
 
-all_predictions %>% 
+preds <- all_predictions %>% 
 	group_by(x) %>% 
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
-						mean = mean(predictions)) %>%
-	filter(x > 28) %>% View
+						mean = mean(predictions))
+
+%>%
+  ggplot(aes(x = x, y = q2.5)) + geom_point() + geom_hline(yintercept = 0) +
+  geom_
+  xlim(30.5, 34)
 
 
 ### tmax = 28.66, 32.77
@@ -96,19 +102,23 @@ fits %>%
   filter(topt.list > 21.468) %>% 
   filter(topt.list <21.4684) %>% View
   
-### 521 is the lower limit curve, curve.id 81 is the upper limit curve
+### 521 is the lower limit curve, curve.id 81 is the upper limit curve, curve.id 773 is the median
 
 ## ok so now let's get the tmaxes on these 
 
 
-fits %>% 
+fits_constant %>% 
   filter(curve.id.list == 81) %>% View
 
-
-fits %>% 
+fits_constant %>% 
   filter(curve.id.list == 521) %>% View
-fits %>% 
+fits_constant %>% 
   filter(curve.id.list == 773) %>% View
+
+
+
+
+
 
   x <- seq(-10, 38, 0.01)
   predictions <- fits$a.list[fits$curve.id.list==521]*exp(fits$b.list[fits$curve.id.list==521]*x)*(1-((x-fits$z.list[fits$curve.id.list==521])/(fits$w.list[fits$curve.id.list==521]/2))^2)
@@ -142,6 +152,9 @@ fits %>%
     geom_vline(xintercept = 21.46802) +
     geom_vline(xintercept = 22.52605)
   
+  fits$w.list[fits$curve.id.list == 81]
+  fits$w.list[fits$curve.id.list == 773]
+  fits$w.list[fits$curve.id.list == 521]
   
   
   fits %>% 
