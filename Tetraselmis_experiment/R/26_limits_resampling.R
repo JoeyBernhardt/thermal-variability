@@ -93,8 +93,8 @@ fits %>%
          q50=quantile(topt.list, probs=0.50),
             mean = mean(topt.list),
          median = median(topt.list)) %>% 
-  filter(topt.list > 22.52) %>% 
-  filter(topt.list <22.54) %>% View
+  filter(topt.list > 21.468) %>% 
+  filter(topt.list <21.4684) %>% View
   
 ### 521 is the lower limit curve, curve.id 81 is the upper limit curve
 
@@ -107,10 +107,17 @@ fits %>%
 
 fits %>% 
   filter(curve.id.list == 521) %>% View
+fits %>% 
+  filter(curve.id.list == 773) %>% View
 
   x <- seq(-10, 38, 0.01)
   predictions <- fits$a.list[fits$curve.id.list==521]*exp(fits$b.list[fits$curve.id.list==521]*x)*(1-((x-fits$z.list[fits$curve.id.list==521])/(fits$w.list[fits$curve.id.list==521]/2))^2)
   upper_curve <- data.frame(x, predictions)
+  
+  
+  x <- seq(-10, 38, 0.01)
+  predictions <- fits$a.list[fits$curve.id.list==773]*exp(fits$b.list[fits$curve.id.list==773]*x)*(1-((x-fits$z.list[fits$curve.id.list==773])/(fits$w.list[fits$curve.id.list==773]/2))^2)
+  mid_curve <- data.frame(x, predictions)
   
   upper_curve %>% 
     filter(x < 5) %>% View
@@ -129,4 +136,17 @@ fits %>%
   
   lower_curve %>% 
     ggplot(aes(x = x, y = lower_predictions)) + geom_line() + xlim(-10, 35) + ylim(-0.05, 2) +
-    geom_line(aes(x = x, y = predictions), data = upper_curve)
+    geom_line(aes(x = x, y = predictions), data = upper_curve) +
+    geom_line(aes(x = x, y = predictions), data = mid_curve, color = "red") +
+    geom_vline(xintercept = 20.27451) +
+    geom_vline(xintercept = 21.46802) +
+    geom_vline(xintercept = 22.52605)
+  
+  
+  
+  fits %>% 
+    filter(topt.list < 30) %>% 
+    ggplot(aes(x = topt.list)) + geom_histogram() +
+    geom_vline(xintercept = 20.27451) +
+    geom_vline(xintercept = 21.46802) +
+    geom_vline(xintercept = 22.52605)
