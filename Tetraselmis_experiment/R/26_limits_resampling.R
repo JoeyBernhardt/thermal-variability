@@ -1,3 +1,4 @@
+library(tidyverse)
 
 ### get the upper and lower 95% on Tmax
 
@@ -69,10 +70,6 @@ preds <- all_predictions %>%
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions))
 
-%>%
-  ggplot(aes(x = x, y = q2.5)) + geom_point() + geom_hline(yintercept = 0) +
-  geom_
-  xlim(30.5, 34)
 
 
 ### tmax = 28.66, 32.77
@@ -106,9 +103,9 @@ fits %>%
 
 ## ok so now let's get the tmaxes on these 
 
-
+### here are the 2.5, 50 and 97.5% quantile curves, used to get the 95% CI on the parameter estimates. 
 fits_constant %>% 
-  filter(curve.id.list == 81) %>% View
+  filter(curve.id.list %in% c(81, 521, 773)) %>% View
 
 fits_constant %>% 
   filter(curve.id.list == 521) %>% View
