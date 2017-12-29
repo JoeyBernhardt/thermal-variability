@@ -1,4 +1,5 @@
 library(tidyverse)
+library(cowplot)
 
 ### get the upper and lower 95% on Tmax
 
@@ -32,9 +33,22 @@ all_predictions %>%
 ## tmax = 31.25, 32.92
 ##tmin = -1.25, 
 
+### find the upper and lower boundary curves for the constant conditions
+
+fits_constant %>% 
+  mutate(q2.5=quantile(topt.list, probs=0.025),
+         q97.5=quantile(topt.list, probs=0.975),
+         q50=quantile(topt.list, probs=0.50),
+         mean = mean(topt.list),
+         median = median(topt.list)) %>% 
+  filter(topt.list > 24.57) %>% 
+  filter(topt.list <24.575) %>% View
+
+## ok curve 695 is the lower 2.5, curve 82 is the upper 97.5, 468 is the middle curve. 
 
 
-
+fits_constant %>% 
+  filter(curve.id.list %in% c(695, 82, 468)) %>% View
 
 
 ### now for variable
@@ -60,7 +74,8 @@ all_predictions <- fits_split %>%
 	map_df(prediction_function) 
 
 all_predictions %>% 
-	filter(x < 0) %>% View
+	filter(x < 0) %>% 
+  ggplot(aes(x = x, y = preditions) + geom_point()
 
 ## 31.90, -4.47
 
@@ -113,7 +128,7 @@ fits_constant %>%
   filter(curve.id.list == 773) %>% View
 
 
-
+fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
 
 
 
@@ -141,13 +156,24 @@ fits_constant %>%
 ## tmax is 31.08
 
   
+  growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
+  fits_v <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+  
+  curve_variable_resamp<-function(x){
+    res<-fits_v$a.list[1]*exp(fits_v$b.list[1]*x)*(1-((x-fits_v$z.list[1])/(fits_v$w.list[1]/2))^2)
+    res
+  }
+  
+  
   lower_curve %>% 
     ggplot(aes(x = x, y = lower_predictions)) + geom_line() + xlim(-10, 35) + ylim(-0.05, 2) +
     geom_line(aes(x = x, y = predictions), data = upper_curve) +
     geom_line(aes(x = x, y = predictions), data = mid_curve, color = "red") +
     geom_vline(xintercept = 20.27451) +
     geom_vline(xintercept = 21.46802) +
-    geom_vline(xintercept = 22.52605)
+    geom_vline(xintercept = 22.52605) +
+    geom_point(aes(x = temp, y = growth_per_day), data = growth_all_v) +
+    stat_function(fun = curve_variable_resamp, color = "blue", size = 2)
   
   fits$w.list[fits$curve.id.list == 81]
   fits$w.list[fits$curve.id.list == 773]
