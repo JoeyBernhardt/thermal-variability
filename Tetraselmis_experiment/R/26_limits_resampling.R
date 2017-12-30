@@ -75,7 +75,7 @@ all_predictions <- fits_split %>%
 
 all_predictions %>% 
 	filter(x < 0) %>% 
-  ggplot(aes(x = x, y = preditions) + geom_point()
+  ggplot(aes(x = x, y = predictions) + geom_point()
 
 ## 31.90, -4.47
 
