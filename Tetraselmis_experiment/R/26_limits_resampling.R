@@ -55,10 +55,12 @@ p +
   
 mean(w.list, data = fits_variable)
 mean(fits_variable$w.list)
-?mean
 
+### find the limits on w
 fv2 <- fits_variable %>% 
-  filter(z.list < 30, z.list > 0)
+  filter(z.list < 30, z.list > 10)
+fv2 <- fits_constant %>% 
+  filter(z.list < 30, z.list > 10)
 
 quantile(fv2$w.list, probs=0.025)
 quantile(fv2$w.list, probs=0.975)
