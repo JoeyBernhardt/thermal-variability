@@ -9,12 +9,21 @@ fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resam
 ## that will get rid of the super big, and not realistic w's
 ## ok need to write a function that will find out the tmins and tmaxes and the w's since it looks like the ones
 ## estimated aren't right? not sure what's going on here. 
+## maybe solution would be to hardcode in a zero growth rate at -1.8C?
 
 ## get the limits on w, t.opt
 fits_v <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv")
 fits_v1 <- fits_variable %>% 
-  filter(curve.id.list == 750)
+  filter(z.list < 30, z.list > 0) %>% 
+  filter(curve.id.list == 11)
 
+
+x <- seq(-80, 88, 0.01)
+predictions <- fits_v1$a.list[1]*exp(fits_v1$b.list[1]*x)*(1-((x-fits_v1$z.list[1])/((fits_v1$w.list[1])/2))^2)
+preds <- data.frame(x, predictions)
+
+predictions_variable <- fits_v$a.list[1]*exp(fits_v$b.list[1]*x)*(1-((x-fits_v$z.list[1])/(fits_v$w.list[1]/2))^2)
+preds_variable <- data.frame(x, predictions_variable)
 curve_variable_resamp1<-function(x){
   res<-fits_v1$a.list[1]*exp(fits_v1$b.list[1]*x)*(1-((x-fits_v1$z.list[1])/((fits_v1$w.list[1])/2))^2)
   res
@@ -30,9 +39,11 @@ p +
   # 	theme_bw() +
   #   labs(y = expression ("Population growth rate"~day^-1))+
   stat_function(fun = curve_variable_resamp1, color = "red", size = 1)+
-  stat_function(fun = curve_variable_resamp, color = "black", size = 1)+
-  geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +xlim(-20, 30) +
-  geom_hline(yintercept = 0) +ylim(-1, 1.5) + geom_vline(xintercept = fits_v1$topt.list)
+  stat_function(fun = curve_variable_resamp, color = "black", size = 1) +
+  geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +xlim(-80, 80) +
+  geom_hline(yintercept = 0) +ylim(-1, 1.5) + geom_vline(xintercept = fits_v1$topt.list) +
+  geom_line(aes(x = x, y = predictions), data = preds, color = "green") +
+  geom_line(aes(x = x, y = predictions_variable), data = preds_variable, color = "pink")
 
 
   fits_variable %>% 
@@ -46,7 +57,11 @@ mean(w.list, data = fits_variable)
 mean(fits_variable$w.list)
 ?mean
 
-quantile(fits_variable$w.list, probs=0.025)
+fv2 <- fits_variable %>% 
+  filter(z.list < 30, z.list > 0)
+
+quantile(fv2$w.list, probs=0.025)
+quantile(fv2$w.list, probs=0.975)
 quantile(w.list, probs=0.975, data = fits_variable)
 quantile(fits_variable$w.list, probs=0.975)
 
@@ -63,7 +78,7 @@ fits_constant %>%
   geom_vline(xintercept = quantile(w.list, probs=0.025, data = fits_variable), color = "red") +
   geom_vline(xintercept = quantile(w.list, probs=0.975, data = fits_variable), color = "red")
 
-mean(w.list, data = fits_constant)
+mean(fits_constant$w.list, data = fits_constant)
 quantile(w.list, probs=0.025, data = fits_constant)
 quantile(w.list, probs=0.975, data = fits_constant)
 
