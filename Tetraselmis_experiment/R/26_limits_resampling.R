@@ -1,9 +1,90 @@
 library(tidyverse)
 library(cowplot)
 
-### get the upper and lower 95% on Tmax
 
 fits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
+fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+
+## what we need to do here is remove the fits for which the tmin is super low.
+## that will get rid of the super big, and not realistic w's
+## ok need to write a function that will find out the tmins and tmaxes and the w's since it looks like the ones
+## estimated aren't right? not sure what's going on here. 
+
+## get the limits on w, t.opt
+fits_v <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv")
+fits_v1 <- fits_variable %>% 
+  filter(curve.id.list == 750)
+
+curve_variable_resamp1<-function(x){
+  res<-fits_v1$a.list[1]*exp(fits_v1$b.list[1]*x)*(1-((x-fits_v1$z.list[1])/((fits_v1$w.list[1])/2))^2)
+  res
+}
+curve_variable_resamp<-function(x){
+  res<-fits_v$a.list[1]*exp(fits_v$b.list[1]*x)*(1-((x-fits_v$z.list[1])/(fits_v$w.list[1]/2))^2)
+  res
+}
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
+p + 
+  # geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = ic[60], alpha = 0.5, data = variable_predictions_points) +
+  # 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
+  # 	theme_bw() +
+  #   labs(y = expression ("Population growth rate"~day^-1))+
+  stat_function(fun = curve_variable_resamp1, color = "red", size = 1)+
+  stat_function(fun = curve_variable_resamp, color = "black", size = 1)+
+  geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +xlim(-20, 30) +
+  geom_hline(yintercept = 0) +ylim(-1, 1.5) + geom_vline(xintercept = fits_v1$topt.list)
+
+
+  fits_variable %>% 
+  ggplot(aes(x = w.list)) + geom_density() +
+  geom_vline(xintercept = 0) +
+  geom_vline(xintercept = quantile(fits_variable$w.list, probs=0.025), color = "red") +
+  geom_vline(xintercept = quantile(fits_variable$w.list, probs=0.975), color = "red") +
+  geom_vline(xintercept = quantile(w.list, probs=0.975, data = fits_variable), color = "blue")
+  
+mean(w.list, data = fits_variable)
+mean(fits_variable$w.list)
+?mean
+
+quantile(fits_variable$w.list, probs=0.025)
+quantile(w.list, probs=0.975, data = fits_variable)
+quantile(fits_variable$w.list, probs=0.975)
+
+?quantile
+
+fits_variable %>%
+  summarise(q2.5=quantile(w.list, probs=0.025),
+            q97.5=quantile(w.list, probs=0.975),
+            mean = mean(w.list)) %>% View
+
+fits_constant %>% 
+  ggplot(aes(x = w.list)) + geom_histogram() +
+  geom_vline(xintercept = 0) +
+  geom_vline(xintercept = quantile(w.list, probs=0.025, data = fits_variable), color = "red") +
+  geom_vline(xintercept = quantile(w.list, probs=0.975, data = fits_variable), color = "red")
+
+mean(w.list, data = fits_constant)
+quantile(w.list, probs=0.025, data = fits_constant)
+quantile(w.list, probs=0.975, data = fits_constant)
+
+
+
+fits_constant %>%
+  summarise(q2.5=quantile(w.list, probs=0.025),
+            q97.5=quantile(w.list, probs=0.975),
+            mean = mean(w.list)) %>% View
+fits_variable %>%
+  filter(rsqr.list > 0.99) %>% View
+  summarise(q2.5=quantile(w.list, probs=0.025),
+            q97.5=quantile(w.list, probs=0.975),
+            mean = mean(w.list)) %>% View
+
+
+  
+
+
+### get the upper and lower 95% on Tmax
+
 
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
@@ -173,9 +254,11 @@ fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resam
     geom_vline(xintercept = 21.46802) +
     geom_vline(xintercept = 22.52605) +
     geom_point(aes(x = temp, y = growth_per_day), data = growth_all_v) +
-    stat_function(fun = curve_variable_resamp, color = "blue", size = 2)
+    stat_function(fun = curve_variable_resamp, color = "blue", size = 2) +
+    stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
+    geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "yellow", size = 2) 
   
-  fits$w.list[fits$curve.id.list == 81]
+    fits$w.list[fits$curve.id.list == 81]
   fits$w.list[fits$curve.id.list == 773]
   fits$w.list[fits$curve.id.list == 521]
   

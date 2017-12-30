@@ -329,10 +329,10 @@ b <- p + geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growt
 # 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
 # 	theme_bw() +
 #   labs(y = expression ("Population growth rate"~day^-1))+
-# 	stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
-# 	geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +
-# 	geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, width = 0.1, color = ic[10]) +
-# 	geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "black", size = 2) +
+stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
+geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +
+geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, width = 0.1, color = ic[10]) +
+geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "black", size = 2) +
 	xlab("") + 
 	theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
 				panel.background = element_blank(),
