@@ -4,9 +4,9 @@ fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resam
 
 ### goal: find the tmin and tmaxes of the bootstrapped curves
 
-breadth_function <- function(data) {
+breadth_function <- function(data, increment) {
   all <- data
-  x <- seq(-5, 55, by = 0.1)
+  x <- seq(-5, 55, by = increment)
   tpc<-function(x){
     res<-all$a.list[1]*exp(all$b.list[1]*x)*(1-((x-all$z.list[1])/(all$w.list[1]/2))^2)
     res
@@ -47,3 +47,13 @@ curves_above_minus5 <- results_above_minus5$curve.id.list
 
 ### now re-do above process, but with smaller increments
 
+all_split_above <- fits_variable %>% 
+  filter(curve.id.list %in% curves_above_minus5) %>% 
+  split(.$curve.id.list)
+
+
+
+results_breadth_curves_above_minus5 <- all_split_above %>% 
+  map_df(breadth_function, .id = "curve_id", increment = 0.001)
+
+write_csv(results_breadth_curves_above_minus5, "Tetraselmis_experiment/results_breadth_curves_above_minus5.csv")
