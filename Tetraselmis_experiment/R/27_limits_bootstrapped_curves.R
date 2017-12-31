@@ -57,3 +57,27 @@ results_breadth_curves_above_minus5 <- all_split_above %>%
   map_df(breadth_function, .id = "curve_id", increment = 0.001)
 
 write_csv(results_breadth_curves_above_minus5, "Tetraselmis_experiment/results_breadth_curves_above_minus5.csv")
+
+
+results_breadth_curves_above_minus5 %>% 
+  filter(temperature_max > 0) %>% 
+  summarise(q2.5=quantile(temperature_max, probs=0.025),
+            q97.5=quantile(temperature_max, probs=0.975),
+            mean = mean(temperature_max)) %>% View
+
+results_breadth_curves_above_minus5 %>% 
+  filter(temperature_max > 0) %>% 
+  summarise(q2.5=quantile(temperature_min, probs=0.025),
+            q97.5=quantile(temperature_min, probs=0.975),
+            mean = mean(temperature_min)) %>% View
+
+
+results_breadth_curves_above_minus5 %>% 
+  filter(temperature_max > 0) %>% 
+  mutate(breadth = temperature_max - temperature_min) %>% 
+  summarise(q2.5=quantile(breadth, probs=0.025),
+            q97.5=quantile(breadth, probs=0.975),
+            mean = mean(breadth)) %>% View
+
+  
+
