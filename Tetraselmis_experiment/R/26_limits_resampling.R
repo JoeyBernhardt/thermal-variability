@@ -15,12 +15,13 @@ fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resam
 fits_v <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv")
 fits_v1 <- fits_variable %>% 
   filter(z.list < 30, z.list > 0) %>% 
-  filter(curve.id.list == 11)
+  filter(curve.id.list == 12)
 
 
-x <- seq(-80, 88, 0.01)
+x <- seq(-10, 55, 0.01)
 predictions <- fits_v1$a.list[1]*exp(fits_v1$b.list[1]*x)*(1-((x-fits_v1$z.list[1])/((fits_v1$w.list[1])/2))^2)
 preds <- data.frame(x, predictions)
+
 
 predictions_variable <- fits_v$a.list[1]*exp(fits_v$b.list[1]*x)*(1-((x-fits_v$z.list[1])/(fits_v$w.list[1]/2))^2)
 preds_variable <- data.frame(x, predictions_variable)
@@ -38,12 +39,14 @@ p +
   # 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
   # 	theme_bw() +
   #   labs(y = expression ("Population growth rate"~day^-1))+
-  stat_function(fun = curve_variable_resamp1, color = "red", size = 1)+
-  stat_function(fun = curve_variable_resamp, color = "black", size = 1) +
-  geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +xlim(-80, 80) +
-  geom_hline(yintercept = 0) +ylim(-1, 1.5) + geom_vline(xintercept = fits_v1$topt.list) +
-  geom_line(aes(x = x, y = predictions), data = preds, color = "green") +
-  geom_line(aes(x = x, y = predictions_variable), data = preds_variable, color = "pink")
+  # stat_function(fun = curve_variable_resamp1, color = "red", size = 1)+
+  # stat_function(fun = curve_variable_resamp, color = "black", size = 1) +
+  # geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = "yellow", size = 2) +
+  xlim(-7.35, 31) +
+  geom_hline(yintercept = 0) +ylim(-0.05, 1.5) + geom_vline(xintercept = fits_v1$topt.list) +
+  geom_line(aes(x = x, y = predictions), data = preds, color = "green") 
+
+  # geom_line(aes(x = x, y = predictions_variable), data = preds_variable, color = "pink")
 
 
   fits_variable %>% 
