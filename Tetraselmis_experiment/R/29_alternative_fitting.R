@@ -98,7 +98,7 @@ best_mod <- left_join(cf3, aics, by = "id") %>%
   
   
 ### plot it!
-curveid <- 164  
+curveid <- 1224  
   
   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
   p + stat_function(fun = function(x) nbcurve(x, cf3$z[cf3$id == curveid], cf3$w[cf3$id == curveid], cf3$a[cf3$id == curveid], cf3$b[cf3$id == curveid]), size = 1) +
@@ -116,8 +116,13 @@ rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.r
   opt<-optinfo$par[[1]]
   maxgrowth<- -optinfo$value
   
- params_constant <- data.frame(opt, maxgrowth, best_mod)
- params_variable <- data.frame(opt, maxgrowth, best_mod)
+ params_constant <- data.frame(opt, maxgrowth, best_mod) %>% 
+   mutate(treatment = "constant")
+ params_variable <- data.frame(opt, maxgrowth, best_mod) 
  
- bind_rows(params_constant, params_variable) %>% View
+ params_variable <- params_variable %>% 
+   mutate(treatment = "variable")
+ 
+ all_params_above_freezing <- bind_rows(params_constant, params_variable) 
+ write_csv(all_params_above_freezing, "Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
  

@@ -316,7 +316,8 @@ a <- p + geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = 
 	theme(text = element_text(size=14)) +
 	geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
 	labs(y = expression ("Population growth rate"~day^-1)) +
-	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7)
+	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7) +
+  stat_function(fun = function(x) nbcurve(x, cf3$z[cf3$id == curveid], cf3$w[cf3$id == curveid], cf3$a[cf3$id == curveid], cf3$b[cf3$id == curveid]), size = 1)
 ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png", width = 5, height = 3)
 ggsave("Tetraselmis_experiment/figures/constant_tpc.png", width = 5, height = 3)
 
