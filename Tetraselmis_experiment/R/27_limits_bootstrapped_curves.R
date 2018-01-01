@@ -56,7 +56,7 @@ all_split_above <- fits_variable %>%
 results_breadth_curves_above_minus5 <- all_split_above %>% 
   map_df(breadth_function, .id = "curve_id", increment = 0.001)
 
-write_csv(results_breadth_curves_above_minus5, "Tetraselmis_experiment/results_breadth_curves_above_minus5.csv")
+write_csv(results_breadth_curves_above_minus5, "Tetraselmis_experiment/data-processed/results_breadth_curves_above_minus5.csv")
 
 
 results_breadth_curves_above_minus5 %>% 
