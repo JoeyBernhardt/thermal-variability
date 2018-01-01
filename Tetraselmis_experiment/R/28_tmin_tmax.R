@@ -2,55 +2,69 @@
 ### Find tmin and tmax
 library(rootSolve)
 
-fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
-for (i in 1:length(curve.id.list)){
-  print(i)
-  nbcurve.tmax<-function(x){
-    nb<-nbcurve(x,fits$z.list[i],fits$w.list[i],fits$a.list[i],fits$b.list[i])
-    nb
-  }
-  fits$tmax[i]<-uniroot.all(nbcurve.tmax,c(fits$topt.list[i],150))[1]
-  fits$tmin[i]<-uniroot.all(nbcurve.tmax,c(-2,fits$topt.list[i]))[1] 
+fits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
+
+fits2 <- fits_constant %>% 
+  rename(z = z.list,
+         a = a.list, 
+         b = b.list, 
+         w = w.list)
+
+nbcurve<-function(temp,z,w,a,b){
+  res<-a*exp(b*temp)*(1-((temp-z)/(w/2))^2)
+  res
 }
 
+cf4 <- fits2 %>%
+  group_by(curve.id.list) %>% 
+  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-2,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-2,topt.list))))
 
 
-fits_real_constant <- fits %>% 
-  filter(!is.na(tmin)) 
+
+fits_real_constant <- cf4 %>% 
+  filter(!is.na(tmin)) %>% 
+  ungroup()
 
 
 fits_real_constant %>% 
-  summarise(q2.5=quantile(w.list, probs=0.025),
-            q97.5=quantile(w.list, probs=0.975),
-            mean = mean(w.list)) %>% View
+  summarise(q2.5=quantile(w, probs=0.025),
+            q97.5=quantile(w, probs=0.975),
+            mean = mean(w)) %>% View
 
 
 ### Now for the variable curves
 
 
-fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
-for (i in 1:length(curve.id.list)){
-  print(i)
-  nbcurve.tmax<-function(x){
-    nb<-nbcurve(x,fits$z.list[i],fits$w.list[i],fits$a.list[i],fits$b.list[i])
-    nb
-  }
-  fits$tmax[i]<-uniroot.all(nbcurve.tmax,c(fits$topt.list[i],150))[1]
-  fits$tmin[i]<-uniroot.all(nbcurve.tmax,c(-2,fits$topt.list[i]))[1] 
-}
+fits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+
+fits3 <- fits_variable %>% 
+  rename(z = z.list,
+         a = a.list, 
+         b = b.list, 
+         w = w.list)
 
 
+cf5 <- fits3 %>%
+  group_by(curve.id.list) %>% 
+  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-2,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-2,topt.list))))
 
-fits_real_variable <- fits %>% 
-  filter(!is.na(tmin)) 
 
+fits_real_variable <- cf5 %>% 
+  filter(!is.na(tmin)) %>% 
+  ungroup()
 
 fits_real_variable %>% 
-  summarise(q2.5=quantile(w.list, probs=0.025),
-            q97.5=quantile(w.list, probs=0.975),
-            mean = mean(w.list)) %>% View
+  summarise(q2.5=quantile(w, probs=0.025),
+            q97.5=quantile(w, probs=0.975),
+            mean = mean(w)) %>% View
 
 fits_real_variable %>% 
-  mutate(breadth = tmax - tmin) %>%
+  mutate(breadth = tmax - tmin) %>% View
   
 
