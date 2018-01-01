@@ -10,7 +10,7 @@ library(readr)
 growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
 growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
 
-dat.full <- growth_all_v %>%
+dat.full <- growth_all %>%
 	group_by(temp) %>% 
 	summarise(growth.rate = mean(growth_per_day)) %>% 
 	rename(temperature = temp) %>% 
