@@ -325,8 +325,9 @@ ggsave("Tetraselmis_experiment/figures/constant_tpc.png", width = 5, height = 3)
 
 ## plot B
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
-b <- p + geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = ic[60], alpha = 0.5, data = variable_predictions_points) +
-# 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
+b <- p + 
+geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = ic[60], alpha = 0.5, data = variable_predictions_points) +
+geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
 # 	theme_bw() +
 #   labs(y = expression ("Population growth rate"~day^-1))+
 stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
@@ -338,8 +339,10 @@ geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "bla
 				panel.background = element_blank(),
 				axis.line = element_line(color="black"),
 				panel.border = element_rect(colour = "black", fill=NA, size=1)) +
-	ylim(-0.5, 1.8) +
-	theme_classic() + xlim(0, 32) +
+  coord_cartesian(ylim = c(-0.5, 1.8), xlim= c(0, 32)) +
+	# ylim(-0.5, 1.8) +
+	theme_classic() +
+  # xlim(0, 32) +
 	theme(text = element_text(size=14)) +
 	geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
 	geom_vline(xintercept = 21.41687, color = ic[10], linetype = "dashed", alpha = 0.7)
@@ -364,8 +367,10 @@ c <- p +
 	 			panel.background = element_blank(),
 	 			axis.line = element_line(color="black"),
 				panel.border = element_rect(colour = "black", fill=NA, size=1)) +
-	ylim(-0.5, 1.8) +
-	theme_classic() + xlim(0, 32) +
+  coord_cartesian(ylim = c(-0.5, 1.8), xlim= c(0, 32)) +
+	# ylim(-0.5, 1.8) +
+	theme_classic() +
+  # xlim(0, 32) +
 	theme(text = element_text(size=14)) +
 	labs(y = expression ("Population growth rate"~day^-1))+
 	geom_hline(yintercept = 0, color= "grey", linetype = "dotted") +
