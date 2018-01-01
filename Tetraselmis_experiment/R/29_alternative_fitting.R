@@ -9,7 +9,7 @@ library(broom)
 growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
 growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
 
-dat.full <- growth_all_v %>%
+dat.full <- growth_all %>%
   group_by(temp) %>% 
   summarise(growth.rate = mean(growth_per_day)) %>% 
   rename(temperature = temp) %>% 
@@ -51,7 +51,7 @@ n.list<-rep(NA, length(curve.id.list))				#Number of growth rate measurements us
   ## This loop fits the model using a range of different starting guesses. We choose the best one using AIC. This helps find good solutions even if there are
   # convergence problems.
   # Starting estimates for parameters 'a' and 'b' use a plausible range but with broadly spaced estimates to speed up fitting. 
-  avals<-seq(-0.2,1.2,0.1)		
+  avals<-seq(-0.2,1.2,0.01)		
   bvals<-seq(-0.2,0.3,0.05)
   mod.list<-list()
   AIC.list<-c()
@@ -82,25 +82,27 @@ coeffs <- mod.list %>%
 
 ## now get the tmin and tmaxes
 cf3 <- coeffs %>% 
-   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(11,150)))==0, NA,
-                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(11,150)))) %>% 
-   mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(2,10)))==0, NA,
-                        uniroot.all(function(x) nbcurve(x, z, w, a, b),c(2,10))))
+   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(20,50)))==0, NA,
+                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(20,50)))) %>% 
+   mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-2,10)))==0, NA,
+                        uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-2,10))))
 
-
-cf3 %>% 
-  filter(a > 0) %>% View
-
-cf3$tmax_alt <-cf3$z +(cf3$w/2)
-cf3$tmin_alt <-cf3$z -(cf3$w/2)
 
 aics <- as.data.frame(AIC.list) %>% 
   mutate(id = rownames(.))
 
-best_mod <- left_join(cf3, aics, by = "id") %>% View
-  filter(!is.na(tmin)) %>% View
+best_mod <- left_join(cf3, aics, by = "id") %>% 
+  filter(!is.na(tmin)) %>% 
   ungroup() %>% 
   dplyr::top_n(., n = -1, wt = AIC.list)
+  
+  
+### plot it!
+curveid <- 164  
+  
+  p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+  p + stat_function(fun = function(x) nbcurve(x, cf3$z[cf3$id == curveid], cf3$w[cf3$id == curveid], cf3$a[cf3$id == curveid], cf3$b[cf3$id == curveid]), size = 1) +
+    ylim(-15, 3) + xlim(-15, 55)
   
 expected <-nbcurve(dat$temperature,best_mod$z,best_mod$w,best_mod$a,best_mod$b)
 rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.rate))^2)  
@@ -115,4 +117,7 @@ rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.r
   maxgrowth<- -optinfo$value
   
  params_constant <- data.frame(opt, maxgrowth, best_mod)
+ params_variable <- data.frame(opt, maxgrowth, best_mod)
+ 
+ bind_rows(params_constant, params_variable) %>% View
  
