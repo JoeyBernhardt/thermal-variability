@@ -124,5 +124,5 @@ rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.r
    mutate(treatment = "variable")
  
  all_params_above_freezing <- bind_rows(params_constant, params_variable) 
- write_csv(all_params_above_freezing, "Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
+   write_csv(all_params_above_freezing, "Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
  

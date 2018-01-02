@@ -228,12 +228,16 @@ fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
-
+fits_real_constant <- read_csv("Tetraselmis_experiment/data-processed/fits_real_constant.csv")
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 ## split up the fits df by curve id
-fits_split <- fits %>% 
-	filter(a.list > 0) %>% 
+fits_split <- fits_real_constant %>% 
+  rename(a.list = a,
+         b.list = b,
+         z.list = z, 
+         w.list = w) %>% 
+	# filter(a.list > 0) %>% 
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {
@@ -251,7 +255,7 @@ all_predictions %>%
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) %>%
-	filter(x > 31) %>% View
+	filter(x > 31) %>%
 	ggplot(aes(x = x, y = q2.5)) + geom_point() + geom_hline(yintercept = 0) +
 	xlim(30.5, 34)
 
@@ -262,7 +266,7 @@ boot_limits <- all_predictions %>%
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) 
-write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv")	
+write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv")	
 
 ## plot it! (bands look super skinny now??). I think this is what we are after.
 data_full %>% 
