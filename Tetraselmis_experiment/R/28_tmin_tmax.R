@@ -83,4 +83,4 @@ fits_above_freezing_variable <- fits_real_variable %>%
             tmax_low=quantile(tmax, probs=0.025),
             tmax_high=quantile(tmax, probs=0.975)) 
   
-
+View(fits_above_freezing_variable)
