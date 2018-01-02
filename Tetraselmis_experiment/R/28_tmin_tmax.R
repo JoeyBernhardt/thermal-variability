@@ -68,13 +68,13 @@ cf5 <- fits3 %>%
   group_by(curve.id.list) %>% 
   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
-  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-2,topt.list)))==0, NA,
-                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-2,topt.list))))
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,topt.list))))
 
 
 fits_real_variable <- cf5 %>% 
-  filter(!is.na(tmin)) %>%
   filter(!is.na(tmax)) %>% 
+  mutate(tmin = ifelse(is.na(tmin), -1.8, tmin)) %>% 
   ungroup()
 
 write_csv(fits_real_variable, "Tetraselmis_experiment/data-processed/fits_real_variable.csv")
@@ -91,6 +91,32 @@ fits_above_freezing_variable <- fits_real_variable %>%
             tmin_low=quantile(tmin, probs=0.025),
             tmin_high=quantile(tmin, probs=0.975),
             tmax_low=quantile(tmax, probs=0.025),
-            tmax_high=quantile(tmax, probs=0.975)) 
+            tmax_high=quantile(tmax, probs=0.975),
+            breadth_low=quantile(breadth, probs=0.025),
+            breadth_high=quantile(breadth, probs=0.975)) 
   
 View(fits_above_freezing_variable)
+
+
+## now find the estimates for the best fitted curves, not the bootstrapped ones. 
+
+fits_v <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv")
+fits_c <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
+
+fits4 <- fits_v %>% 
+  rename(z = z.list,
+         a = a.list, 
+         b = b.list, 
+         w = w.list)
+
+
+cf6 <- fits4 %>%
+  group_by(curve.id.list) %>% 
+  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,topt.list))))
+
+cf6 %>%
+  mutate(tmin = ifelse(is.na(tmin), -1.8, tmin)) %>% 
+  mutate(breadth = tmax - tmin) %>% View

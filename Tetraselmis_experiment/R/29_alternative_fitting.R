@@ -70,9 +70,6 @@ n.list<-rep(NA, length(curve.id.list))				#Number of growth rate measurements us
   }
 
   
-length(mod.list)  
-length(AIC.list) 
-  
 
 coeffs <- mod.list %>% 
   map_df(.f = tidy, .id = "id") %>% 
@@ -91,6 +88,7 @@ cf3 <- coeffs %>%
 aics <- as.data.frame(AIC.list) %>% 
   mutate(id = rownames(.))
 
+### pick only fits that have tmins above -2C
 best_mod <- left_join(cf3, aics, by = "id") %>% 
   filter(!is.na(tmin)) %>% 
   ungroup() %>% 

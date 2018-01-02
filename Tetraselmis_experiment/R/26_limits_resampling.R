@@ -70,7 +70,7 @@ quantile(fv2$w.list, probs=0.975)
 quantile(w.list, probs=0.975, data = fits_variable)
 quantile(fits_variable$w.list, probs=0.975)
 
-?quantile
+
 
 fits_variable %>%
   summarise(q2.5=quantile(w.list, probs=0.025),
