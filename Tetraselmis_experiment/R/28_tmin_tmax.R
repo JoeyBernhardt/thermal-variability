@@ -1,6 +1,8 @@
 
 ### Find tmin and tmax
 library(rootSolve)
+library(tidyverse)
+library(cowplot)
 
 fits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 
@@ -19,14 +21,20 @@ cf4 <- fits2 %>%
   group_by(curve.id.list) %>% 
   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
-  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-2,topt.list)))==0, NA,
-                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-2,topt.list))))
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,topt.list))))
 
 
 
 fits_real_constant <- cf4 %>% 
-  filter(!is.na(tmin)) %>% 
+  mutate(tmin = ifelse(is.na(tmin), -1.8, tmin)) %>% 
   ungroup()
+
+cf4 %>% 
+  filter(!is.na(tmin)) %>% View
+
+fits_real_constant %>% 
+  ggplot(aes(x = tmin)) + geom_histogram(bins = 10)
 
 
 write_csv(fits_real_constant, "Tetraselmis_experiment/data-processed/fits_real_constant.csv")
@@ -39,7 +47,9 @@ fits_above_freezing_constant <- fits_real_constant %>%
             tmin_low=quantile(tmin, probs=0.025),
             tmin_high=quantile(tmin, probs=0.975),
             tmax_low=quantile(tmax, probs=0.025),
-            tmax_high=quantile(tmax, probs=0.975)) 
+            tmax_high=quantile(tmax, probs=0.975),
+            breadth_low=quantile(breadth, probs=0.025),
+            breadth_high=quantile(breadth, probs=0.975)) 
 
 View(fits_above_freezing_constant)
 ### Now for the variable curves
