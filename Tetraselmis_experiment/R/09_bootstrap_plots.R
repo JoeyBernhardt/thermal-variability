@@ -16,7 +16,7 @@ growth_constant <- read_csv("Tetraselmis_experiment/data-processed/growth_resamp
 # boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_variable.csv")
 # boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant.csv")
 boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv") ### these are for the new resampled curve
-# boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv") ### these are for the new resampled curve
+boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv") ### these are for the new resampled curve
 
 boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")
 fits_constant_variable <- read_csv("Tetraselmis_experiment/data-processed/fits_constant_variable.csv")
@@ -296,6 +296,11 @@ curve_constant_resamp<-function(x){
 	res<-fits_c$a.list[1]*exp(fits_c$b.list[1]*x)*(1-((x-fits_c$z.list[1])/(fits_c$w.list[1]/2))^2)
 	res
 }
+
+curve_constant_above<-function(x){
+  res<-fits_c$a.list[1]*exp(fits_c$b.list[1]*x)*(1-((x-fits_c$z.list[1])/(fits_c$w.list[1]/2))^2)
+  res
+}
 ## plot the predictions
 
 ic <- colormap(colormap = colormaps$inferno, nshades = 72, format = "hex",
@@ -306,11 +311,16 @@ ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.
 ps_c <- ps %>% 
   filter(treatment == "constant")
 
+curve_constant_above<-function(x){
+  res<-ps_c$a[1]*exp(ps_c$b[1]*x)*(1-((x-ps_c$z[1])/(ps_c$w[1]/2))^2)
+  res
+}
+
 ## plot A
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
-a <- p + 
-  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5) + theme_bw()+
-	stat_function(fun = curve_constant_resamp, color = ic[20], size = 1) +
+p + 
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits, fill = ic[20], alpha = 0.5) + theme_bw()+
+	# stat_function(fun = curve_constant_resamp, color = ic[20], size = 1) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum, color = ic[20], size = 2) + geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum, width = 0.1, color =ic[20]) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum, shape = 1, size = 2) +
 	xlab("") + 
@@ -323,7 +333,9 @@ a <- p +
 	theme(text = element_text(size=14)) +
 	geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
 	labs(y = expression ("Population growth rate"~day^-1)) +
-	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7) 
+	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7) +
+  stat_function(fun = curve_constant_above, color = ic[20], size = 1) +
+  coord_cartesian(ylim = c(-1, 1.8))
   
 ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png", width = 5, height = 3)
 ggsave("Tetraselmis_experiment/figures/constant_tpc.png", width = 5, height = 3)

@@ -12,6 +12,8 @@ library(dplyr)
 library(tidyr)
 library(readr)
 library(ggthemes)
+library(broom)
+library(tidyverse)
 
 
 # load data ---------------------------------------------------------------
@@ -19,6 +21,14 @@ library(ggthemes)
 
 params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## estimated TPC parameters for constant conditions
 growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv") ## empirically observed growth rates
+
+ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
+ps_c <- ps %>% 
+  filter(treatment == "constant")
+
+params <- ps_c %>% 
+  select(z, w, a, b) %>%
+  gather(key = term, value = estimate) 
 
 params <- params_raw %>% 
 	select(z.list, w.list, a.list, b.list) %>%
@@ -161,47 +171,75 @@ for(i in 1:length(curve.id.list)){
 		}
 	}
 	
-	# Identify the best model from the list and save coefficients and R^2 values
-	if(!is.null(AIC.list)){
-		bestmodind<-which(AIC.list==min(AIC.list))
-		if(length(bestmodind)>1){
-			bestmodind<-sample(bestmodind,1)
-		}
-		bestmod<-mod.list[[bestmodind]]
-		cfs<-coef(bestmod)
-		expected<-nbcurve(dat$temperature,cfs[[1]],cfs[[2]],cfs[[3]],cfs[[4]])
-		rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.rate))^2)
-	}
 	
-	# If the quick fit yielded poor results (low R^2), try a more thorough search through parameter space
-	if(rsqr<0.95){
-		avals<-seq(-0.2,1.2,0.02)
-		bvals<-seq(-0.2,0.3,0.02)
-		mod.list<-list()
-		AIC.list<-c()
-		for(ia in 1:length(avals)){
-			for(ib in 1:length(bvals)){
-				a.guess<-avals[ia]
-				b.guess<-bvals[ib]
-				res2<-try(fit<-mle2(dat$growth.rate~dnorm(mean=nbcurve(dat$temperature,z=z,w=w,a=a,b=b),sd=s),start=list(z=z.guess,w=w.guess,a=a.guess,b=b.guess,s=0.3),
-														skip.hessian=TRUE,data=dat))
-				if(class(res2)!="try-error"){
-					mod.list<-append(mod.list,fit)
-					AIC.list<-append(AIC.list,AIC(fit))
-				}
-			}
-		}
-		# Identify the best model from the list and save coefficients and R^2 values
-		bestmodind<-which(AIC.list==min(AIC.list))
-		if(length(bestmodind)>1){
-			bestmodind<-sample(bestmodind,1)
-		}
-		
-		bestmod<-mod.list[[bestmodind]]
-		cfs<-coef(bestmod)
-		expected<-nbcurve(dat$temperature,cfs[[1]],cfs[[2]],cfs[[3]],cfs[[4]])
-		rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.rate))^2)
-	}
+	coeffs <- mod.list %>% 
+	  map_df(.f = tidy, .id = "id") %>% 
+	  group_by(id) %>% 
+	  select(term, estimate) %>% 
+	  spread(key = term, value = estimate)
+	
+	## now get the tmin and tmaxes
+	cf3 <- coeffs %>% 
+	  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(15,150)))==0, NA,
+	                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(15,150)))) %>% 
+	  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,10)))==0, NA,
+	                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,10))))
+	
+	
+	aics <- as.data.frame(AIC.list) %>% 
+	  mutate(id = rownames(.))
+	
+	### pick only fits that have tmins above -2C
+	bestmod <- left_join(cf3, aics, by = "id") %>% 
+	  filter(!is.na(tmin)) %>% 
+	  ungroup() %>% 
+	  dplyr::top_n(., n = -1, wt = AIC.list)
+	
+	cfs<-c(bestmod$z[[1]], bestmod$w[[1]], bestmod$a[[1]], bestmod$b[[1]])
+	expected<-nbcurve(dat$temperature,cfs[[1]],cfs[[2]],cfs[[3]],cfs[[4]])
+	rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.rate))^2)
+	
+	# # Identify the best model from the list and save coefficients and R^2 values
+	# if(!is.null(AIC.list)){
+	# 	bestmodind<-which(AIC.list==min(AIC.list))
+	# 	if(length(bestmodind)>1){
+	# 		bestmodind<-sample(bestmodind,1)
+	# 	}
+	# 	bestmod<-mod.list[[bestmodind]]
+	# 	cfs<-coef(bestmod)
+	# 	expected<-nbcurve(dat$temperature,cfs[[1]],cfs[[2]],cfs[[3]],cfs[[4]])
+	# 	rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.rate))^2)
+	# }
+	# 
+	# # If the quick fit yielded poor results (low R^2), try a more thorough search through parameter space
+	# if(rsqr<0.95){
+	# 	avals<-seq(-0.2,1.2,0.02)
+	# 	bvals<-seq(-0.2,0.3,0.02)
+	# 	mod.list<-list()
+	# 	AIC.list<-c()
+	# 	for(ia in 1:length(avals)){
+	# 		for(ib in 1:length(bvals)){
+	# 			a.guess<-avals[ia]
+	# 			b.guess<-bvals[ib]
+	# 			res2<-try(fit<-mle2(dat$growth.rate~dnorm(mean=nbcurve(dat$temperature,z=z,w=w,a=a,b=b),sd=s),start=list(z=z.guess,w=w.guess,a=a.guess,b=b.guess,s=0.3),
+	# 													skip.hessian=TRUE,data=dat))
+	# 			if(class(res2)!="try-error"){
+	# 				mod.list<-append(mod.list,fit)
+	# 				AIC.list<-append(AIC.list,AIC(fit))
+	# 			}
+	# 		}
+	# 	}
+	# 	# Identify the best model from the list and save coefficients and R^2 values
+	# 	bestmodind<-which(AIC.list==min(AIC.list))
+	# 	if(length(bestmodind)>1){
+	# 		bestmodind<-sample(bestmodind,1)
+	# 	}
+	# 	
+	# 	bestmod<-mod.list[[bestmodind]]
+	# 	cfs<-coef(bestmod)
+	# 	expected<-nbcurve(dat$temperature,cfs[[1]],cfs[[2]],cfs[[3]],cfs[[4]])
+	# 	rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.rate))^2)
+	# }
 	
 	
 	# Use the curve fit to find Topt and the estimated maximum growth rate (i.e. growth rate at Topt)
@@ -218,12 +256,13 @@ for(i in 1:length(curve.id.list)){
 	w.list[i]<-cfs[[2]]
 	a.list[i]<-cfs[[3]]
 	b.list[i]<-cfs[[4]]
-	s.list[i]<-cfs[[5]]
+	# s.list[i]<-cfs[[5]]
 	topt.list[i]<-opt
 	maxgrowth.list[i]<-maxgrowth
 	n.list[i]<-length(dat$temperature)
 }
-
+fits_limited <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,n.list)
+write_csv(fits_limited, "Tetraselmis_experiment/data-processed/boot_fits_resample_limited.csv")
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
@@ -233,6 +272,7 @@ fits_real_constant <- read_csv("Tetraselmis_experiment/data-processed/fits_real_
 
 ## split up the fits df by curve id
 fits_split <- fits_real_constant %>% 
+  filter(tmin > -1.8) %>%
   rename(a.list = a,
          b.list = b,
          z.list = z, 

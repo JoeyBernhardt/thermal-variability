@@ -51,7 +51,7 @@ n.list<-rep(NA, length(curve.id.list))				#Number of growth rate measurements us
   ## This loop fits the model using a range of different starting guesses. We choose the best one using AIC. This helps find good solutions even if there are
   # convergence problems.
   # Starting estimates for parameters 'a' and 'b' use a plausible range but with broadly spaced estimates to speed up fitting. 
-  avals<-seq(-0.2,1.2,0.01)		
+  avals<-seq(-0.2,1.2,0.05)		
   bvals<-seq(-0.2,0.3,0.05)
   mod.list<-list()
   AIC.list<-c()
@@ -69,9 +69,7 @@ n.list<-rep(NA, length(curve.id.list))				#Number of growth rate measurements us
     }
   }
 
-  
-
-coeffs <- mod.list %>% 
+  coeffs <- mod.list %>% 
   map_df(.f = tidy, .id = "id") %>% 
   group_by(id) %>% 
   select(term, estimate) %>% 
@@ -79,10 +77,10 @@ coeffs <- mod.list %>%
 
 ## now get the tmin and tmaxes
 cf3 <- coeffs %>% 
-   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(20,50)))==0, NA,
-                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(20,50)))) %>% 
-   mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-2,10)))==0, NA,
-                        uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-2,10))))
+   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(15,150)))==0, NA,
+                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(15,150)))) %>% 
+   mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,10)))==0, NA,
+                        uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,10))))
 
 
 aics <- as.data.frame(AIC.list) %>% 
@@ -123,4 +121,10 @@ rsqr<-1-sum((dat$growth.rate-expected)^2)/sum((dat$growth.rate-mean(dat$growth.r
  
  all_params_above_freezing <- bind_rows(params_constant, params_variable) 
    write_csv(all_params_above_freezing, "Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
+   
+   
+all_params_above_freezing <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")   
+View(all_params_above_freezing)   
+   
+   
  
