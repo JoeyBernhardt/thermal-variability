@@ -268,37 +268,56 @@ fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 fits_real_constant <- read_csv("Tetraselmis_experiment/data-processed/fits_real_constant.csv")
+fits_limited <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_limited.csv")
+
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 ## split up the fits df by curve id
-fits_split <- fits_real_constant %>% 
-  filter(tmin > -1.8) %>%
-  rename(a.list = a,
-         b.list = b,
-         z.list = z, 
-         w.list = w) %>% 
+fits_split <- fits_limited %>% 
+  filter(rsqr.list > 0.95) %>% 
+  # filter(tmin > -1.8) %>%
+  # rename(a.list = a,
+  #        b.list = b,
+  #        z.list = z, 
+  #        w.list = w) %>% 
 	# filter(a.list > 0) %>% 
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {
-	x <- seq(0, 38, 0.01)
+	x <- seq(-3, 38, 0.1)
 	predictions <- curve1$a.list[[1]]*exp(curve1$b.list[[1]]*x)*(1-((x-curve1$z.list[[1]])/(curve1$w.list[[1]]/2))^2)
 	data.frame(x, predictions)
 }
 
 ## make predictions for each set of parameter estimates. 
 all_predictions <- fits_split %>% 
-	map_df(prediction_function) 
+	map_df(prediction_function, .id = "run") 
 
-all_predictions %>% 
+summ <- all_predictions %>% 
 	group_by(x) %>% 
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
-						mean = mean(predictions)) %>%
-	filter(x > 31) %>%
-	ggplot(aes(x = x, y = q2.5)) + geom_point() + geom_hline(yintercept = 0) +
-	xlim(30.5, 34)
+						mean = mean(predictions)) 
 
+
+ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
+ps_c <- ps %>% 
+  filter(treatment == "constant")
+
+curve_constant_resamp<-function(x){
+  res<-ps_c$a[1]*exp(ps_c$b[1]*x)*(1-((x-ps_c$z[1])/(ps_c$w[1]/2))^2)
+  res
+}
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+p + 
+  # geom_line(aes(x = x, y = predictions, group = run), data = all_predictions) + 
+  xlim(-2, 32) + ylim(-1, 2.5) + geom_hline(yintercept = 0) + geom_vline(xintercept = -1.8) +
+  stat_function(fun = curve_constant_resamp, color = "red") +
+  geom_point(aes(x = temp, y = mean), data = growth_sum, color  = "blue") +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = growth_sum, width = 0.1, color = "blue") +
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = summ, fill = ic[20], alpha = 0.5)
+  
 
 ## get the upper and lower limits of the predicted growth rates at each value of x (temperature)
 boot_limits <- all_predictions %>% 

@@ -16,7 +16,11 @@ dat.full <- growth_all %>%
 	rename(temperature = temp) %>% 
 	mutate(curve.id = "1") %>% 
 	select(curve.id, temperature, growth.rate) 
+str(dat.full)
 
+freeze <- data.frame(curve.id = "1", temperature = -1.8, growth.rate = 0)
+
+dat.full <- bind_rows(dat.full, freeze)
 
 
 nbcurve<-function(temp,z,w,a,b){
@@ -177,9 +181,22 @@ p + geom_point(aes(x = temperature, y = growth.rate), data = dat.full, size = 0.
 	geom_point(aes(x = temp, y = mean), data = growth_sum) +
 	geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), width = 0.1, data = growth_sum) +
 	# geom_errorbar(aes(ymin = mean-sd , ymax = mean+sd, x = temp), width = 0.1, data = growth_sum) +
-	theme_classic(base_family = 'GillSans') + xlim(-2, 32) +
+	theme_classic(base_family = 'GillSans') + xlim(-8, 32) +
 	ylab("Exponential growth rate") + xlab("Temperature (C)") +
-	theme(text=element_text(size=14)) + geom_hline(yintercept = 0, color = "grey")
+	theme(text=element_text(size=14)) + geom_hline(yintercept = 0, color = "grey") +
+  geom_vline(xintercept = -1.8)
+
+
+fits %>%
+  rename(z = z.list,
+         a = a.list, 
+         b = b.list, 
+         w = w.list) %>% 
+  group_by(curve.id.list) %>% 
+  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-5,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-5,topt.list)))) %>% View
 
 ### now let's fit the TPC to the resampled TPC for the variable treatment
 

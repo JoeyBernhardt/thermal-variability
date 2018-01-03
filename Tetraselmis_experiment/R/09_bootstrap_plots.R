@@ -16,7 +16,7 @@ growth_constant <- read_csv("Tetraselmis_experiment/data-processed/growth_resamp
 # boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_variable.csv")
 # boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant.csv")
 boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv") ### these are for the new resampled curve
-boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv") ### these are for the new resampled curve
+# boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv") ### these are for the new resampled curve
 
 boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")
 fits_constant_variable <- read_csv("Tetraselmis_experiment/data-processed/fits_constant_variable.csv")

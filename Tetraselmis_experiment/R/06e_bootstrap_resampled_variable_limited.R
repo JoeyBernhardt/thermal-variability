@@ -281,3 +281,65 @@ fits_limited_variable %>%
   mutate(tmin = uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,10))) %>% View
 
 
+## now get the upper and lower limits on the curve
+
+fits_split <- fits_limited_variable %>% 
+  filter(rsqr.list > 0.98) %>% 
+  split(.$curve.id.list)
+
+prediction_function <- function(curve1) {
+  x <- seq(-2, 32, 0.1)
+  predictions <- curve1$a.list[[1]]*exp(curve1$b.list[[1]]*x)*(1-((x-curve1$z.list[[1]])/(curve1$w.list[[1]]/2))^2)
+  data.frame(x, predictions)
+}
+
+## make predictions for each set of parameter estimates. 
+all_predictions <- fits_split %>% 
+  map_df(prediction_function) 
+
+## get the upper and lower limits of the predicted growth rates at each value of x (temperature)
+boot_limits_variable_limited <- all_predictions %>% 
+  group_by(x) %>% 
+  summarise(q2.5=quantile(predictions, probs=0.025),
+            q97.5=quantile(predictions, probs=0.975),
+            mean = mean(predictions)) 
+write_csv(boot_limits_variable_limited, "Tetraselmis_experiment/data-processed/boot_limits_variable_limited.csv")
+
+
+
+### let's plot it with the fitted curve
+library(colormap)
+ic <- colormap(colormap = colormaps$inferno, nshades = 72, format = "hex",
+               alpha = 1, reverse = FALSE)
+
+curve_variable_resamp<-function(x){
+  res<-ps_v$a[1]*exp(ps_v$b[1]*x)*(1-((x-ps_v$z[1])/(ps_v$w[1]/2))^2)
+  res
+}
+
+variable_predictions_points <- read_csv("Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
+b <- p + 
+  geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = ic[60], alpha = 0.5, data = variable_predictions_points) +
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable_limited, fill = ic[10], alpha = 0.5) +
+  # 	theme_bw() +
+  #   labs(y = expression ("Population growth rate"~day^-1))+
+  stat_function(fun = curve_variable_resamp, color = ic[10], size = 1) +
+  geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[10], size = 2) +
+  geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, width = 0.1, color = ic[10]) +
+  geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "black", size = 2) +
+  xlab("") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(color="black"),
+        panel.border = element_rect(colour = "black", fill=NA, size=1)) +
+  coord_cartesian(ylim = c(-0.5, 1.8), xlim= c(0, 32)) +
+  # ylim(-0.5, 1.8) +
+  theme_classic() +
+  # xlim(0, 32) +
+  theme(text = element_text(size=14)) +
+  geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
+  geom_vline(xintercept = 21.41687, color = ic[10], linetype = "dashed", alpha = 0.7)
+
+

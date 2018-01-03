@@ -39,6 +39,28 @@ fits_real_constant %>%
 
 write_csv(fits_real_constant, "Tetraselmis_experiment/data-processed/fits_real_constant.csv")
 
+resample_constant_params <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
+resample_variable_params <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv")
+
+
+pc <- resample_constant_params %>% 
+  rename(z = z.list,
+         a = a.list, 
+         b = b.list, 
+         w = w.list)
+
+pv <- resample_variable_params %>% 
+  rename(z = z.list,
+         a = a.list, 
+         b = b.list, 
+         w = w.list)
+
+pv %>%
+  group_by(curve.id.list) %>% 
+  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,topt.list)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,topt.list)))) %>% View
 
 fits_above_freezing_constant <- fits_real_constant %>% 
   mutate(breadth = tmax - tmin) %>%
@@ -48,6 +70,7 @@ fits_above_freezing_constant <- fits_real_constant %>%
             tmin_high=quantile(tmin, probs=0.975),
             tmax_low=quantile(tmax, probs=0.025),
             tmax_high=quantile(tmax, probs=0.975),
+            tmax_med=quantile(tmax, probs=0.50),
             breadth_low=quantile(breadth, probs=0.025),
             breadth_high=quantile(breadth, probs=0.975)) 
 
