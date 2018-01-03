@@ -263,7 +263,7 @@ for(i in 1:length(curve.id.list)){
 }
 fits_limited <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,n.list)
 write_csv(fits_limited, "Tetraselmis_experiment/data-processed/boot_fits_resample_limited.csv")
-fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
+fits <- data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
@@ -273,7 +273,7 @@ fits_limited <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resamp
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 ## split up the fits df by curve id
-fits_split <- fits_limited %>% 
+fits_split <- fits %>% 
   filter(rsqr.list > 0.95) %>% 
   # filter(tmin > -1.8) %>%
   # rename(a.list = a,
@@ -301,6 +301,7 @@ summ <- all_predictions %>%
 
 
 ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
+boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv")
 ps_c <- ps %>% 
   filter(treatment == "constant")
 
@@ -316,7 +317,8 @@ p +
   stat_function(fun = curve_constant_resamp, color = "red") +
   geom_point(aes(x = temp, y = mean), data = growth_sum, color  = "blue") +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = growth_sum, width = 0.1, color = "blue") +
-  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = summ, fill = ic[20], alpha = 0.5)
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = summ, fill = ic[20], alpha = 0.5) +
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits, fill = "orange", alpha = 0.5)
   
 
 ## get the upper and lower limits of the predicted growth rates at each value of x (temperature)
