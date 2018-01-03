@@ -13,6 +13,7 @@ library(readr)
 library(ggthemes)
 library(broom)
 library(tidyverse)
+library(rootSolve)
 
 
 # load data ---------------------------------------------------------------
@@ -256,3 +257,39 @@ for(i in 1:length(curve.id.list)){
 }
 fits_limited_variable <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,n.list)
 write_csv(fits_limited_variable, "Tetraselmis_experiment/data-processed/boot_fits_resample_limited_variable.csv")
+
+
+
+fits_limited_variable %>% 
+  filter(rsqr.list > 0.98) %>% View
+
+
+nbcurve<-function(temp,z,w,a,b){
+  res<-a*exp(b*temp)*(1-((temp-z)/(w/2))^2)
+  res
+}
+
+fits_limited_variable %>%
+  filter(rsqr.list > 0.98) %>% 
+  rename(z = z.list, 
+         w = w.list, 
+         a = a.list, 
+         b = b.list) %>% 
+ group_by(curve.id.list) %>%
+  mutate(tmax = uniroot.all(function(x) nbcurve(x, z, w, a, b), c(topt.list,150))) %>% 
+  mutate(tmin = uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,10))) %>% View
+
+  
+  z <- fits_limited_variable$z.list[fits_limited_variable$curve.id.list == 284]
+  w <- fits_limited_variable$w.list[fits_limited_variable$curve.id.list == 284]
+  a <- fits_limited_variable$a.list[fits_limited_variable$curve.id.list == 284]
+  b <- fits_limited_variable$b.list[fits_limited_variable$curve.id.list == 284]
+  uniroot.all(function(x) nbcurve(x, z, w, a, b), c(-2.8,10))  
+  
+bestmod %>% 
+  select(z, w, a, b) %>% 
+  mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b), c(5,150)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(5,150)))) %>% 
+  mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,10)))==0, NA,
+                       uniroot.all(function(x) nbcurve(x, z, w, a, b),c(-1.8,10)))) %>% View
+  
