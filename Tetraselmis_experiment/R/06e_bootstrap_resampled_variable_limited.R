@@ -317,6 +317,8 @@ curve_variable_resamp<-function(x){
   res
 }
 
+
+
 variable_predictions_points <- read_csv("Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 

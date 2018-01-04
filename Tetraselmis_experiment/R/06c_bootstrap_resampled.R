@@ -293,6 +293,14 @@ prediction_function <- function(curve1) {
 all_predictions <- fits_split %>% 
 	map_df(prediction_function, .id = "run") 
 
+boot_limits <- all_predictions %>% 
+  group_by(x) %>% 
+  summarise(q2.5=quantile(predictions, probs=0.025),
+            q97.5=quantile(predictions, probs=0.975),
+            mean = mean(predictions)) 
+
+write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv")	
+
 summ <- all_predictions %>% 
 	group_by(x) %>% 
 	summarise(q2.5=quantile(predictions, probs=0.025),
@@ -302,19 +310,27 @@ summ <- all_predictions %>%
 
 ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
 boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv")
+fits_c <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
 ps_c <- ps %>% 
   filter(treatment == "constant")
 
-curve_constant_resamp<-function(x){
+curve_constant_resamp_freeze<-function(x){
   res<-ps_c$a[1]*exp(ps_c$b[1]*x)*(1-((x-ps_c$z[1])/(ps_c$w[1]/2))^2)
   res
 }
+
+curve_constant_resamp<-function(x){
+  res<-fits_c$a.list[1]*exp(fits_c$b.list[1]*x)*(1-((x-fits_c$z.list[1])/(fits_c$w.list[1]/2))^2)
+  res
+}
+
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 p + 
   # geom_line(aes(x = x, y = predictions, group = run), data = all_predictions) + 
   xlim(-2, 32) + ylim(-1, 2.5) + geom_hline(yintercept = 0) + geom_vline(xintercept = -1.8) +
-  stat_function(fun = curve_constant_resamp, color = "red") +
+  stat_function(fun = curve_constant_resamp_freeze, color = "red") +
+  stat_function(fun = curve_constant_resamp, color = "green") +
   geom_point(aes(x = temp, y = mean), data = growth_sum, color  = "blue") +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = growth_sum, width = 0.1, color = "blue") +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = summ, fill = ic[20], alpha = 0.5) +

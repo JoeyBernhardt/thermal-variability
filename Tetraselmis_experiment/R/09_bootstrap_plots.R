@@ -318,8 +318,8 @@ curve_constant_above<-function(x){
 
 ## plot A
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
-p + 
-  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits, fill = ic[20], alpha = 0.5) + theme_bw()+
+a <- p + 
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5) +
 	# stat_function(fun = curve_constant_resamp, color = ic[20], size = 1) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum, color = ic[20], size = 2) + geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum, width = 0.1, color =ic[20]) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum, shape = 1, size = 2) +
@@ -335,7 +335,7 @@ p +
 	labs(y = expression ("Population growth rate"~day^-1)) +
 	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7) +
   stat_function(fun = curve_constant_above, color = ic[20], size = 1) +
-  coord_cartesian(ylim = c(-1, 1.8))
+  coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32))
   
 ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png", width = 5, height = 3)
 ggsave("Tetraselmis_experiment/figures/constant_tpc.png", width = 5, height = 3)
@@ -365,7 +365,8 @@ geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "bla
   # xlim(0, 32) +
 	theme(text = element_text(size=14)) +
 	geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
-	geom_vline(xintercept = 21.41687, color = ic[10], linetype = "dashed", alpha = 0.7)
+	geom_vline(xintercept = 21.41687, color = ic[10], linetype = "dashed", alpha = 0.7) +
+  coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32))
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data.pdf")
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band.png", width = 5, height = 3)
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band_points.png", width = 5, height = 3)
@@ -396,7 +397,8 @@ c <- p +
 	geom_hline(yintercept = 0, color= "grey", linetype = "dotted") +
 	geom_vline(xintercept = 16.96, color = "grey", linetype = "dotted") +
 	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[10], alpha = 0.5) +
-	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5)
+	geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5) +
+  coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32))
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_together.png", width = 5, height = 3)
 
 	
