@@ -320,7 +320,7 @@ curve_constant_above<-function(x){
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
 a <- p + 
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[20], alpha = 0.5) +
-	# stat_function(fun = curve_constant_resamp, color = ic[20], size = 1) +
+	stat_function(fun = curve_constant_resamp, color = ic[20], size = 1) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum, color = ic[20], size = 2) + geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum, width = 0.1, color =ic[20]) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum, shape = 1, size = 2) +
 	xlab("") + 
@@ -334,7 +334,7 @@ a <- p +
 	geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
 	labs(y = expression ("Population growth rate"~day^-1)) +
 	geom_vline(xintercept = 24.5681, color = ic[20], linetype = "dashed", alpha = 0.7) +
-  stat_function(fun = curve_constant_above, color = ic[20], size = 1) +
+  # stat_function(fun = curve_constant_above, color = ic[20], size = 1) +
   coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32))
   
 ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png", width = 5, height = 3)
@@ -410,8 +410,7 @@ ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_resampling_color_ta
 
 
 library(RColorBrewer)
-View(palette(viridis(6)))
-display.brewer.pal(n = 8, name = 'Dark2')
+
 
 
 ### Now let's try with all the curves and points overlaid
