@@ -18,7 +18,7 @@ growth_constant <- read_csv("Tetraselmis_experiment/data-processed/growth_resamp
 boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv") ### these are for the new resampled curve
 # boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv") ### these are for the new resampled curve
 
-boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")
+# boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")
 boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_variable.csv")
 fits_constant_variable <- read_csv("Tetraselmis_experiment/data-processed/fits_constant_variable.csv")
 
@@ -306,7 +306,6 @@ curve_constant_above<-function(x){
 
 ic <- colormap(colormap = colormaps$viridis, nshades = 8, format = "hex",
 							 alpha = 1, reverse = FALSE)
-?colormap
 
 ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
 ps_c <- ps %>% 
@@ -324,8 +323,8 @@ a <- p +
   # geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = "white", data = variable_predictions_points, linetype = "dotted", color = "black") +
   geom_hline(yintercept = 0, color = "grey") +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
-	stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5) +
-  geom_point(aes(x = temp, y = mean), data = growth_sum, color = ic[3], size = 2) +
+	stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
+  geom_point(aes(x = temp, y = mean), data = growth_sum, color = ic[3], size = 2.5) +
   geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum, width = 0.2, color =ic[3]) +
 	# geom_point(aes(x = temp, y = mean), data = growth_sum, shape = 1, size = 2) +
 	xlab("") + 
@@ -352,14 +351,14 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 b <- p + 
   geom_hline(yintercept = 0, color = "darkgrey") +
   geom_vline(xintercept = 21.41687, color = ic[5], linetype = "solid", alpha = 0.5) +
-  stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5) +
+  stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
   # geom_line(aes(x = temperature, y= growth.rate.lower), linetype = "dotdash", alpha = 1, data = variable_predictions_points, color = ic[3]) +
   # geom_line(aes(x = temperature, y= growth.rate.upper), linetype = "dotdash", alpha = 1, data = variable_predictions_points, color = ic[3])+
 geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[5], alpha = 0.3) +
 labs(y = expression ("Population growth rate"~day^-1))+
-stat_function(fun = curve_variable_resamp, color = ic[5], size = 1.5) +
-geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[5], size = 2) +
+stat_function(fun = curve_variable_resamp, color = ic[5], size = 1.5, alpha = 0.7) +
+geom_point(aes(x = temp, y = mean), data = growth_sum_v, color = ic[5], size = 2.5) +
 geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, width = 0.1, color = ic[5]) +
 # geom_point(aes(x = temp, y = mean), data = growth_sum_v, shape = 1, color = "black", size = 2) +
 	xlab("") + 
