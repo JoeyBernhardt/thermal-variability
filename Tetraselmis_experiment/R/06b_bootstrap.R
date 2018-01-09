@@ -14,8 +14,7 @@ library(readr)
 
 # load data ---------------------------------------------------------------
 
-
-params <- read_csv("Tetraselmis_experiment/data-processed/constant_TPC_params.csv") ## estimated TPC parameters for constant conditions
+params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")  ## estimated TPC parameters for constant conditions
 growth <- read_csv("Tetraselmis_experiment/data-processed/constant_growth_rates.csv") ## empirically observed growth rates
 
 growth2 <- growth
@@ -72,7 +71,7 @@ EqnS.3 <- function(sample_size){
 	data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
 }
 	
-samples <- rep(1, 1000)
+samples <- rep(1, 10)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -80,7 +79,7 @@ dat.full <- samples %>%
 	gather(key = "temperature", value = "growth.rate", starts_with("x")) %>% 
 	separate(temperature, into = c("x", "temperature")) %>% 
 	select(-x) %>% 
-	filter(growth.rate >=0) %>% 
+	# filter(growth.rate >=0) %>% 
 	mutate(temperature = as.numeric(temperature))
 
 ## store a mini dataframe for plotting later
