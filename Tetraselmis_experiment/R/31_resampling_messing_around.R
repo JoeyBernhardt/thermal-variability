@@ -8,7 +8,7 @@ library(rootSolve)
 
 
 d <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
-d10 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_10000.csv")
+d10 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_10000_alltemps.csv")
 
 table(d10$n.list)
 table(d$n.list)
