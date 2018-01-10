@@ -218,6 +218,8 @@ fits_v <- cfv %>%
   mutate(tmin = ifelse(is.na(tmin), -1.8, tmin)) %>% 
   ungroup()
 
+cfv %>% 
+  filter(!is.na(tmin)) %>% View
 
 fits_above_freezing_v <- fits_v %>% 
   mutate(breadth = tmax - tmin) %>%
@@ -237,3 +239,7 @@ fits_above_freezing_v <- fits_v %>%
             topt_high=quantile(topt.list, probs=0.975),
             topt_mean=mean(topt.list)) %>% 
   gather(key = "metric", value = "value_complete") 
+
+
+thomas %>% 
+  filter(used.for.tmin.analysis == 1) %>% View
