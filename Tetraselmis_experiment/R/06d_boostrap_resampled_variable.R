@@ -62,28 +62,21 @@ predictions <- temps %>%
 sample_size <- 1
 
 EqnS.3 <- function(sample_size){
-	x_0 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 0])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-							 mean = predictions$predicted_growth[predictions$temperature ==0])
-	x_5 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 5])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-							 mean = predictions$predicted_growth[predictions$temperature ==5])
-	x_10 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 10])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==10])
-	x_16 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 16])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==16])
-	x_20 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 20])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==20])
-	x_24 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 24])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==24])
-	x_27 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 27])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==27])
-	x_29 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 29])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==29])
-	x_32 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 32])^2*(((9-1)/rchisq(n = 1, df = 8))^0.5))^0.5,
-								mean = predictions$predicted_growth[predictions$temperature ==32])
-	data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
+  x_5 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 5])^2*(((6-1)/rchisq(n = 1, df = 5))^0.5))^0.5,
+               mean = predictions$predicted_growth[predictions$temperature ==5])
+  x_10 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 10])^2*(((6-1)/rchisq(n = 1, df = 5))^0.5))^0.5,
+                mean = predictions$predicted_growth[predictions$temperature ==10])
+  x_15 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 15])^2*(((6-1)/rchisq(n = 1, df = 5))^0.5))^0.5,
+                mean = predictions$predicted_growth[predictions$temperature ==15])
+  x_20 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 20])^2*(((6-1)/rchisq(n = 1, df = 5))^0.5))^0.5,
+                mean = predictions$predicted_growth[predictions$temperature ==20])
+  x_24 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 24])^2*(((6-1)/rchisq(n = 1, df = 5))^0.5))^0.5,
+                mean = predictions$predicted_growth[predictions$temperature ==24])
+  x_27 <- rnorm(n = sample_size, sd = ((growth2$sd[growth2$temp == 27])^2*(((6-1)/rchisq(n = 1, df = 5))^0.5))^0.5,
+                mean = predictions$predicted_growth[predictions$temperature ==27])
+  data.frame(x_5, x_10, x_15, x_20, x_24, x_27)
 }
-
-samples <- rep(1, 1000)
+samples <- rep(1, 10000)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -91,7 +84,7 @@ dat.full <- samples %>%
 	gather(key = "temperature", value = "growth.rate", starts_with("x")) %>% 
 	separate(temperature, into = c("x", "temperature")) %>% 
 	select(-x) %>% 
-	filter(growth.rate >=0) %>% 
+	# filter(growth.rate >=0) %>% 
 	mutate(temperature = as.numeric(temperature))
 
 ## store a mini dataframe for plotting later
@@ -225,7 +218,7 @@ for(i in 1:length(curve.id.list)){
 
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
-write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
 
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
