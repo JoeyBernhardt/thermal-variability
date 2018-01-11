@@ -145,6 +145,8 @@ for(i in 1:length(curve.id.list)){
 fits <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list) 
 write_csv(fits, "Tetraselmis_experiment/data-processed/predicted_parms_variable.csv")
 
+fits <- read_csv("Tetraselmis_experiment/data-processed/predicted_parms_variable.csv")
+
 curve_fit_low<-function(x){
   res<-fits$a.list[1]*exp(fits$b.list[1]*x)*(1-((x-fits$z.list[1])/(fits$w.list[1]/2))^2)
   res
@@ -161,5 +163,9 @@ dat.full %>%
   stat_function(fun = curve_fit_low, color = "green") +
   ylim(0, 1.5)
   
+variable_predictions_points <- read_csv("Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
 
+
+variable_predictions_points %>% 
+  top_n(n = 1, wt = growth.rate.upper) %>% View
 

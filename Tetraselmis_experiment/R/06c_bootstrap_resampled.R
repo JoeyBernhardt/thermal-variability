@@ -22,9 +22,9 @@ library(tidyverse)
 params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## estimated TPC parameters for constant conditions
 growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv") ## empirically observed growth rates
 
-ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
-ps_c <- ps %>% 
-  filter(treatment == "constant")
+# ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
+# ps_c <- ps %>% 
+#   filter(treatment == "constant")
 
 params <- ps_c %>% 
   select(z, w, a, b) %>%
@@ -94,7 +94,7 @@ EqnS.3 <- function(sample_size){
 	data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
 }
 
-samples <- rep(1, 10)
+samples <- rep(1, 10000)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -104,6 +104,11 @@ dat.full <- samples %>%
 	select(-x) %>% 
 	# filter(growth.rate >=0) %>% 
 	mutate(temperature = as.numeric(temperature))
+
+dat.full %>% 
+  ggplot(aes(x= growth.rate)) + geom_histogram(bins = 50) +
+  facet_wrap( ~ temperature)
+
 
 ## store a mini dataframe for plotting later
 data_full <- dat.full %>% 
