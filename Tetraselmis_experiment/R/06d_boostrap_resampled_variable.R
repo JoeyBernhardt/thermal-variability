@@ -76,7 +76,14 @@ EqnS.3 <- function(sample_size){
                 mean = predictions$predicted_growth[predictions$temperature ==27])
   data.frame(x_5, x_10, x_15, x_20, x_24, x_27)
 }
+
+
+
+samples <- rep(1, 5000)
+
+
 samples <- rep(1, 10000)
+
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -218,8 +225,18 @@ for(i in 1:length(curve.id.list)){
 
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
+
+
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
+
+
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv")
+
+
+fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+
+
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
 
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
