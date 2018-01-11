@@ -228,7 +228,8 @@ fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.
 
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
-
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_1719.csv")
+write_csv(dat.full, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_1719_dat_full.csv")
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
