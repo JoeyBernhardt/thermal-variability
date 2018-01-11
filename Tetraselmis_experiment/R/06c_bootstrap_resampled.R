@@ -276,6 +276,7 @@ fits_10k <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_1
 
 ## split up the fits df by curve id
 fits_split <- fits_10k %>% 
+  sample_n(size = 2547, replace = FALSE) %>% 
   # filter(rsqr.list > 0.98) %>%
   # filter(tmin > -1.8) %>%
   # rename(a.list = a,
@@ -286,7 +287,7 @@ fits_split <- fits_10k %>%
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {
-	x <- seq(-3, 38, 0.1)
+	x <- seq(0, 32, 0.1)
 	predictions <- curve1$a.list[[1]]*exp(curve1$b.list[[1]]*x)*(1-((x-curve1$z.list[[1]])/(curve1$w.list[[1]]/2))^2)
 	data.frame(x, predictions)
 }
@@ -295,7 +296,7 @@ prediction_function <- function(curve1) {
 all_predictions <- fits_split %>% 
 	map_df(prediction_function, .id = "run") 
 
-boot_limits <- all_predictions %>% 
+boot_limits_constant <- all_predictions %>% 
   group_by(x) %>% 
   summarise(q2.5=quantile(predictions, probs=0.025),
             q97.5=quantile(predictions, probs=0.975),

@@ -219,7 +219,7 @@ for(i in 1:length(curve.id.list)){
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
-fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv")
 
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
@@ -239,12 +239,12 @@ all_predictions <- fits_split %>%
 	map_df(prediction_function) 
 
 ## get the upper and lower limits of the predicted growth rates at each value of x (temperature)
-boot_limits <- all_predictions %>% 
+boot_limits_variable <- all_predictions %>% 
 	group_by(x) %>% 
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) 
-write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")	
+ write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")	
 
 ## plot it! (bands look super skinny now??). I think this is what we are after.
 data_full %>% 

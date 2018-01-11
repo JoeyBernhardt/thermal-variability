@@ -241,7 +241,7 @@ derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
 }
 ###
 
-x <- seq(-5, 38, by = 0.01)
+x <- seq(0, 32, by = 0.01)
 
 
 variable_predictions_upper <- function(x) {
@@ -262,8 +262,7 @@ variable_lower2 <- data.frame(x, variable_lower) %>%
 	rename(temperature = x, 
 				 growth.rate.lower = variable_lower)
 
-variable_predictions_points <- left_join(variable_lower2, variable_upper2) %>% 
-	# filter(growth.rate.lower >= 0, growth.rate.upper >=0)
+variable_predictions_points <- left_join(variable_lower2, variable_upper2) 
 
 write_csv(variable_predictions_points, "Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
 variable_predictions_points <- read_csv("Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
