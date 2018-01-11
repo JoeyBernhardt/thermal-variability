@@ -94,7 +94,7 @@ EqnS.3 <- function(sample_size){
 	data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
 }
 
-samples <- rep(1, 1000)
+samples <- rep(1, 10)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -102,7 +102,7 @@ dat.full <- samples %>%
 	gather(key = "temperature", value = "growth.rate", starts_with("x")) %>% 
 	separate(temperature, into = c("x", "temperature")) %>% 
 	select(-x) %>% 
-	filter(growth.rate >=0) %>% 
+	# filter(growth.rate >=0) %>% 
 	mutate(temperature = as.numeric(temperature))
 
 ## store a mini dataframe for plotting later
@@ -269,12 +269,14 @@ write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample.csv")
 fits_real_constant <- read_csv("Tetraselmis_experiment/data-processed/fits_real_constant.csv")
 fits_limited <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_limited.csv")
+fits_10k <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_10000_alltemps.csv")
+
 
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 ## split up the fits df by curve id
-fits_split <- fits %>% 
-  filter(rsqr.list > 0.95) %>% 
+fits_split <- fits_10k %>% 
+  # filter(rsqr.list > 0.98) %>%
   # filter(tmin > -1.8) %>%
   # rename(a.list = a,
   #        b.list = b,
@@ -299,7 +301,7 @@ boot_limits <- all_predictions %>%
             q97.5=quantile(predictions, probs=0.975),
             mean = mean(predictions)) 
 
-write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv")	
+write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv")	
 
 summ <- all_predictions %>% 
 	group_by(x) %>% 

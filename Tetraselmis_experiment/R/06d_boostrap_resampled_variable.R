@@ -77,7 +77,13 @@ EqnS.3 <- function(sample_size){
   data.frame(x_5, x_10, x_15, x_20, x_24, x_27)
 }
 
+
+
 samples <- rep(1, 5000)
+
+
+samples <- rep(1, 10000)
+
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -85,7 +91,7 @@ dat.full <- samples %>%
 	gather(key = "temperature", value = "growth.rate", starts_with("x")) %>% 
 	separate(temperature, into = c("x", "temperature")) %>% 
 	select(-x) %>% 
-	filter(growth.rate >=0) %>% 
+	# filter(growth.rate >=0) %>% 
 	mutate(temperature = as.numeric(temperature))
 
 ## store a mini dataframe for plotting later
@@ -219,6 +225,9 @@ for(i in 1:length(curve.id.list)){
 
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
+
+
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
 
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
 

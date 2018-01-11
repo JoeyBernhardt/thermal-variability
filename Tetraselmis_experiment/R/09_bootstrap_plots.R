@@ -15,7 +15,7 @@ all_r <- read_csv("Tetraselmis_experiment/data-processed/growth_estimates_round3
 growth_constant <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
 # boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_variable.csv")
 # boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant.csv")
-boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv") ### these are for the new resampled curve
+boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv") ### these are for the new resampled curve
 # boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_above_freezing.csv") ### these are for the new resampled curve
 
 # boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")
@@ -63,7 +63,7 @@ p +geom_line(aes(x = x, y = q2.5), data = boot_limits_constant) +
 
 ## next step is to fit the TPC to them, so that we can get their second derivatives.
 ### here we fit the TPC to the upper and lower edges of the bootstrapped TPCs
-dat.full <- boot_limits_constant %>% 
+dat.full <- boot_limits %>% 
 	gather(key = curve.id, value = growth.rate, 2:4) %>% 
 	rename(temperature = x) 
 
@@ -241,7 +241,7 @@ derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
 }
 ###
 
-x <- seq(-5, 38, by = 0.001)
+x <- seq(-5, 38, by = 0.01)
 
 
 variable_predictions_upper <- function(x) {
@@ -263,7 +263,7 @@ variable_lower2 <- data.frame(x, variable_lower) %>%
 				 growth.rate.lower = variable_lower)
 
 variable_predictions_points <- left_join(variable_lower2, variable_upper2) %>% 
-	filter(growth.rate.lower >= 0, growth.rate.upper >=0)
+	# filter(growth.rate.lower >= 0, growth.rate.upper >=0)
 
 write_csv(variable_predictions_points, "Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
 variable_predictions_points <- read_csv("Tetraselmis_experiment/data-processed/variable_predictions_points.csv")
@@ -306,15 +306,6 @@ curve_constant_above<-function(x){
 
 ic <- colormap(colormap = colormaps$viridis, nshades = 8, format = "hex",
 							 alpha = 1, reverse = FALSE)
-
-ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
-ps_c <- ps %>% 
-  filter(treatment == "constant")
-
-curve_constant_above<-function(x){
-  res<-ps_c$a[1]*exp(ps_c$b[1]*x)*(1-((x-ps_c$z[1])/(ps_c$w[1]/2))^2)
-  res
-}
 
 ## plot A
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
@@ -379,7 +370,7 @@ ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band_points.png", width = 5, height = 3)
 
 plots <- plot_grid(a, b, labels = c("A", "B"), align = "v", nrow = 2)
-ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_resampling_color_tall.png", width = 5, height = 7)
+ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_resampling_color_10k.png", width = 5, height = 7)
 
 ## plot C
 
