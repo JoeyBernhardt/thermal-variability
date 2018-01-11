@@ -20,6 +20,7 @@ boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_lim
 
 # boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")
 boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_variable.csv")
+boot_limits_variable <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v10k.csv")
 fits_constant_variable <- read_csv("Tetraselmis_experiment/data-processed/fits_constant_variable.csv")
 
 variable_growth <- all_r %>% 
@@ -63,7 +64,7 @@ p +geom_line(aes(x = x, y = q2.5), data = boot_limits_constant) +
 
 ## next step is to fit the TPC to them, so that we can get their second derivatives.
 ### here we fit the TPC to the upper and lower edges of the bootstrapped TPCs
-dat.full <- boot_limits %>% 
+dat.full <- boot_limits_constant %>% 
 	gather(key = curve.id, value = growth.rate, 2:4) %>% 
 	rename(temperature = x) 
 
@@ -202,14 +203,8 @@ for(i in 1:length(curve.id.list)){
 }
 
 fits <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list) 
-write_csv(fits, "Tetraselmis_experiment/data-processed/boot_upper_lower_fits.csv")
-fits <- read_csv("Tetraselmis_experiment/data-processed/boot_upper_lower_fits.csv")
-
-## now make the plots for predictions
-
-# 
-# fits <- read_csv("Tetraselmis_experiment/data-processed/fits_constant_variable.csv")
-# fits <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## new fitted params from resampling approach
+# write_csv(fits, "Tetraselmis_experiment/data-processed/boot_upper_lower_fits.csv")
+# fits <- read_csv("Tetraselmis_experiment/data-processed/boot_upper_lower_fits.csv")
 
 bootcurve_upper<-function(x){
 	res<-fits$a.list[2]*exp(fits$b.list[2]*x)*(1-((x-fits$z.list[2])/(fits$w.list[2]/2))^2)
@@ -241,7 +236,7 @@ derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
 }
 ###
 
-x <- seq(0, 32, by = 0.01)
+x <- seq(-2, 32, by = 0.01)
 
 
 variable_predictions_upper <- function(x) {

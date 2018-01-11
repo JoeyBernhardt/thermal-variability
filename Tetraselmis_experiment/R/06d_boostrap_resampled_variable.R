@@ -238,15 +238,25 @@ fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
 
+fits1 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv")
+fits2 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_3184.csv")
+fits3 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
+fits4 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
+fits_all <- bind_rows(fits1, fits2, fits3, fits4) %>% 
+  filter(!is.na(topt.list))
+
+### ok now bringing in all the various versions of the bootstrapped variable
+
+
 ## split up the fits df by curve id
-fits_split <- fits %>% 
-	filter(a.list >0) %>% 
+fits_split <- fits_all %>% 
+	filter(a.list >0, rsqr.list > 0.98) %>% 
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {
-	x <- seq(0, 38, 1)
+	x <- seq(-3, 38, 1)
 	predictions <- curve1$a.list[[1]]*exp(curve1$b.list[[1]]*x)*(1-((x-curve1$z.list[[1]])/(curve1$w.list[[1]]/2))^2)
 	data.frame(x, predictions)
 }
@@ -261,7 +271,7 @@ boot_limits_variable <- all_predictions %>%
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) 
- write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")	
+ write_csv(boot_limits_variable, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v10k.csv")	
 
 ## plot it! (bands look super skinny now??). I think this is what we are after.
 data_full %>% 
