@@ -344,6 +344,8 @@ topt_var_pred_high <- data.frame(x1 = 21.99899, x2 = 21.99899, y1 = -0.1, y2 = 0
 rmax_var_pred_low <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.281735, y2 = 1.281735)
 rmax_var_pred_high <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.393774, y2 = 1.393774)
 rmax_line_var <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.20, y2 = 1.20)
+rmax_line <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.62, y2 = 1.62)
+rmax <- data.frame(x1 = -1.2, x2 = -1.2, y1 = 1.52, y2 = 1.71)
 
 rmax_var <- data.frame(x1 =-1.2, x2 = -1.2, y1 = 1.06, y2 = 1.36)
 
@@ -377,7 +379,9 @@ geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, wi
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_var, color = ic[5], size = 5, alpha = 0.7) +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_var_pred_low, color = "black", size = 0.5, linetype = "dashed") +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_var_pred_high, color = "black", size = 0.5, linetype = "dashed") +
-   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_line_var, color = ic[5], size = 0.5, alpha = 0.7) 
+   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_line_var, color = ic[5], size = 0.5, alpha = 0.7) +
+   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax, color = ic[3], size = 5, alpha = 0.7) +
+   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_line, color = ic[3], size = 0.5) 
  
  
 
