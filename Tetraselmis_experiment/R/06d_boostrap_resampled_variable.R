@@ -228,21 +228,46 @@ fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.
 
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
+
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_1719.csv")
 write_csv(dat.full, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_1719_dat_full.csv")
+
+
+
+fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv")
+
+
 fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv")
+
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
 
+fits1 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv") %>% 
+  mutate(trial = "try1") 
+fits2 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_3184.csv") %>% 
+  mutate(trial = "try2")
+fits3 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")%>% 
+  mutate(trial = "try3")
+fits4 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")%>% 
+  mutate(trial = "try4")
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
+fits_all <- bind_rows(fits1, fits2, fits3, fits4) %>% 
+  filter(!is.na(topt.list)) %>% 
+  unite(unique_id, trial, curve.id.list)
+
+write_csv(fits_all, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_v.csv")
+
+### ok now bringing in all the various versions of the bootstrapped variable
+
+
 ## split up the fits df by curve id
-fits_split <- fits %>% 
-	filter(a.list >0) %>% 
+fits_split <- fits_all %>% 
+	filter(a.list >0, rsqr.list > 0.98) %>% 
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {
-	x <- seq(0, 38, 1)
+	x <- seq(-3, 38, 1)
 	predictions <- curve1$a.list[[1]]*exp(curve1$b.list[[1]]*x)*(1-((x-curve1$z.list[[1]])/(curve1$w.list[[1]]/2))^2)
 	data.frame(x, predictions)
 }
@@ -252,12 +277,12 @@ all_predictions <- fits_split %>%
 	map_df(prediction_function) 
 
 ## get the upper and lower limits of the predicted growth rates at each value of x (temperature)
-boot_limits <- all_predictions %>% 
+boot_limits_variable <- all_predictions %>% 
 	group_by(x) %>% 
 	summarise(q2.5=quantile(predictions, probs=0.025),
 						q97.5=quantile(predictions, probs=0.975),
 						mean = mean(predictions)) 
-write_csv(boot_limits, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v.csv")	
+ write_csv(boot_limits_variable, "Tetraselmis_experiment/data-processed/boot_limits_constant_resample_v10k.csv")	
 
 ## plot it! (bands look super skinny now??). I think this is what we are after.
 data_full %>% 
