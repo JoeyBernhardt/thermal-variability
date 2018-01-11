@@ -250,9 +250,13 @@ fits3 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_41
   mutate(trial = "try3")
 fits4 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")%>% 
   mutate(trial = "try4")
+fits5 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_1719.csv")%>% 
+  mutate(trial = "try5")
+fits6 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_2446.csv")%>% 
+  mutate(trial = "try6")
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
-fits_all <- bind_rows(fits1, fits2, fits3, fits4) %>% 
+fits_all <- bind_rows(fits1, fits2, fits3, fits4, fits5, fits6) %>% 
   filter(!is.na(topt.list)) %>% 
   unite(unique_id, trial, curve.id.list)
 
