@@ -238,14 +238,21 @@ fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v.csv
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
 
-fits1 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv")
-fits2 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_3184.csv")
-fits3 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")
-fits4 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
+fits1 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_10000_2547.csv") %>% 
+  mutate(trial = "try1") 
+fits2 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_3184.csv") %>% 
+  mutate(trial = "try2")
+fits3 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_4118.csv")%>% 
+  mutate(trial = "try3")
+fits4 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")%>% 
+  mutate(trial = "try4")
 ## ok now take the fits, and make prediction curves and then take the 97.5 and 2.5% CIs
 
 fits_all <- bind_rows(fits1, fits2, fits3, fits4) %>% 
-  filter(!is.na(topt.list))
+  filter(!is.na(topt.list)) %>% 
+  unite(unique_id, trial, curve.id.list)
+
+write_csv(fits_all, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_v.csv")
 
 ### ok now bringing in all the various versions of the bootstrapped variable
 
