@@ -179,7 +179,7 @@ fits_10v <- cf10v %>%
   ungroup()
 
 
-fits_above_freezing_constant_10v <- fits_10v %>% 
+fits_above_freezing_10v <- fits_10v %>% 
   mutate(breadth = tmax - tmin) %>%
   summarise(w_low=quantile(w, probs=0.025),
             w_high=quantile(w, probs=0.975),
@@ -197,7 +197,7 @@ fits_above_freezing_constant_10v <- fits_10v %>%
             topt_high=quantile(topt.list, probs=0.975),
             topt_mean=mean(topt.list)) %>% 
   gather(key = "metric", value = "value_incomplete") 
-write_csv(fits_above_freezing_constant_10, "Tetraselmis_experiment/data-processed/fits_above_freezing_variable_10.csv")
+write_csv(fits_above_freezing_10v, "Tetraselmis_experiment/data-processed/fits_above_freezing_variable_10.csv")
 
 ### now just with full 9 temps
 fits_split9 <- d10 %>% 
