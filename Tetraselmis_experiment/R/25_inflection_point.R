@@ -67,14 +67,14 @@ variable_upper2 <- data.frame(x, deriv_value) %>%
 
 
 variable_upper2 %>% 
-	filter(deriv_value > 16.8) %>% View
+	filter(deriv_value < 0.001) %>% View
 	ggplot(aes(x = temperature, y = deriv_value)) + geom_line() +
 	geom_hline(yintercept = 0) + xlim(16.5, 17) + ylim(-0.01, 0.01)
 	
 	
 	### find the inflection points of the upper and lower curves
 	
-	boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample.csv")
+	boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv")
 
 	
 	dat.full <- boot_limits_constant %>% 
@@ -214,12 +214,12 @@ variable_upper2 %>%
 	write_csv(fits, "Tetraselmis_experiment/data-processed/upper_lower_curve_constant_fits.csv")
 	
 	curve_lower<-function(x){
-	  res<-fits$a.list[2]*exp(fits$b.list[2]*x)*(1-((x-fits$z.list[2])/(fits$w.list[2]/2))^2)
+	  res<-fits$a.list[curve.id.list == 2]*exp(fits$b.list[curve.id.list == 2]*x)*(1-((x-fits$z.list[curve.id.list == 2])/(fits$w.list[curve.id.list == 2]/2))^2)
 	  res
 	}
 	
 	curve_upper<-function(x){
-	  res<-fits$a.list[3]*exp(fits$b.list[3]*x)*(1-((x-fits$z.list[3])/(fits$w.list[3]/2))^2)
+	  res<-fits$a.list[curve.id.list == 3]*exp(fits$b.list[curve.id.list == 3]*x)*(1-((x-fits$z.list[curve.id.list == 3])/(fits$w.list[curve.id.list == 3]/2))^2)
 	  res
 	}
 	
@@ -233,7 +233,7 @@ variable_upper2 %>%
 	  rename(temperature = x) %>% 
 	  filter(deriv_lower < 0.0001) %>% View
 	
-	## inflection of the lower curve is at 15.669
+	## inflection of the lower curve is at 15.669, 16.71
 	
 	deriv_upper <- function(x) {
 	  y <- derivative(f = curve_upper, x = x, order = 2)
@@ -245,5 +245,5 @@ variable_upper2 %>%
 	  filter(deriv_upper < 0.0001) %>% View
 	
 	
-	## inflection of the lower curve is at 16.933
+	## inflection of the lower curve is at 16.933, 17.124
 	

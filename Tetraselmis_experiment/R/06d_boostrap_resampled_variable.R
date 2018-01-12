@@ -264,7 +264,7 @@ write_csv(fits_all, "Tetraselmis_experiment/data-processed/boot_fits_resample_10
 
 ### ok now bringing in all the various versions of the bootstrapped variable
 
-
+fits_all <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_10000_v.csv")
 ## split up the fits df by curve id
 fits_split <- fits_all %>% 
 	filter(rsqr.list > 0.98) %>% 

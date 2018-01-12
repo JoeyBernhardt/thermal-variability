@@ -72,7 +72,7 @@ fits10 <- d10 %>%
 
 cf10 <- fits10 %>%
   filter(rsqr.list > 0.98) %>% 
-  group_by(curve.id.list) %>% str()
+  group_by(curve.id.list) %>% 
   mutate(tmax = ifelse(length(uniroot.all(function(x) nbcurve(x, z, w, a, b),c(topt.list,150)))==0, NA,
                        uniroot.all(function(x) nbcurve(x, z, w,  a, b),c(topt.list,150)))) %>% 
   mutate(tmin = ifelse(length(uniroot.all(function(x) nbcurve(x, z,w, a, b),c(-1.8,topt.list)))==0, NA,
@@ -101,7 +101,10 @@ fits_above_freezing_constant_10 <- fits_10 %>%
             breadth_mean=mean(breadth),
             topt_low=quantile(topt.list, probs=0.025),
             topt_high=quantile(topt.list, probs=0.975),
-            topt_mean=mean(topt.list)) %>% 
+            topt_mean=mean(topt.list),
+            rmax_low=quantile(maxgrowth.list, probs=0.025),
+            rmax_high=quantile(maxgrowth.list, probs=0.975),
+            rmax_mean=mean(maxgrowth.list)) %>% 
   gather(key = "metric", value = "value_incomplete") 
 write_csv(fits_above_freezing_constant_10, "Tetraselmis_experiment/data-processed/fits_above_freezing_constant_10.csv")
 
@@ -195,7 +198,10 @@ fits_above_freezing_10v <- fits_10v %>%
             breadth_mean=mean(breadth),
             topt_low=quantile(topt.list, probs=0.025),
             topt_high=quantile(topt.list, probs=0.975),
-            topt_mean=mean(topt.list)) %>% 
+            topt_mean=mean(topt.list),
+            rmax_low=quantile(maxgrowth.list, probs=0.025),
+            rmax_high=quantile(maxgrowth.list, probs=0.975),
+            rmax_mean=mean(maxgrowth.list)) %>% 
   gather(key = "metric", value = "value") 
 write_csv(fits_above_freezing_10v, "Tetraselmis_experiment/data-processed/fits_above_freezing_variable_10.csv")
 

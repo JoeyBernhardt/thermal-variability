@@ -302,13 +302,15 @@ ct <- read_csv("Tetraselmis_experiment/data-processed/fits_above_freezing_consta
   rename(value = value_incomplete)
 
 ## plot A
-topt <- data.frame(x1 = 24.27, x2 = 24.86, y1 = 0, y2 = 0)
-rmax_line <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.62, y2 = 1.62)
-rmax <- data.frame(x1 = -1.2, x2 = -1.2, y1 = 1.52, y2 = 1.71)
+topt <- data.frame(x1 = ct$value[ct$metric=="topt_low"], x2 = ct$value[ct$metric=="topt_high"], y1 = 0, y2 = 0)
+rmax_line <- data.frame(x1 = -2.5, x2 = 0, y1 = ct$value[ct$metric=="rmax_mean"], y2 = ct$value[ct$metric=="rmax_mean"])
+rmax <- data.frame(x1 = -1.2, x2 = -1.2, y1 = ct$value[ct$metric=="rmax_low"], y2 = ct$value[ct$metric=="rmax_high"])
 topt_point <- data.frame(x1 = ct$value[ct$metric=="topt_mean"], x2 = ct$value[ct$metric=="topt_mean"], y1 = -0.1, y2 = 0.1)
+inflection <- data.frame(x1 = 16.96, x2 = 16.96, y1 = 0.8, y2 = 1.3)
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
 a <- p + 
+  geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = inflection, color = "grey", size = 0.5) +
   geom_hline(yintercept = 0, color = "grey") +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
 	stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
@@ -327,7 +329,8 @@ a <- p +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt, color = ic[3], size = 5, alpha = 0.7) +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax, color = ic[3], size = 5, alpha = 0.7) +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_line, color = ic[3], size = 0.5) +
-   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_point, color = ic[3], size = 0.5)
+   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_point, color = ic[3], size = 0.5) 
+  
    
   
 ggsave("Tetraselmis_experiment/figures/constant_tpc_figure_with_inflection.png", width = 5, height = 3)
@@ -338,20 +341,26 @@ ggsave("Tetraselmis_experiment/figures/constant_tpc.png", width = 5, height = 3)
 
 ## plot B
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
-topt_var <- data.frame(x1 = 20.38, x2 = 22.22, y1 = 0, y2 = 0)
+
+topt <- data.frame(x1 = ct$value[ct$metric=="topt_low"], x2 = ct$value[ct$metric=="topt_high"], y1 = 0, y2 = 0)
+rmax_line <- data.frame(x1 = -2.5, x2 = 0, y1 = ct$value[ct$metric=="rmax_mean"], y2 = ct$value[ct$metric=="rmax_mean"])
+rmax <- data.frame(x1 = -1.2, x2 = -1.2, y1 = ct$value[ct$metric=="rmax_low"], y2 = ct$value[ct$metric=="rmax_high"])
+topt_point <- data.frame(x1 = ct$value[ct$metric=="topt_mean"], x2 = ct$value[ct$metric=="topt_mean"], y1 = -0.1, y2 = 0.1)
+
+
+topt_var <- data.frame(x1 = ctv$value[ctv$metric=="topt_low"], x2 = ctv$value[ctv$metric=="topt_high"], y1 = 0, y2 = 0)
 topt_var_pred_low <- data.frame(x1 = 21.78618, x2 = 21.78618, y1 = -0.1, y2 = 0.1)
 topt_var_pred_high <- data.frame(x1 = 21.99899, x2 = 21.99899, y1 = -0.1, y2 = 0.1)
 rmax_var_pred_low <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.281735, y2 = 1.281735)
 rmax_var_pred_high <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.393774, y2 = 1.393774)
-rmax_line_var <- data.frame(x1 = -2.5, x2 = 0, y1 = 1.20, y2 = 1.20)
-rmax_line <- data.frame(x1 = -2.5, x2 = -0.05, y1 = 1.62, y2 = 1.62)
-rmax <- data.frame(x1 = -1.2, x2 = -1.2, y1 = 1.52, y2 = 1.71)
+rmax_line_var <- data.frame(x1 = -2.5, x2 = 0, y1 = ctv$value[ctv$metric=="rmax_mean"], y2 = ctv$value[ctv$metric=="rmax_mean"])
 
-rmax_var <- data.frame(x1 =-1.2, x2 = -1.2, y1 = 1.06, y2 = 1.36)
+rmax_var <- data.frame(x1 =-1.2, x2 = -1.2, y1 = ctv$value[ctv$metric=="rmax_low"], y2 = ctv$value[ctv$metric=="rmax_high"])
 topt_point_v <- data.frame(x1 = ctv$value[ctv$metric=="topt_mean"], x2 = ctv$value[ctv$metric=="topt_mean"], y1 = -0.1, y2 = 0.1)
 
  b <- p + 
   geom_hline(yintercept = 0, color = "darkgrey") +
+   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = inflection, color = "grey", size = 0.5) +
   stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
 geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[5], alpha = 0.3) +
@@ -383,7 +392,7 @@ geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, wi
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax, color = ic[3], size = 5, alpha = 0.7) +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_line, color = ic[3], size = 0.5) +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_point_v, color = ic[5], size = 0.5) +
-   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_point, color = ic[3], size = 0.5)
+   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_point, color = ic[3], size = 0.5) 
  
  
 
