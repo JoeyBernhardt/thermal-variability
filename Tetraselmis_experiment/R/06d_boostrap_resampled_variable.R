@@ -258,7 +258,7 @@ fits6 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_24
 
 fits_all <- bind_rows(fits1, fits2, fits3, fits4, fits5, fits6) %>% 
   filter(!is.na(topt.list)) %>% 
-  unite(unique_id, trial, curve.id.list)
+  unite(unique_id, trial, curve.id.list, remove = FALSE)
 
 write_csv(fits_all, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_v.csv")
 
@@ -267,7 +267,7 @@ write_csv(fits_all, "Tetraselmis_experiment/data-processed/boot_fits_resample_10
 
 ## split up the fits df by curve id
 fits_split <- fits_all %>% 
-	filter(a.list >0, rsqr.list > 0.98) %>% 
+	filter(rsqr.list > 0.98) %>% 
 	split(.$curve.id.list)
 
 prediction_function <- function(curve1) {

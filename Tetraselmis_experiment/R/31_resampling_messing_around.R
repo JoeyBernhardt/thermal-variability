@@ -196,7 +196,7 @@ fits_above_freezing_10v <- fits_10v %>%
             topt_low=quantile(topt.list, probs=0.025),
             topt_high=quantile(topt.list, probs=0.975),
             topt_mean=mean(topt.list)) %>% 
-  gather(key = "metric", value = "value_incomplete") 
+  gather(key = "metric", value = "value") 
 write_csv(fits_above_freezing_10v, "Tetraselmis_experiment/data-processed/fits_above_freezing_variable_10.csv")
 
 ### now just with full 9 temps
