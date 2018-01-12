@@ -54,7 +54,7 @@ derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
 }
 ###
 
-x <- seq(0, 33, by = 0.001)
+x <- seq(-5, 38, by = 0.001)
 
 
 deriv_2 <- function(x) {
@@ -231,7 +231,7 @@ variable_upper2 %>%
 	deriv_lower <- sapply(x, deriv_lower)
 	constant_lower <- data.frame(x, deriv_lower) %>% 
 	  rename(temperature = x) %>% 
-	  filter(deriv_lower < 0.0001) %>% View
+	  filter(deriv_lower < 0.0001) 
 	
 	## inflection of the lower curve is at 15.669, 16.71
 	
@@ -242,8 +242,30 @@ variable_upper2 %>%
 	deriv_upper <- sapply(x, deriv_upper)
 	constant_upper <- data.frame(x, deriv_upper) %>% 
 	  rename(temperature = x) %>% 
-	  filter(deriv_upper < 0.0001) %>% View
+	  filter(deriv_upper < 0.0001)
 	
 	
 	## inflection of the lower curve is at 16.933, 17.124
 	
+	
+	
+	
+	p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
+TPC <- p +
+  # geom_hline(yintercept = 0, color = "grey") +
+  geom_vline(xintercept = 16.96, color = "grey")+
+  stat_function(fun = curve_constant_resamp, size = 1.5) +
+  ylim(0, 1.8) + xlim(-2, 32) +
+  ylab("P(T)") + xlab(expression("")) 
+
+deriv <- p +
+  geom_hline(yintercept = 0, color = "grey") +
+  geom_vline(xintercept = 16.96, color = "grey") +
+  ylab("P''(T)") + xlab(expression("Temperature (" *degree * "C)")) +
+  xlim(-2, 32) + ylim(-0.05, 0.05) +
+  geom_line(aes(x = temperature, y = deriv_value), data = variable_upper2, size = 1.5)
+  
+
+plot1 <- plot_grid(TPC, deriv, labels = c("A", "B"), align = "v", nrow = 2)
+ggsave(plot1, file = "Tetraselmis_experiment/figures/figure1.png", width = 6, height = 7)
+
