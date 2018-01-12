@@ -8,8 +8,8 @@ library(stringr)
 library(simecol)
 library(purrr)
 
-ldata <- read_csv("data-processed/TT_cells.csv")
-data5 <- read_csv("data-processed/5C_TT_cells.csv")
+ldata <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_light.csv")
+data5 <- read_csv("Tetraselmis_experiment/data-processed/5C_TT_cells.csv")
 
 
 str(ldata)
@@ -24,7 +24,7 @@ ldata2 <- ldata %>%
 	mutate(replicate = str_replace(replicate, "08", "8")) %>% 
 	mutate(replicate = str_replace(replicate, "09", "9")) %>% 
 	mutate(light_level = NA) %>% 
-	mutate(light_level = ifelse(replicate %in% c("11", "1", "6", "3"), "high_light", light_level)) %>% 
+	mutate(light_level = ifelse(replicate %in% c("11", "1", "6", "3"), "high_light", light_level)) %>%
 	mutate(light_level = ifelse(replicate %in% c("2", "4", "7", "10"), "med_high_light", light_level)) %>% 
 	mutate(light_level = ifelse(replicate %in% c("5", "12", "8", "9"), "med_low_light", light_level)) %>%
 	mutate(light_level = ifelse(replicate %in% c("14", "13", "16", "15"), "low_light", light_level)) %>% 
@@ -127,7 +127,7 @@ PI <- fitEP(growth_results$light, growth_results$estimate, normalize = FALSE, lo
 			fitmethod=c("Nelder-Mead"))
 PI$eopt
 
-plot(growth_results$light, growth_results$estimate, xlim=c(0,150), ylim=c(0,1), xlab="light (photons)", ylab="growth rate")
+plot(growth_results$light, growth_results$estimate, xlim=c(0,150), ylim=c(0,1), xlab="light (photons)", ylab="Growth rate")
 #Add model fit
 E <- seq(0,150,by=1)
 with(PI,{
