@@ -1,4 +1,4 @@
-## plotting the confidence intervals, are the curves different??
+ ## plotting the confidence intervals, are the curves different??
 
 
 
@@ -203,7 +203,7 @@ for(i in 1:length(curve.id.list)){
 }
 
 fits <-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list) 
-# write_csv(fits, "Tetraselmis_experiment/data-processed/boot_upper_lower_fits.csv")
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_upper_lower_fits2.csv")
 # fits <- read_csv("Tetraselmis_experiment/data-processed/boot_upper_lower_fits.csv")
 
 bootcurve_upper<-function(x){

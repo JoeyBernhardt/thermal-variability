@@ -325,7 +325,7 @@ ggsave("Tetraselmis_experiment/figures/env_temp_v_Topt.pdf")
 
 
 ## skew and SD best explain variation in the effect of variability
-m1 <- lm(diff ~ rel.curveskew + SD, data = results5)
+m1 <- lm(rev_diff ~ rel.curveskew + SD, data = results6)
 m1 <- lm(max_diff ~ rel.curveskew + SD, data = results5)
 m1 <- lm(breadth_diff ~ rel.curveskew + SD, data = results5)
 m2 <- lm(diff ~ rel.curveskew, data = results5)
