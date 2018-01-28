@@ -379,7 +379,8 @@ geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, wi
   coord_cartesian(ylim = c(-0.5, 1.8), xlim= c(0, 32)) +
 	theme_classic() +
 	theme(text = element_text(size=14)) +
-  geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = "transparent", alpha = 0.01, data = variable_predictions_points, linetype = "dashed", color = "black", size = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = "transparent", alpha = 0.01, data = variable_predictions_points, linetype = "dashed", color = "black", size = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01, data = all_preds_average, linetype = "dashed", color = "black", size = 0.5)
   coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32)) +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_var, color = ic[5], size = 5, alpha = 0.7) +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_var_pred_low, color = "black", size = 0.5, linetype = "dashed") +
@@ -397,7 +398,7 @@ geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, wi
  
 
  plots <- plot_grid(a, b, labels = c("A", "B"), align = "v", nrow = 2)
- ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_resampling_color_10k.png", width = 6, height = 7)
+ ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_resampling_color_10kb.png", width = 6, height = 7)
 
 
 
