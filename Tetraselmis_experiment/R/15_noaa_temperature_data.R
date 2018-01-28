@@ -115,7 +115,7 @@ write_csv(thomas_locations, "Tetraselmis_experiment/data-processed/thomas_locati
 thomas_locations <- read_csv("Tetraselmis_experiment/data-processed/thomas_locations.csv")
 
 thomas_split <- thomas_locations %>% 
-	filter(isolate.code == 11) %>%
+	filter(isolate.code == 89) %>%
 	split(.$isolate.code)
 
 
@@ -131,7 +131,7 @@ extract_function <- function(df) {
 	output <- results$data
 }
 
-temperatures_2005 <- thomas_split %>% 
+temperatures_2005_89 <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
 
 
@@ -139,8 +139,8 @@ temperatures_2005 <- thomas_split %>%
 
 write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
 
-write_csv(temperatures_2005, "Tetraselmis_experiment/data-processed/daily_temps_.csv")
-
+write_csv(temperatures_2005, "Tetraselmis_experiment/data-processed/daily_temps_2005.csv")
+write_csv(temperatures_2005_89, "Tetraselmis_experiment/data-processed/daily_temps_isolate89_2005.csv")
 
 temperatures_above99 <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
