@@ -7,8 +7,6 @@
 library(rerddap)
 library(tidyverse)
 library(purrr)
-library(reprex)
-library(rerddap)
 library(ncdf4)
 
 #### not sure what this is for ####
@@ -120,20 +118,29 @@ thomas_split <- thomas_locations %>%
 	filter(isolate.code == 11) %>%
 	split(.$isolate.code)
 
+
+time_start <- c("2005-01-01")
+time_end <- c("2006-01-01")
+
 extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
-					time = c('2011-01-01', '2010-01-01'),
+					time = c(time_end, time_start),
 					latitude = c(df$latitude[[1]], df$latitude[[1]]),
 					longitude = c(df$longitude[[1]], df$longitude[[1]]),
 					fields = "sst")
 	output <- results$data
 }
 
-temperatures <- thomas_split %>% 
+temperatures_2005 <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
 
 
+
+
 write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
+
+write_csv(temperatures_2005, "Tetraselmis_experiment/data-processed/daily_temps_.csv")
+
 
 temperatures_above99 <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
