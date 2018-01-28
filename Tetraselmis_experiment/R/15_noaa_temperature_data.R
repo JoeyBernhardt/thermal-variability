@@ -7,8 +7,11 @@
 library(rerddap)
 library(tidyverse)
 library(purrr)
+library(reprex)
+library(rerddap)
+library(ncdf4)
 
-
+#### not sure what this is for ####
 out <- ed_search(query = 'temperature')
 out
 
@@ -18,8 +21,7 @@ library(tidyverse)
 
 SST <- str_subset(string = out$info$title, pattern = "SST, Daily Optimum Interpolation")
 
-View(data.frame(SST))
-SST
+
 
 out$info[[out$info$title == "SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180"]]
 
@@ -34,8 +36,7 @@ info_df %>%
 
 griddap('ncdcOisst2AmsrAgg_LonPM180')
 
-library(reprex)
-library(rerddap)
+
 out <- griddap('ncdcOisst2AmsrAgg_LonPM180',
 								time = c('2006-01-01', '1995-01-01'),
 								latitude = c(33.875, 33.875),
@@ -52,7 +53,6 @@ reprex(venue = "gh", si = TRUE)
 
 data_source <- 'ncdcOisst2AmsrAgg_LonPM180'
 
-?griddap
 extract_temps <- function(df) {
 	out <- griddap('ncdcOisst2AmsrAgg_LonPM180',
 					time = c(time_end, time_start),
@@ -80,7 +80,7 @@ df <- df[1,]
 collected_data <- df_split %>% 
 	map_df(extract_temps, .id = "last_time")
 
-df_split
+ndf_split
 
 four_years_data <- four_years$data
 write_csv(four_years_data, "Tetraselmis_experiment/data-processed/four_years_data2.csv")
@@ -101,13 +101,23 @@ thomas3 <- thomas2 %>%
 				 longitude = isolation.longitude) %>% 
 	filter(!is.na(latitude), !is.na(longitude)) %>% 
 	filter(habitat %in% c("marine", "estuarine", "saltmarsh")) %>% 
-	filter(curvequal == "good")
+	filter(curvequal == "good") %>% 
+  filter(mu.rsqrlist > 0.85)
 
 thomas_locations <- thomas3 %>% 
 	select(isolate.code, latitude, longitude)
+
+write_csv(thomas_locations, "Tetraselmis_experiment/data-processed/thomas_locations.csv")
+
 	
+
+# bring in location data --------------------------------------------------
+
+
+thomas_locations <- read_csv("Tetraselmis_experiment/data-processed/thomas_locations.csv")
+
 thomas_split <- thomas_locations %>% 
-	filter(isolate.code > 99) %>%
+	filter(isolate.code == 11) %>%
 	split(.$isolate.code)
 
 extract_function <- function(df) {

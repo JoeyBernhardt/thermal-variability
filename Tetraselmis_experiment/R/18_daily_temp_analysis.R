@@ -16,15 +16,27 @@ temp5 <- read_csv("Tetraselmis_experiment/data-processed/temepratures_last_time.
 missing <- read_csv("Tetraselmis_experiment/data-processed/missing_isolates_NOAA.csv")
 results5 <- read_csv("Tetraselmis_experiment/data-processed/results5.csv")
 
-unique(temp5$isolate.code)
-unique(temp4$isolate.code)
+
+
+ts <- bind_rows(temp1, temp2)
+identical(unique(ts$isolate.code), results5$isolate.code)
+
+
+
+
+results5 %>% 
+  filter(mu.rsqrlist > 0.85) %>% View
+
+length(unique(temp1$isolate.code))
+length(unique(temp2$isolate.code))
+intersect(unique(temp1$isolate.code), unique(temp2$isolate.code))
 
 
 close_temps <- bind_rows(temp1, temp2) %>% 
 	filter(!is.na(sst)) %>% 
 	distinct(isolate.code)
 
-length(setdiff(results5$isolate.code, close_temps$isolate.code))
+length(setdiff(results5$isolate.code, close_temps$isolate.code)) ### ok looks like we are missing 23 isolates
 
 
 temp4_isolates <- temp4 %>% 

@@ -6,10 +6,16 @@ library(lubridate)
 library(timeSeries)
 library(timetk)
 library(viridis)
+library(cowplot)
 
 temp1 <- read_csv("Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
 four_years_data <- read_csv("Tetraselmis_experiment/data-processed/four_years_data.csv")
 temps_all <- read_csv("Tetraselmis_experiment/data-processed/temps_all_33.875N.csv")
+
+
+four_years_data %>% 
+  ggplot(aes(x = sst)) + geom_histogram() + 
+  facet_wrap( ~ lat, scales = "free_y")
 
 
 str(four_years_data)
