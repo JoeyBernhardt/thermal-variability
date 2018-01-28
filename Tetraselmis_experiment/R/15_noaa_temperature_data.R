@@ -3,27 +3,19 @@
 
 
 ### now trying with Ropensci's rerddapp
-
 library(rerddap)
 library(tidyverse)
 library(purrr)
 library(ncdf4)
 
+cache_delete("/Users/joeybernhardt/Library/Caches/R/rerddap/e6e4113fc99e88a79b7294717a602145.nc")
+cache_delete_all(force = TRUE)
+cache_details()
+
 #### not sure what this is for ####
 out <- ed_search(query = 'temperature')
-out
-
-library(stringr)
-library(tidyverse)
-
-
 SST <- str_subset(string = out$info$title, pattern = "SST, Daily Optimum Interpolation")
-
-
-
 out$info[[out$info$title == "SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180"]]
-
-
 info('SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180')
 
 info_df <- out$info
@@ -119,8 +111,8 @@ thomas_split <- thomas_locations %>%
 	split(.$isolate.code)
 
 
-time_start <- c("2005-01-01")
-time_end <- c("2006-01-01")
+time_start <- c("2004-01-01")
+time_end <- c("2005-01-01")
 
 extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
