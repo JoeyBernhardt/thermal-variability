@@ -110,7 +110,7 @@ thomas_locations <- read_csv("Tetraselmis_experiment/data-processed/thomas_locat
 ## 466, 467, 470, 472, 570, 571, 603
 
 thomas_split <- thomas_locations %>% 
-	filter(isolate.code == thomas_locations$isolate.code[[91]]) %>%
+	filter(isolate.code == 603) %>% 
 	split(.$isolate.code)
 time_start <- c("2004-01-01")
 time_end <- c("2004-01-5")
@@ -119,7 +119,7 @@ extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
 					time = c(time_end, time_start),
 					latitude = c(df$latitude[[1]], df$latitude[[1]]),
-					longitude = c(df$longitude[[1]], df$longitude[[1]]),
+					longitude = c(df$longitude[[1]] - 0.7, df$longitude[[1]]-0.7),
 					fields = "sst")
 	output <- results$data
 }
