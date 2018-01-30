@@ -140,12 +140,19 @@ write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_2011.
 
 t2003 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2003.csv")
 t2004 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+t2005 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+t2006 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+t2007 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+t2008 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+t2009 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+t2010 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
 
-tsx <- bind_rows(t2003, t2004)
+
+tsx <- bind_rows(t2003, t2004, t2005, t2006, t2007, t2008, t2009)
 
 tsx %>% 
-  ggplot(aes(x = sst)) + geom_histogram() +
-  facet_wrap(~ isolate.code, scales = "free")
+  ggplot(aes(x = sst)) + geom_density() +
+  facet_wrap(~ isolate.code, scales = "free_y")
 ggsave("Tetraselmis_experiment/figures/temp_histograms.pdf", width = 14, height = 14)
 
 
