@@ -117,8 +117,8 @@ thomas_locations2 <- thomas_locations %>%
 thomas_split <- thomas_locations2 %>% 
 	# filter(isolate.code == 34) %>% 
 	split(.$isolate.code)
-time_start <- c("2002-01-01")
-time_end <- c("2003-01-01")
+time_start <- c("2001-01-01")
+time_end <- c("2002-01-01")
 
 extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
@@ -145,7 +145,8 @@ tsx <- bind_rows(t2003, t2004)
 
 tsx %>% 
   ggplot(aes(x = sst)) + geom_histogram() +
-  facet_wrap(~ lat, scales = "free")
+  facet_wrap(~ isolate.code, scales = "free")
+ggsave("Tetraselmis_experiment/figures/temp_histograms.pdf", width = 14, height = 14)
 
 
 write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
