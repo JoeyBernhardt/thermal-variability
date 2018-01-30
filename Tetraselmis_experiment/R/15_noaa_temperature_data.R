@@ -104,13 +104,17 @@ write_csv(thomas_locations, "Tetraselmis_experiment/data-processed/thomas_locati
 # bring in location data --------------------------------------------------
 
 
-thomas_locations <- read_csv("Tetraselmis_experiment/data-processed/thomas_locations.csv")
+thomas_locations <- read_csv("Tetraselmis_experiment/data-processed/thomas_locations_nearest.csv")
+
+thomas_locations2 <- thomas_locations %>% 
+  mutate(latitude = ifelse(!is.na(nearest_lat), nearest_lat, latitude)) %>% 
+  mutate(longitude = ifelse(!is.na(nearest_long), nearest_long, longitude))
 
 ### problematic isolates 34, 85, 86, 146, 173, 320, 344, 345, 346, 462, 463, 464, 465
 ## 466, 467, 470, 472, 570, 571, 603
 
 thomas_split <- thomas_locations %>% 
-	filter(isolate.code == 603) %>% 
+	filter(isolate.code == 34) %>% 
 	split(.$isolate.code)
 time_start <- c("2004-01-01")
 time_end <- c("2004-01-5")
@@ -119,7 +123,7 @@ extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
 					time = c(time_end, time_start),
 					latitude = c(df$latitude[[1]], df$latitude[[1]]),
-					longitude = c(df$longitude[[1]] - 0.7, df$longitude[[1]]-0.7),
+					longitude = c(df$longitude[[1]], df$longitude[[1]]),
 					fields = "sst")
 	output <- results$data
 }
