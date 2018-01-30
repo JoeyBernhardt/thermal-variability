@@ -9,9 +9,9 @@ library(purrr)
 library(ncdf4)
 library(cowplot)
 
-cache_delete("/Users/joeybernhardt/Library/Caches/R/rerddap/e6e4113fc99e88a79b7294717a602145.nc")
-cache_delete_all(force = TRUE)
 cache_details()
+cache_delete_all(force = TRUE)
+
 
 #### not sure what this is for ####
 out <- ed_search(query = 'temperature')
@@ -117,8 +117,8 @@ thomas_locations2 <- thomas_locations %>%
 thomas_split <- thomas_locations2 %>% 
 	# filter(isolate.code == 34) %>% 
 	split(.$isolate.code)
-time_start <- c("2001-01-01")
-time_end <- c("2002-01-01")
+time_start <- c("2011-01-01")
+time_end <- c("2011-12-31")
 
 extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
@@ -132,7 +132,7 @@ extract_function <- function(df) {
 temperatures <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
 
-write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_2002.csv")
+write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_2011.csv")
 
 
 # plot all the freq histograms --------------------------------------------
