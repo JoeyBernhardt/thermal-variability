@@ -106,13 +106,14 @@ write_csv(thomas_locations, "Tetraselmis_experiment/data-processed/thomas_locati
 
 thomas_locations <- read_csv("Tetraselmis_experiment/data-processed/thomas_locations.csv")
 
+### problematic isolates 34, 85, 86, 146, 173, 320, 344, 345, 346, 462, 463, 464, 465
+## 466, 467, 470, 472, 570, 571, 603
+
 thomas_split <- thomas_locations %>% 
-	filter(isolate.code == 89) %>%
+	filter(isolate.code == thomas_locations$isolate.code[[91]]) %>%
 	split(.$isolate.code)
-
-
 time_start <- c("2004-01-01")
-time_end <- c("2005-01-01")
+time_end <- c("2004-01-5")
 
 extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
@@ -123,9 +124,9 @@ extract_function <- function(df) {
 	output <- results$data
 }
 
-temperatures_2005_89 <- thomas_split %>% 
+temperatures <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
-
+(temperatures)
 
 
 

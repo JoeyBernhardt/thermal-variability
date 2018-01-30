@@ -36,10 +36,23 @@ lin_avg <- ts %>%
   mutate(growth_rate = d$a*exp(d$b*temp)*(1-((temp-d$z)/(d$w/2))^2)) %>% 
   summarise_each(funs(mean, sd), growth_rate)
 
-data_fun <- approxfun(growth$day, growth$growth_rate, method="constant", 0, 0)
-out <- integrate(data_fun, lower = 1, upper = 366, subdivisions = 2000)
+library(tidyverse)
+
+## read in data
+
+growth <- read.csv("Tetraselmis_experiment/data-processed/growth_toy.csv")
+
+## make a function that approximates the time series
+data_fun <- approxfun(growth$day, growth$growth_rate, method="constant", 0, 0) 
+
+## this is equivalent to equation 2.3 in Vasseur et al. 2014 (I think), here we have 366 days
+out <- integrate(data_fun, lower = 1, upper = 366, subdivisions = 2000) ## integrate over the time series
+
+## the value of equation 2.3 gives the total 'area under the curve' i.e. the cumulative growth rate
 out$value
 
+### but what makes more sense to me is this (which divides by number of days)
+out$value/365
 
 
 AUC(x, y)
