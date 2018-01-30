@@ -160,6 +160,7 @@ temperatures %>%
   filter(is.na(sst)) %>% View
 
 # plot all the freq histograms --------------------------------------------
+t1990 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_1990.csv")
 t1991 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_1991.csv")
 t1992 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_1992.csv")
 t1993 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_1993.csv")
@@ -182,10 +183,15 @@ t2009 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2009.csv")
 t2010 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2010.csv")
 
 
-tsx <- bind_rows(t1991, t1992, t1993, t1994, t1995, t1996, t1997, t1998, t2003, t2004, t2005, t2006, t2007, t2008, t2009, t1999, t2000, t2001, t2002, t2010)
+tsx <- bind_rows(t1990, t1991, t1992, t1993, t1994, t1995, t1996, t1997, t1998, t2003, t2004, t2005, t2006, t2007, t2008, t2009, t1999, t2000, t2001, t2002, t2010)
 
 tsx2 <- tsx %>% 
   distinct(isolate.code, time, lat, long, .keep_all = TRUE)
+
+tsx2 %>% 
+  filter(isolate.code == 606) %>% 
+  ggplot(aes(x = time, y = sst)) + geom_line()
+
 
 tsx2 %>% 
   mutate(lat = round(lat, digits = 1)) %>% 
@@ -193,8 +199,9 @@ tsx2 %>%
   unite(lat_long_isolate, c("lat", "lon", "isolate.code"), sep = ".", remove = FALSE) %>% 
   mutate(region = ifelse(abs(lat) > 30, "temperate", "tropical")) %>% 
   mutate(region = ifelse(abs(lat) > 60, "polar", region)) %>% 
-  ggplot(aes(x = sst, fill = region)) + geom_density() +
-  facet_wrap(~ lat_long_isolate, scales = "free_y")
+  filter(abs(lat) < 74) %>% 
+  ggplot(aes(x = sst, fill = region)) + geom_histogram() +
+  facet_wrap(~ lat_long_isolate)
 ggsave("Tetraselmis_experiment/figures/temp_histograms.pdf", width = 18, height = 14)
 ggsave("Tetraselmis_experiment/figures/temp_density.pdf", width = 18, height = 14)
 
