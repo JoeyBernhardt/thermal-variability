@@ -7,6 +7,7 @@ library(rerddap)
 library(tidyverse)
 library(purrr)
 library(ncdf4)
+library(cowplot)
 
 cache_delete("/Users/joeybernhardt/Library/Caches/R/rerddap/e6e4113fc99e88a79b7294717a602145.nc")
 cache_delete_all(force = TRUE)
@@ -113,11 +114,11 @@ thomas_locations2 <- thomas_locations %>%
 ### problematic isolates 34, 85, 86, 146, 173, 320, 344, 345, 346, 462, 463, 464, 465
 ## 466, 467, 470, 472, 570, 571, 603
 
-thomas_split <- thomas_locations %>% 
-	filter(isolate.code == 34) %>% 
+thomas_split <- thomas_locations2 %>% 
+	# filter(isolate.code == 34) %>% 
 	split(.$isolate.code)
-time_start <- c("2004-01-01")
-time_end <- c("2004-01-5")
+time_start <- c("2002-01-01")
+time_end <- c("2003-01-01")
 
 extract_function <- function(df) {
 	results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
@@ -130,8 +131,21 @@ extract_function <- function(df) {
 
 temperatures <- thomas_split %>% 
 	map_df(extract_function, .id = "isolate.code")
-(temperatures)
 
+write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_2002.csv")
+
+
+# plot all the freq histograms --------------------------------------------
+
+
+t2003 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2003.csv")
+t2004 <- read_csv("Tetraselmis_experiment/data-processed/daily_temps_2004.csv")
+
+tsx <- bind_rows(t2003, t2004)
+
+tsx %>% 
+  ggplot(aes(x = sst)) + geom_histogram() +
+  facet_wrap(~ lat, scales = "free")
 
 
 write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
