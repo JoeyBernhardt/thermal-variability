@@ -310,7 +310,7 @@ inflection <- data.frame(x1 = 16.96, x2 = 16.96, y1 = 0.8, y2 = 1.3)
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
 a <- p + 
-  geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = inflection, color = "grey", size = 0.5) +
+  # geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = inflection, color = "grey", size = 0.5) +
   geom_hline(yintercept = 0, color = "grey") +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
 	stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
@@ -325,7 +325,8 @@ a <- p +
 	theme(text = element_text(size=14)) +
 	labs(y = expression ("Population growth rate"~day^-1)) +
   coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32)) +
-  geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = "transparent", alpha = 0.01, data = variable_predictions_points, linetype = "dashed", color = "black", size = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01, data = all_preds_average, linetype = "dashed", color = "black", size = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = "transparent", alpha = 0.01, data = variable_predictions_points, linetype = "dashed", color = "black", size = 0.5) +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt, color = ic[3], size = 5, alpha = 0.7) +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax, color = ic[3], size = 5, alpha = 0.7) +
    geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = rmax_line, color = ic[3], size = 0.5) +
@@ -358,9 +359,9 @@ rmax_line_var <- data.frame(x1 = -2.5, x2 = 0, y1 = ctv$value[ctv$metric=="rmax_
 rmax_var <- data.frame(x1 =-1.2, x2 = -1.2, y1 = ctv$value[ctv$metric=="rmax_low"], y2 = ctv$value[ctv$metric=="rmax_high"])
 topt_point_v <- data.frame(x1 = ctv$value[ctv$metric=="topt_mean"], x2 = ctv$value[ctv$metric=="topt_mean"], y1 = -0.1, y2 = 0.1)
 
- b <- p + 
+b <- p + 
   geom_hline(yintercept = 0, color = "darkgrey") +
-   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = inflection, color = "grey", size = 0.5) +
+   # geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = inflection, color = "grey", size = 0.5) +
   stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
   geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
 geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_variable, fill = ic[5], alpha = 0.3) +
@@ -380,7 +381,7 @@ geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, wi
 	theme_classic() +
 	theme(text = element_text(size=14)) +
   # geom_ribbon(aes(x = temperature, ymin = growth.rate.lower, ymax = growth.rate.upper, linetype = NA), fill = "transparent", alpha = 0.01, data = variable_predictions_points, linetype = "dashed", color = "black", size = 0.5) +
-  geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01, data = all_preds_average, linetype = "dashed", color = "black", size = 0.5)
+  geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01, data = all_preds_average, linetype = "dashed", color = "black", size = 0.5) +
   coord_cartesian(ylim = c(-0.2, 1.7), xlim = c(0, 32)) +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_var, color = ic[5], size = 5, alpha = 0.7) +
   geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = topt_var_pred_low, color = "black", size = 0.5, linetype = "dashed") +
@@ -401,8 +402,6 @@ geom_errorbar(aes(x = temp, ymin = lower, ymax = upper), data = growth_sum_v, wi
  ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_resampling_color_10kb.png", width = 6, height = 7)
 
 
-
- 
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data.pdf")
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band.png", width = 5, height = 3)
 ggsave("Tetraselmis_experiment/figures/variable_predictions_data_prediction_band_points.png", width = 5, height = 3)
