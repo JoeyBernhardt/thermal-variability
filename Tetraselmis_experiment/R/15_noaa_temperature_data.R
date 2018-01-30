@@ -141,8 +141,8 @@ write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_2002.
 ### now to get temps from before 2002, need just AVHRR
 ## ncdcOisst2Agg_LonPM180
 
-time_start <- c("1990-01-01")
-time_end <- c("1990-12-31")
+time_start <- c("1982-01-01")
+time_end <- c("1982-12-31")
 extract_function <- function(df) {
   results <- griddap('ncdcOisst2Agg_LonPM180',
                      time = c(time_end, time_start),
@@ -154,7 +154,7 @@ extract_function <- function(df) {
 
 temperatures <- thomas_split %>% 
   map_df(extract_function, .id = "isolate.code")
-write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_1990.csv")
+write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temps_1982.csv")
 
 temperatures %>% 
   filter(is.na(sst)) %>% View
