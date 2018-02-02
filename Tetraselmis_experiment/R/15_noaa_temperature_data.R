@@ -196,6 +196,35 @@ tsx <- bind_rows(t1982, t1983, t1984, t1985, t1986, t1987, t1988, t1989, t1990, 
 tsx2 <- tsx %>% 
   distinct(isolate.code, time, lat, long, .keep_all = TRUE)
 
+### put the temperature and the thermal trait data together
+tc <- left_join(tsx2, thomas3, by = "isolate.code")
+
+growth_rates <- tc %>% 
+  rename(temp = sst) %>% 
+  group_by(isolate.code) %>% 
+  mutate(growth_rate = a*exp(b*temp)*(1-((temp-z)/(w/2))^2)) %>% 
+  select(isolate.code, temp, a, b, z, w, growth_rate)
+
+growth_summary <- growth_rates %>% 
+  group_by(isolate.code) %>% 
+  summarise_each(funs(mean), growth_rate)
+
+
+all_thermal_data <- read_csv("Tetraselmis_experiment/data-processed/all_thermal_data.csv")
+mean <- all_thermal_data %>% 
+  group_by(isolate.code) %>% 
+  mutate(growth_rate_mean = a*exp(b*Mean)*(1-((Mean-z)/(w/2))^2)) %>% 
+  select(isolate.code, growth_rate_mean, Mean)
+
+
+all <- left_join(growth_summary, mean, by = "isolate.code")
+
+
+all %>% 
+  ggplot(aes(x = growth_rate_mean, y = growth_rate)) + geom_point() +
+  geom_abline(slope = 1, intercept = 0)
+
+
 tsx2 %>% 
   filter(isolate.code == 606) %>% 
   ggplot(aes(x = time, y = sst)) + geom_line()
