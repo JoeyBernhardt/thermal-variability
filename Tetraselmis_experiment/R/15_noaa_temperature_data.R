@@ -225,6 +225,21 @@ all %>%
   geom_abline(slope = 1, intercept = 0)
 
 
+results5 <- read_csv("Tetraselmis_experiment/data-processed/results5.csv")
+predicted_growth_temperature2 <- read_csv("Tetraselmis_experiment/data-processed/predicted_growth_temperature2.csv")
+
+pred_var <- predicted_growth_temperature2 %>% 
+  select(isolate.code, predicted_growth_variable)
+
+### here we have the time-averaged growth rate and the STT predicted growth rate.
+all2 <- left_join(all, predicted_growth_temperature2, by = "isolate.code")
+write_csv(all2, "Tetraselmis_experiment/data-processed/all2.csv")
+
+
+all2 %>% 
+  mutate(difference = growth_rate - predicted_growth_variable) %>% 
+  ggplot(aes(x = difference)) + geom_histogram() 
+
 tsx2 %>% 
   filter(isolate.code == 606) %>% 
   ggplot(aes(x = time, y = sst)) + geom_line()

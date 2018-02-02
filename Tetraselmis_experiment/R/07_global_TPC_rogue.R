@@ -597,14 +597,16 @@ write_csv(predicted_growth_temperature2, "Tetraselmis_experiment/data-processed/
 predicted_growth_temperature2 <- read_csv("Tetraselmis_experiment/data-processed/predicted_growth_temperature2.csv")
 
 names(predicted_growth_temperature2)
+library(viridis)
 
 r_diff <- 
-	predicted_growth_temperature2 %>% 
+	all2 %>% 
+  # predicted_growth_temperature2 %>% 
 	filter(curvequal == "good", minqual == "good", maxqual == "good") %>% 
 	mutate(growth_diff_rel = ((predicted_growth_constant - predicted_growth_variable)/mu.g.opt.val.list)*100) %>% 
 	mutate(growth_diff = predicted_growth_constant - predicted_growth_variable) %>% 
-	mutate(rev_growth_diff = predicted_growth_variable - predicted_growth_constant) %>% 
-	mutate(temp_diff = topt- Mean) %>% 
+	mutate(rev_growth_diff = growth_rate - predicted_growth_constant) %>% 
+	mutate(temp_diff = topt- Mean.x) %>% 
 	mutate(skew_dir = ifelse(rel.curveskew<0, "negative skew", "positive skew")) %>% 
 	filter(growth_diff_rel < 60) %>%
 	ggplot(aes(x = temp_diff, y = rev_growth_diff, color = SD, label = isolate.code)) + geom_point(size = 3) +
