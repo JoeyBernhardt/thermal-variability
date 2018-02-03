@@ -14,7 +14,9 @@ cache_delete_all(force = TRUE)
 
 
 #### search for data ####
-out <- ed_search(query = 'SST')
+?ed_search
+
+out <- ed_search(query = 'CPC')
 SST <- str_subset(string = out$info$title, pattern = "SST, Daily Optimum Interpolation")
 out$info[[out$info$title == "SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180"]]
 info('SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180')
@@ -22,7 +24,7 @@ info('SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, L
 info_df <- out$info
 
 info_df %>% 
-  filter(grepl("ncdc", dataset_id)) %>% View
+  filter(grepl("tmax", title)) %>% View
 
 
 info_df %>% 
@@ -196,6 +198,8 @@ tsx <- bind_rows(t1982, t1983, t1984, t1985, t1986, t1987, t1988, t1989, t1990, 
 tsx2 <- tsx %>% 
   distinct(isolate.code, time, lat, long, .keep_all = TRUE)
 
+write_csv(tsx2, "Tetraselmis_experiment/data-processed/OISST_data.csv")
+
 ### put the temperature and the thermal trait data together
 tc <- left_join(tsx2, thomas3, by = "isolate.code")
 
@@ -251,7 +255,7 @@ tsx2 %>%
   unite(lat_long_isolate, c("lat", "lon", "isolate.code"), sep = ".", remove = FALSE) %>% 
   mutate(region = ifelse(abs(lat) > 30, "temperate", "tropical")) %>% 
   mutate(region = ifelse(abs(lat) > 60, "polar", region)) %>% 
-  ggplot(aes(x = sst, fill = region)) + geom_histogram() +
+  ggplot(aes(x = sst, fill = region)) + geom_density() +
   facet_wrap(~ lat_long_isolate, scales = "free_y")
 ggsave("Tetraselmis_experiment/figures/temp_histograms.pdf", width = 18, height = 14)
 ggsave("Tetraselmis_experiment/figures/temp_density.pdf", width = 18, height = 14)
