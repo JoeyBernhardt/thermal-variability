@@ -249,17 +249,58 @@ tsx2 %>%
   ggplot(aes(x = time, y = sst)) + geom_line()
 
 
-tsx2 %>% 
+tc2 <- tc %>% 
   mutate(lat = round(lat, digits = 1)) %>% 
   mutate(lon = round(lon, digits = 1)) %>% 
+  filter(isolate.code == 49) %>% 
+  group_by(isolate.code) %>% 
   unite(lat_long_isolate, c("lat", "lon", "isolate.code"), sep = ".", remove = FALSE) %>% 
   mutate(region = ifelse(abs(lat) > 30, "temperate", "tropical")) %>% 
-  mutate(region = ifelse(abs(lat) > 60, "polar", region)) %>% 
-  ggplot(aes(x = sst, fill = region)) + geom_density() +
-  facet_wrap(~ lat_long_isolate, scales = "free_y")
+  mutate(region = ifelse(abs(lat) > 60, "polar", region))
+
+tc2 %>% 
+  ggplot(aes(x = sst)) + geom_density(fill = "blue") +
+  stat_function(color = "blue", fun = function(sst,z,w,a,b) tc2$a[[1]]*exp(tc2$b[[1]]*sst)*(1-((sst-tc2$z[[1]])/(tc2$w[[1]]/2))^2)) +
+  # facet_wrap(~ lat_long_isolate, scales = "free_y") +
+  xlim(0, 40) +
+  ylab("Frequency") + xlab("Daily SST") +
+  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits =c(0, 2)) +
+  ggtitle("Skeletonema tropicum")
+
+
+tc3 <- tc %>% 
+  mutate(lat = round(lat, digits = 1)) %>% 
+  mutate(lon = round(lon, digits = 1)) %>% 
+  filter(isolate.code == 146)
+
+### ok min SST is -1.8, max sst is 36.12, so maybe go from -2 to 37.
+
+tc3 %>% 
+  ggplot(aes(x = sst)) + geom_density(fill = "blue") +
+  stat_function(color = "blue", fun = function(sst,z,w,a,b) tc3$a[[1]]*exp(tc3$b[[1]]*sst)*(1-((sst-tc3$z[[1]])/(tc3$w[[1]]/2))^2)) +
+  # facet_wrap(~ lat_long_isolate, scales = "free_y") +
+  xlim(0, 40) +
+  ylab("Frequency") + xlab("Daily SST") +
+  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits =c(0, 1.4)) +
+  ggtitle("Skeletonema costatum")
+  
 ggsave("Tetraselmis_experiment/figures/temp_histograms.pdf", width = 18, height = 14)
 ggsave("Tetraselmis_experiment/figures/temp_density.pdf", width = 18, height = 14)
 
+
+function(sst,z,w,a,b) a*exp(b*sst)*(1-((sst-z)/(w/2))^2)
+
+
+
+isol49 <- filter(tsx2, isolate.code == 49)
+
+
+densities <- hist(isol49$sst, include.lowest = TRUE, right = FALSE)$density
+temps <- hist(isol49$sst, include.lowest = TRUE, right = FALSE)$breaks
+length(densities)
+length(temps)
+
+df <- data_frame(temps, densities)
 
 write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
 
@@ -271,6 +312,17 @@ temperatures_above99 <- thomas_split %>%
 
 
 write_csv(temperatures_above99, "Tetraselmis_experiment/data-processed/daily_temperatures_above99.csv")
+
+
+
+# plotting skeletonema isolates -------------------------------------------
+
+thomas3 %>% 
+  filter(grepl("Skeletonema", speciesname)) %>% View
+
+
+
+
 
 
 # missing isolates --------------------------------------------------------
