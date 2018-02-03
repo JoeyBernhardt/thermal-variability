@@ -199,7 +199,7 @@ tsx2 <- tsx %>%
   distinct(isolate.code, time, lat, long, .keep_all = TRUE)
 
 write_csv(tsx2, "Tetraselmis_experiment/data-processed/OISST_data.csv")
-
+tsx2 <- read_csv("Tetraselmis_experiment/data-processed/OISST_data.csv")
 ### put the temperature and the thermal trait data together
 tc <- left_join(tsx2, thomas3, by = "isolate.code")
 
@@ -274,6 +274,94 @@ tc3 <- tc %>%
   filter(isolate.code == 146)
 
 ### ok min SST is -1.8, max sst is 36.12, so maybe go from -2 to 37.
+temp.cat <- function(x, lower = -2, upper, by = 0.25, sep = "--", above.char = "+") {
+  labs <- c(paste(seq(lower, upper - by, by = by),
+                  seq(lower + by, upper, by = by), sep = sep),
+            paste(upper, above.char, sep = ""))
+  
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf),
+      right = FALSE, labels = labs)
+}
+
+
+tc_bins <- tc %>% 
+  group_by(isolate.code) %>% 
+  do(length.con <- as.data.frame(table(temp.cat(.$sst, upper = 42)))) %>% ## use size.cat function to create 1um size class bins
+  filter(Freq >0) %>% ## remove bins where there are no cells
+  separate(Var1, c("lower", "upper"), sep = "--") %>% ## separate the size bins into upper and lower bounds
+  mutate(temperature = as.numeric(upper)) %>% 
+  mutate(frequency = Freq / 10411)
+
+tc_all <- left_join(tc_bins, thomas3, by = "isolate.code")
+
+tc_146 <- tc_all %>% 
+  filter(isolate.code == 146)
+
+tc_146 %>% 
+  ggplot(aes(x = temperature)) + geom_bar(aes(x = temperature, y = frequency*10), stat = "identity", fill = "cadetblue") +
+  stat_function(color = "cadetblue", fun = function(sst,z,w,a,b) tc3$a[[1]]*exp(tc3$b[[1]]*sst)*(1-((sst-tc3$z[[1]])/(tc3$w[[1]]/2))^2)) +
+  xlim(0, 40) + ylim(0, 1.5) +
+  ylab("Frequency (*10)") + xlab("Daily SST at isolation location (°C)") +
+  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits =c(0, 2))
+
+
+### ok now let's get the TPCs onto thomas3
+
+temp_seq<- rep(seq(-2, 40, by = 0.1), 89)
+isolate.code <- sort(rep(thomas3$isolate.code, times = length(seq(-2, 40, by = 0.1))))
+isolates_temps <- data_frame(isolate.code, temp_seq)
+
+
+thomas_growth <- left_join(isolates_temps, thomas3) %>% 
+  rename(temp = temp_seq) %>% 
+  group_by(isolate.code) %>% 
+  mutate(growth_rate = a*exp(b*temp)*(1-((temp-z)/(w/2))^2))
+
+temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code")
+
+isol1 <- temps_growth %>% 
+  filter(isolate.code ==1) %>% 
+  select(frequency, growth_rate, everything())
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
+  
+str(isol1$temperature)
+
+temps_growth %>%  
+  ungroup() %>% 
+  filter(isolate.code == 572)
+
+isol1 %>%
+  ungroup() %>% 
+  distinct(isolate.code, temperature, frequency, .keep_all = TRUE) %>% 
+  ggplot(aes(x = temperature)) + geom_bar(aes(x = temperature, y = frequency),
+                                          stat = "identity", fill = "cadetblue")
+str(isol1$temperature)
+str(tc_146$temperature)
+
+tc_146 %>% 
+  ggplot(aes(x = temperature)) + geom_bar(aes(x = temperature, y = frequency*10),
+                                          stat = "identity", fill = "cadetblue")
+
+bins <- temps_growth %>% 
+  distinct(isolate.code, temperature, frequency, .keep_all = TRUE) 
+
+bins %>% 
+  filter(isolate.code == 1) %>% 
+  mutate(f5 = frequency*5) %>% View
+
+ggplot() + geom_bar(aes(x = temperature, y = frequency*5),
+                    stat = "identity", fill = "cadetblue", data = bins) +
+  geom_hline(yintercept = 0, color = "grey")+
+  geom_line(data = temps_growth, aes(x = temp, y = growth_rate*2)) +
+  xlim(-3, 40) +
+  facet_wrap( ~ isolate.code) +
+  ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
+  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 5)) +
+  theme(strip.background = element_rect(colour="white", fill="white"))
+  
+ggsave("Tetraselmis_experiment/figures/temps_curves.pdf", height = 10, width = 13)
+
 
 tc3 %>% 
   ggplot(aes(x = sst)) + geom_density(fill = "blue") +
