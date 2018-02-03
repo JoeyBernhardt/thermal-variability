@@ -317,7 +317,8 @@ thomas_growth <- left_join(isolates_temps, thomas3) %>%
   group_by(isolate.code) %>% 
   mutate(growth_rate = a*exp(b*temp)*(1-((temp-z)/(w/2))^2))
 
-temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code")
+temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code") %>% 
+  filter(isolate.code != 1)
 
 isol1 <- temps_growth %>% 
   filter(isolate.code ==1) %>% 
@@ -344,20 +345,21 @@ tc_146 %>%
                                           stat = "identity", fill = "cadetblue")
 
 bins <- temps_growth %>% 
+  filter(isolate.code != 1) %>% 
   distinct(isolate.code, temperature, frequency, .keep_all = TRUE) 
 
 bins %>% 
   filter(isolate.code == 1) %>% 
   mutate(f5 = frequency*5) %>% View
 
-ggplot() + geom_bar(aes(x = temperature, y = frequency*5),
+ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
                     stat = "identity", fill = "cadetblue", data = bins) +
   geom_hline(yintercept = 0, color = "grey")+
-  geom_line(data = temps_growth, aes(x = temp, y = growth_rate*2)) +
+  geom_line(data = temps_growth, aes(x = temp, y = growth_rate)) +
   xlim(-3, 40) +
   facet_wrap( ~ isolate.code) +
   ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
-  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 5)) +
+  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 2)) +
   theme(strip.background = element_rect(colour="white", fill="white"))
   
 ggsave("Tetraselmis_experiment/figures/temps_curves.pdf", height = 10, width = 13)
