@@ -214,6 +214,31 @@ growth_summary <- growth_rates %>%
   summarise_each(funs(mean), growth_rate)
 
 
+
+# mean_temps <- 
+ 
+temps <- rep(seq(-2, 40, by = 0.01), 89)
+
+isolate.code_temp <- sort(rep(thomas3$isolate.code, times = length(temps)))
+isolates_temps2 <- data_frame(isolate.code_temp, temps)
+ 
+  tc %>% 
+  group_by(isolate.code) %>% 
+  mutate(cent_temp = sst - mean(sst)) %>% 
+  mutate(cent1 = cent_temp -0.27) %>% 
+  mutate(growth_rate_mean = a*exp(b*cent1)*(1-((cent1-z)/(w/2))^2)) %>% 
+  summarise(mean_growth = mean(growth_rate_mean)) %>% 
+  arrange(desc(mean_growth))
+  
+
+mean_temps %>% 
+  filter(isolate.code == 128) %>% 
+  ggplot(aes(x = mean_cent)) + geom_histogram() +
+  facet_wrap( ~ isolate.code, scales = "free_y")
+
+
+
+
 all_thermal_data <- read_csv("Tetraselmis_experiment/data-processed/all_thermal_data.csv")
 mean <- all_thermal_data %>% 
   group_by(isolate.code) %>% 
