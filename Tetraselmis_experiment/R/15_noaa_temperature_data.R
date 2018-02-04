@@ -238,11 +238,13 @@ pred_var <- predicted_growth_temperature2 %>%
 ### here we have the time-averaged growth rate and the STT predicted growth rate.
 all2 <- left_join(all, predicted_growth_temperature2, by = "isolate.code")
 write_csv(all2, "Tetraselmis_experiment/data-processed/all2.csv")
-
+all2 <- read_csv("Tetraselmis_experiment/data-processed/all2.csv")
 
 all2 %>% 
   mutate(difference = growth_rate - predicted_growth_variable) %>% 
   ggplot(aes(x = difference)) + geom_histogram() 
+
+
 
 tsx2 %>% 
   filter(isolate.code == 606) %>% 
@@ -324,33 +326,10 @@ isol1 <- temps_growth %>%
   filter(isolate.code ==1) %>% 
   select(frequency, growth_rate, everything())
 
-p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
-  
-str(isol1$temperature)
-
-temps_growth %>%  
-  ungroup() %>% 
-  filter(isolate.code == 572)
-
-isol1 %>%
-  ungroup() %>% 
-  distinct(isolate.code, temperature, frequency, .keep_all = TRUE) %>% 
-  ggplot(aes(x = temperature)) + geom_bar(aes(x = temperature, y = frequency),
-                                          stat = "identity", fill = "cadetblue")
-str(isol1$temperature)
-str(tc_146$temperature)
-
-tc_146 %>% 
-  ggplot(aes(x = temperature)) + geom_bar(aes(x = temperature, y = frequency*10),
-                                          stat = "identity", fill = "cadetblue")
-
 bins <- temps_growth %>% 
   filter(isolate.code != 1) %>% 
   distinct(isolate.code, temperature, frequency, .keep_all = TRUE) 
 
-bins %>% 
-  filter(isolate.code == 1) %>% 
-  mutate(f5 = frequency*5) %>% View
 
 ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
                     stat = "identity", fill = "cadetblue", data = bins) +
@@ -380,17 +359,6 @@ ggsave("Tetraselmis_experiment/figures/temp_density.pdf", width = 18, height = 1
 
 function(sst,z,w,a,b) a*exp(b*sst)*(1-((sst-z)/(w/2))^2)
 
-
-
-isol49 <- filter(tsx2, isolate.code == 49)
-
-
-densities <- hist(isol49$sst, include.lowest = TRUE, right = FALSE)$density
-temps <- hist(isol49$sst, include.lowest = TRUE, right = FALSE)$breaks
-length(densities)
-length(temps)
-
-df <- data_frame(temps, densities)
 
 write_csv(temperatures, "Tetraselmis_experiment/data-processed/daily_temperatures_1-97.csv")
 
