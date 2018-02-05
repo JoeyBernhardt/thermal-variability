@@ -217,19 +217,47 @@ growth_summary <- growth_rates %>%
 
 # mean_temps <- 
  
-temps <- rep(seq(-2, 40, by = 0.01), 89)
+temps <- seq(-2, 40, by = 0.01)
 
-isolate.code_temp <- sort(rep(thomas3$isolate.code, times = length(temps)))
-isolates_temps2 <- data_frame(isolate.code_temp, temps)
- 
-  tc %>% 
+limits_fun <- function(x){
+res <- tc %>% 
   group_by(isolate.code) %>% 
-  mutate(cent_temp = sst - mean(sst)) %>% 
-  mutate(cent1 = cent_temp -0.27) %>% 
+  mutate(cent_temp = sst - mean(sst)) %>%
+  mutate(cent1 = cent_temp + x) %>% 
   mutate(growth_rate_mean = a*exp(b*cent1)*(1-((cent1-z)/(w/2))^2)) %>% 
   summarise(mean_growth = mean(growth_rate_mean)) %>% 
-  arrange(desc(mean_growth))
+  mutate(temperature = x)
+  return(res)
+}
   
+resp <- temps %>% 
+  map_df(limits_fun, .id = "temp") %>% 
+  group_by(isolate.code) %>% 
+  filter(mean_growth > 0) %>% 
+  group_by(isolate.code) %>% 
+  top_n(n = -4, wt = mean_growth) 
+
+write_csv(resp, "Tetraselmis_experiment/data-processed/resp.csv")
+resp <- read_csv("Tetraselmis_experiment/data-processed/resp.csv")
+low <- resp %>% 
+  group_by(isolate.code) %>% 
+  top_n(n = -1, wt = temperature) 
+
+## 77 might be wrong
+high <- resp %>% 
+  group_by(isolate.code) %>% 
+  top_n(n = 1, wt = temperature) 
+
+
+high_low <- left_join(low, high, by = "isolate.code") %>% 
+  rename(low = temperature.x, high = temperature.y) %>% 
+  gather(key = type, value = temperature, low, high)
+
+
+high_low %>% 
+  ggplot(aes(x = temperature, y = 0)) + geom_point() + 
+  # geom_line(data = temps_growth, aes(x = temp, y = growth_rate)) +
+  facet_wrap( ~ isolate.code)
 
 mean_temps %>% 
   filter(isolate.code == 128) %>% 
@@ -270,10 +298,6 @@ all2 %>%
   ggplot(aes(x = difference)) + geom_histogram() 
 
 
-
-tsx2 %>% 
-  filter(isolate.code == 606) %>% 
-  ggplot(aes(x = time, y = sst)) + geom_line()
 
 
 tc2 <- tc %>% 
@@ -345,7 +369,7 @@ thomas_growth <- left_join(isolates_temps, thomas3) %>%
   mutate(growth_rate = a*exp(b*temp)*(1-((temp-z)/(w/2))^2))
 
 temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code") %>% 
-  filter(isolate.code != 1)
+  filter(isolate.code != 1) 
 
 isol1 <- temps_growth %>% 
   filter(isolate.code ==1) %>% 
@@ -364,11 +388,45 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
   facet_wrap( ~ isolate.code) +
   ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
   scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 2)) +
-  theme(strip.background = element_rect(colour="white", fill="white"))
+  theme(strip.background = element_rect(colour="white", fill="white")) +
+  geom_point(data = high_low, aes(x = temperature, y = 0), color = "red", size =1) 
   
-ggsave("Tetraselmis_experiment/figures/temps_curves.pdf", height = 10, width = 13)
+  ggsave("Tetraselmis_experiment/figures/temps_curves_lims.pdf", height = 10, width = 13)
 
 
+# see how different the tmaxes are w/two approaches -----------------------
+
+
+  tmax <- high %>% 
+    rename(tmax_hist = temperature)
+  
+ tmaxes <- left_join(results5, tmax, by = "isolate.code") %>% 
+   filter(mu.rsqrlist > 0.85)
+ 
+ tmaxes %>% 
+   mutate(diff_max = temperature_max - tmax_hist) %>% 
+   filter(diff_max < 5) %>% 
+   ggplot(aes(x = tmax_hist, y = temperature_max)) + geom_point() +
+   ylab("Tmax from STT") + xlab("Tmax from time averaging") +
+   geom_abline(slope = 1, intercept = 0)
+ 
+ tmaxes %>% 
+   mutate(diff_max = temperature_max - tmax_hist) %>% 
+   filter(diff_max < 5) %>% 
+   mutate(rev_max_diff = tmax_hist - tmax) %>% 
+   ggplot(aes(x = rel.curveskew, y = rev_max_diff, color = SD)) + geom_point(size = 3) +
+   scale_color_viridis(option = "inferno") + theme_bw() +
+   geom_smooth(method = "lm", color = "grey", alpha = 0.3, size = 0.4) +
+   ylab("Tmax(var) - Tmax(cons) (°C)") +
+   xlab("Curve skewness") + 
+   theme_bw() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+         panel.background = element_blank(),
+         axis.line = element_line(color="black")) +
+   theme(text = element_text(size=14, family = "Helvetica")) + geom_point(size = 3, shape = 1, color = "black") + geom_hline(yintercept = 0) +
+   xlim(-0.02, 0.02) + geom_vline(xintercept = 0) 
+ 
+  
 tc3 %>% 
   ggplot(aes(x = sst)) + geom_density(fill = "blue") +
   stat_function(color = "blue", fun = function(sst,z,w,a,b) tc3$a[[1]]*exp(tc3$b[[1]]*sst)*(1-((sst-tc3$z[[1]])/(tc3$w[[1]]/2))^2)) +
