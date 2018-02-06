@@ -341,7 +341,7 @@ topts %>%
         axis.line = element_line(color="black")) +
   theme(text = element_text(size=14, family = "Helvetica")) +
   geom_vline(xintercept = 0) + geom_point(size = 3, shape = 1, color = "black") + xlim(-0.02, 0.02)
-ggsave("Tetraselmis_experiment/figures/topt_diff_NLA.png", width = 5, height = 3)
+ggsave("Tetraselmis_experiment/figures/topt_diff_NLA.png", width = 6, height = 3)
 
 
 topts2 <- topts %>% 
@@ -378,35 +378,42 @@ topt_data <-st_transform(x = topt_data, crs = "+proj=robin")
 
 
 global_data <- st_as_sf(global_therm, coords = c("Lon", "Lat"), crs = 4326)
+
 global_data <-st_transform(x = global_data, crs = "+proj=robin")
 
 topt_data_neg <- st_as_sf(filter(topts2, topt_change < -2), coords = c("longitude", "latitude"), crs = 4326)
 topt_data_neg <-st_transform(x = topt_data_neg, crs = "+proj=robin")
 
-
+### global map of SST SD (monthly)
 ggplot(global_data) +
   geom_sf(aes(color = SD)) +
+  scale_color_viridis(discrete = FALSE, option = "inferno") +
+  geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
+  geom_sf(data = topt_data, geom = "point", aes(color = sst_sd), size = 3)+
+  geom_sf(data = topt_data, geom = "point", shape = 1, color = "black", size = 3)+
   theme_bw()+
   theme(panel.grid = element_blank(),
         line = element_blank(),
         rect = element_blank(),
         text = element_text(size=14))
+ggsave("Tetraselmis_experiment/figures/global_monthly_sst_ssdb.pdf", width = 6.5, height = 4)
 
-ggplot(topt_data)+
-  # scale_color_gradient2(low = ic[8], mid = ic[4], high = "red", name = "Topt shift") +
-  scale_color_gradient2(low = "#2c7bb6", mid = "#ffffbf", high = "#fdae61", name = "") +
-  scale_fill_gradient2(low = "#5ab4ac", mid = "#f5f5f5", high = "#d8b365", name = "") +
-  geom_sf(data = global_data, aes(color = SD), alpha = 0.5)+
+ggplot(filter(topt_data, topt_change>0)) +
+  # scale_color_gradient2(low = "#2c7bb6", mid = "#ffffbf", high = "#fdae61", name = "") +
+  # scale_fill_gradient2(low = "#5ab4ac", mid = "#f5f5f5", high = "#d8b365", name = "") +
+  scale_color_viridis(option = "viridis", discrete = FALSE, name = "") +
   geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
-  geom_sf(geom = "point", aes(fill = topt_change), size = 3)+
-  geom_sf(data = topt_data_neg, geom = "point", aes(fill = topt_change), size = 3, alpha = 0.7)+
+  geom_sf(geom = "point", aes(color = topt_change), size = 3) +
+  # geom_sf(data = topt_data_neg, geom = "point", aes(color = topt_change), size = 3, alpha = 0.7)+
   geom_sf(geom = "point", shape = 1, color = "black", size = 3)+
   theme_bw()+
   theme(panel.grid = element_blank(),
         line = element_blank(),
         rect = element_blank(),
         text = element_text(size=14))
-ggsave("Tetraselmis_experiment/figures/topt_shift_mapb.pdf", width = 6.5, height = 4)
+ggsave("Tetraselmis_experiment/figures/topt_shift_map.pdf", width = 6.5, height = 4)
+ggsave("Tetraselmis_experiment/figures/topt_shift_map_negative_vals.pdf", width = 6.5, height = 4)
+ggsave("Tetraselmis_experiment/figures/topt_shift_map_positive_vals.pdf", width = 6.5, height = 4)
 
 ggplot(aes(x = lon, y = lat, color = sst_sd), data = sst_summary) +
   mapWorld +
@@ -460,23 +467,28 @@ all2 <- left_join(all, predicted_growth_temperature2, by = "isolate.code")
 write_csv(all2, "Tetraselmis_experiment/data-processed/all2.csv")
 all2 <- read_csv("Tetraselmis_experiment/data-processed/all2.csv")
 
+all3 <- left_join(all2, sst_summary, by = "isolate.code")
+
 all2 %>% 
   mutate(difference = growth_rate - predicted_growth_variable) %>% 
   ggplot(aes(x = difference)) + geom_histogram() 
 
-all2 %>% 
+all4 <- all3 %>% 
   # predicted_growth_temperature2 %>% 
   filter(curvequal == "good", minqual == "good", maxqual == "good") %>% 
   mutate(growth_diff_rel = ((predicted_growth_constant - predicted_growth_variable)/mu.g.opt.val.list)*100) %>% 
   mutate(growth_diff = predicted_growth_constant - predicted_growth_variable) %>% 
   mutate(rev_growth_diff = growth_rate - predicted_growth_constant) %>% 
   mutate(temp_diff = topt- Mean.x) %>% 
-  mutate(skew_dir = ifelse(rel.curveskew<0, "negative skew", "positive skew")) %>% 
-  filter(growth_diff_rel < 60) %>%
-  ggplot(aes(x = temp_diff, y = rev_growth_diff, color = SD, label = isolate.code)) + geom_point(size = 3) +
+  mutate(skew_dir = ifelse(rel.curveskew<0, "negative skew", "positive skew")) 
+ 
+r_data <- st_as_sf(all4, coords = c("longitude", "latitude"), crs = 4326)
+r_data <-st_transform(x = r_data, crs = "+proj=robin")
+
+ 
+all4 %>% 
+  ggplot(aes(x = temp_diff, y = rev_growth_diff, color = sst_sd, label = isolate.code)) + geom_point(size = 3) +
   scale_color_viridis(option = "inferno") + theme_bw() +
-  facet_wrap( ~ skew_dir) +
-  # geom_smooth(color = "grey", alpha = 0.3, size = 0.4) +
   ylab("r(var) - r(cons)") +
   xlab("TOpt - Mean temperature at isolation location (°C)") + 
   theme_bw() +
@@ -485,11 +497,25 @@ all2 %>%
         panel.background = element_blank(),
         axis.line = element_line(color="black")) +
   theme(text = element_text(size=16, family = "Helvetica")) +geom_vline(xintercept = 0) + 
-  ylim(-0.28, 0.02) +
-  # theme(legend.position = "none") +
-  theme(strip.background = element_rect(colour="white", fill="white")) +
+  ylim(-0.62, 0.02) +
   geom_point(size = 3, shape = 1, color = "black")
 ggsave("Tetraselmis_experiment/figures/NLA_r_diff_plot.png", width = 6, height = 3)
+
+### try to plot the differences in r over the map
+ggplot(r_data) +
+  scale_color_viridis(discrete = FALSE, option = "viridis", name = "") +
+  # scale_color_gradient2(low = "#276419", mid = "#b8e186", high = "#c51b7d", name = "", midpoint = 0) +
+  geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
+  geom_sf(geom = "point", aes(color = rev_growth_diff), size = 4) +
+  geom_sf(geom = "point", shape = 1, color = "black", size = 4)+
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        line = element_blank(),
+        rect = element_blank(),
+        text = element_text(size=14))
+ggsave("Tetraselmis_experiment/figures/r_diff_map.pdf", width = 6.5, height = 4)
+
+
 
 tc2 <- tc %>% 
   mutate(lat = round(lat, digits = 1)) %>% 
@@ -591,7 +617,7 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
   tmax <- high %>% 
     rename(tmax_hist = temperature)
   
- tmaxes <- left_join(results5, tmax, by = "isolate.code") %>% 
+ tmaxes <- left_join(results5b, tmax, by = "isolate.code") %>% 
    filter(mu.rsqrlist > 0.85)
  
  tmaxes %>% 
@@ -605,7 +631,7 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
    mutate(diff_max = temperature_max - tmax_hist) %>% 
    filter(diff_max < 5) %>% 
    mutate(rev_max_diff = tmax_hist - tmax) %>% 
-   ggplot(aes(x = rel.curveskew, y = rev_max_diff, color = SD)) + geom_point(size = 3) +
+   ggplot(aes(x = rel.curveskew, y = rev_max_diff, color = sst_sd)) + geom_point(size = 3) +
    scale_color_viridis(option = "inferno") + theme_bw() +
    geom_smooth(method = "lm", color = "grey", alpha = 0.3, size = 0.4) +
    ylab("Tmax(var) - Tmax(cons) (°C)") +
@@ -616,7 +642,7 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
          axis.line = element_line(color="black")) +
    theme(text = element_text(size=14, family = "Helvetica")) + geom_point(size = 3, shape = 1, color = "black") + geom_hline(yintercept = 0) +
    xlim(-0.02, 0.02) + geom_vline(xintercept = 0) 
- ggsave("Tetraselmis_experiment/figures/tmax_diff_NLA.png", width = 5, height = 3) 
+ ggsave("Tetraselmis_experiment/figures/tmax_diff_NLA.png", width = 6, height = 3) 
   
 tc3 %>% 
   ggplot(aes(x = sst)) + geom_density(fill = "blue") +
