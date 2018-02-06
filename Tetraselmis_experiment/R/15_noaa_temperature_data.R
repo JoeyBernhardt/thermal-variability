@@ -301,6 +301,10 @@ topts %>%
   mutate(topt_change = topt_averaging - topt) %>% 
   ggplot(aes(x = topt_change)) + geom_histogram()
 
+
+# NLA topt plot -----------------------------------------------------------
+
+
 topts %>% 
   mutate(topt_diff = topt_averaging - topt_variable) %>% 
   mutate(topt_change = topt_averaging - topt) %>% 
@@ -313,18 +317,46 @@ topts %>%
         axis.line = element_line(color="black")) +
   theme(text = element_text(size=14, family = "Helvetica")) +
   geom_vline(xintercept = 0) + geom_point(size = 3, shape = 1, color = "black") + xlim(-0.02, 0.02)
+ggsave("Tetraselmis_experiment/figures/topt_diff_NLA.png", width = 5, height = 3)
 
-topts %>% 
+
+topts2 <- topts %>% 
   mutate(topt_diff = topt_averaging - topt_variable) %>% 
-  mutate(topt_change = topt_averaging - topt) %>% 
+  mutate(topt_change = topt_averaging - topt) 
+
+topts2 %>% 
   ggplot(aes(x = longitude, y = latitude, color = topt_change)) +
   mapWorld +
   geom_point(size = 4) +
   geom_point(size = 4, shape = 1, color = "black") +
   # geom_point(aes(x = lon, y = lat, color = sst_sd), data = sst_summary, size = 4) +
   # scale_color_viridis(discrete = FALSE, begin = 0, end = 1, option = "inferno") +
-  scale_color_gradient2(low = "purple", high = "orange")
+  scale_color_gradient2(low = "blue", mid = "white",  high = "red")
 
+
+# make of differences in topt ---------------------------------------------
+library(colormap)
+ic <- colormap(colormap = colormaps$viridis, nshades = 8, format = "hex",
+               alpha = 1, reverse = FALSE)
+
+topt_data <- st_as_sf(topts2, coords = c("longitude", "latitude"), crs = 4326)
+topt_data <-st_transform(x = topt_data, crs = "+proj=robin")
+
+topt_data_neg <- st_as_sf(filter(topts2, topt_change < -2), coords = c("longitude", "latitude"), crs = 4326)
+topt_data_neg <-st_transform(x = topt_data_neg, crs = "+proj=robin")
+
+ggplot(topt_data)+
+  scale_color_gradient2(low = ic[8], mid = ic[4], high = "red", name = "Topt shift") +
+  geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
+  geom_sf(geom = "point", aes(color = topt_change), size = 3, alpha = 0.7)+
+  geom_sf(data = topt_data_neg, geom = "point", aes(color = topt_change), size = 3, alpha = 0.7)+
+  geom_sf(geom = "point", shape = 1, color = "black", size = 3)+
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        line = element_blank(),
+        rect = element_blank(),
+        text = element_text(size=14))
+ggsave("Tetraselmis_experiment/figures/topt_shift_map.pdf", width = 6.5, height = 4)
 
 ggplot(aes(x = lon, y = lat, color = sst_sd), data = sst_summary) +
   mapWorld +
@@ -338,7 +370,6 @@ world1 <- sf::st_as_sf(map('world', plot = FALSE, fill = TRUE, col = 1:10, wrap=
 ggplot() + geom_sf(data = world1)
 
 sst_data <- st_as_sf(sst_summary, coords = c("lon", "lat"), crs = 4326)
-PROJ <- "+proj=wintri +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 sst_data <-st_transform(x = sst_data, crs = "+proj=robin")
 world2 <- st_transform(world1,crs = 4326)
 
@@ -379,6 +410,10 @@ predicted_growth_temperature2 <- read_csv("Tetraselmis_experiment/data-processed
 pred_var <- predicted_growth_temperature2 %>% 
   select(isolate.code, predicted_growth_variable)
 
+
+# NLA growth rate and growth rate from mean -------------------------------
+
+
 ### here we have the time-averaged growth rate and the STT predicted growth rate.
 all2 <- left_join(all, predicted_growth_temperature2, by = "isolate.code")
 write_csv(all2, "Tetraselmis_experiment/data-processed/all2.csv")
@@ -388,7 +423,31 @@ all2 %>%
   mutate(difference = growth_rate - predicted_growth_variable) %>% 
   ggplot(aes(x = difference)) + geom_histogram() 
 
-
+all2 %>% 
+  # predicted_growth_temperature2 %>% 
+  filter(curvequal == "good", minqual == "good", maxqual == "good") %>% 
+  mutate(growth_diff_rel = ((predicted_growth_constant - predicted_growth_variable)/mu.g.opt.val.list)*100) %>% 
+  mutate(growth_diff = predicted_growth_constant - predicted_growth_variable) %>% 
+  mutate(rev_growth_diff = growth_rate - predicted_growth_constant) %>% 
+  mutate(temp_diff = topt- Mean.x) %>% 
+  mutate(skew_dir = ifelse(rel.curveskew<0, "negative skew", "positive skew")) %>% 
+  filter(growth_diff_rel < 60) %>%
+  ggplot(aes(x = temp_diff, y = rev_growth_diff, color = SD, label = isolate.code)) + geom_point(size = 3) +
+  scale_color_viridis(option = "inferno") + theme_bw() +
+  facet_wrap( ~ skew_dir) +
+  # geom_smooth(color = "grey", alpha = 0.3, size = 0.4) +
+  ylab("r(var) - r(cons)") +
+  xlab("TOpt - Mean temperature at isolation location (°C)") + 
+  theme_bw() +
+  geom_hline(yintercept = 0) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(color="black")) +
+  theme(text = element_text(size=16, family = "Helvetica")) +geom_vline(xintercept = 0) + 
+  ylim(-0.4, 0.02) +
+  # theme(legend.position = "none") +
+  theme(strip.background = element_rect(colour="white", fill="white")) +
+  geom_point(size = 3, shape = 1, color = "black")
 
 
 tc2 <- tc %>% 
@@ -516,7 +575,7 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
          axis.line = element_line(color="black")) +
    theme(text = element_text(size=14, family = "Helvetica")) + geom_point(size = 3, shape = 1, color = "black") + geom_hline(yintercept = 0) +
    xlim(-0.02, 0.02) + geom_vline(xintercept = 0) 
- 
+ ggsave("Tetraselmis_experiment/figures/tmax_diff_NLA.png", width = 5, height = 3) 
   
 tc3 %>% 
   ggplot(aes(x = sst)) + geom_density(fill = "blue") +
