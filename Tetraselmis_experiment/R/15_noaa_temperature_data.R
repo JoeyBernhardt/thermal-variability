@@ -8,14 +8,13 @@ library(tidyverse)
 library(purrr)
 library(ncdf4)
 library(cowplot)
+library(viridis)
 
 cache_details()
 cache_delete_all(force = TRUE)
 
 
 #### search for data ####
-?ed_search
-
 out <- ed_search(query = 'CPC')
 SST <- str_subset(string = out$info$title, pattern = "SST, Daily Optimum Interpolation")
 out$info[[out$info$title == "SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180"]]
@@ -81,6 +80,9 @@ ndf_split
 four_years_data <- four_years$data
 write_csv(four_years_data, "Tetraselmis_experiment/data-processed/four_years_data2.csv")
 four_years_data <- read_csv("Tetraselmis_experiment/data-processed/four_years_data2.csv")
+
+
+# Thomas data -------------------------------------------------------------
 
 
 thomas <- read_csv("data/thermal_trait_data/Thomas_2014_traits_derived_20140606.csv")
@@ -199,6 +201,11 @@ tsx2 <- tsx %>%
   distinct(isolate.code, time, lat, long, .keep_all = TRUE)
 
 write_csv(tsx2, "Tetraselmis_experiment/data-processed/OISST_data.csv")
+
+
+# bring in all oisst data -------------------------------------------------
+
+
 tsx2 <- read_csv("Tetraselmis_experiment/data-processed/OISST_data.csv")
 
 ### put the temperature and the thermal trait data together
@@ -220,6 +227,9 @@ growth_summary <- growth_rates %>%
 sst_summary <- tsx2 %>% 
   group_by(isolate.code, lat, lon) %>% 
   summarise_each(funs(mean, sd), sst) 
+
+
+# Get critical temps from NLA ---------------------------------------------
 
 
 # mean_temps <- 
@@ -258,6 +268,12 @@ resp_topt <- temps %>%
 
 write_csv(resp, "Tetraselmis_experiment/data-processed/resp.csv")
 write_csv(resp_topt, "Tetraselmis_experiment/data-processed/resp_topt.csv")
+
+# read in critical temps --------------------------------------------------
+
+
+
+resp_topt <- read_csv("Tetraselmis_experiment/data-processed/resp_topt.csv")
 resp <- read_csv("Tetraselmis_experiment/data-processed/resp.csv")
 low <- resp %>% 
   group_by(isolate.code) %>% 
@@ -274,23 +290,31 @@ high_low <- left_join(low, high, by = "isolate.code") %>%
   gather(key = type, value = temperature, low, high)
 
 
-high_low %>% 
-  ggplot(aes(x = temperature, y = 0)) + geom_point() + 
-  # geom_line(data = temps_growth, aes(x = temp, y = growth_rate)) +
-  facet_wrap( ~ isolate.code)
-
-mean_temps %>% 
-  filter(isolate.code == 128) %>% 
-  ggplot(aes(x = mean_cent)) + geom_histogram() +
-  facet_wrap( ~ isolate.code, scales = "free_y")
-
-
 ### let's compare topt_variable from STT with Topt_variable from averaging
 resp_topt <- resp_topt %>% 
   rename(topt_averaging = temperature)
 
-topts <- left_join(results5, resp_topt, by = "isolate.code") %>% 
+
+# bring in results5 -------------------------------------------------------
+
+
+results5 <- read_csv("Tetraselmis_experiment/data-processed/results5.csv")
+predicted_growth_temperature2 <- read_csv("Tetraselmis_experiment/data-processed/predicted_growth_temperature2.csv")
+
+pred_var <- predicted_growth_temperature2 %>% 
+  select(isolate.code, predicted_growth_variable)
+
+
+### add the sst_summary data to results5
+
+results5b <- left_join(results5, sst_summary, by = "isolate.code") %>% 
   filter(mu.rsqrlist > 0.85)
+
+
+topts <- left_join(results5b, resp_topt, by = "isolate.code") %>% 
+  filter(mu.rsqrlist > 0.85)
+
+
 
 topts %>% 
   ggplot(aes(x = topt_variable, y = topt_averaging)) + geom_point() +
@@ -308,7 +332,7 @@ topts %>%
 topts %>% 
   mutate(topt_diff = topt_averaging - topt_variable) %>% 
   mutate(topt_change = topt_averaging - topt) %>% 
-  ggplot(aes(x = rel.curveskew, y = topt_change, color = SD, label = isolate.code)) + geom_point(size = 3) +
+  ggplot(aes(x = rel.curveskew, y = topt_change, color = sst_sd, label = isolate.code)) + geom_point(size = 3) +
   scale_color_viridis(option = "inferno") + theme_bw() + geom_smooth(method = "lm", color = "grey", alpha = 0.3, size = 0.4) +
   geom_hline(yintercept = 0) + ylab("Topt(var) - Topt(cons) (°C)") +
   xlab("") + 
@@ -334,29 +358,55 @@ topts2 %>%
   scale_color_gradient2(low = "blue", mid = "white",  high = "red")
 
 
+# Maps! -------------------------------------------------------------------
+
 # make of differences in topt ---------------------------------------------
 library(colormap)
+library(sf)
+library(maps)
+
+global_therm <- read_csv("Tetraselmis_experiment/data-processed/global_therm.csv") %>% 
+  filter(Biome == "marine", !is.na(Mean)) 
+
+world1 <- sf::st_as_sf(map('world', plot = FALSE, fill = TRUE, col = 1:10, wrap=c(-180,180)))
+
 ic <- colormap(colormap = colormaps$viridis, nshades = 8, format = "hex",
                alpha = 1, reverse = FALSE)
 
 topt_data <- st_as_sf(topts2, coords = c("longitude", "latitude"), crs = 4326)
 topt_data <-st_transform(x = topt_data, crs = "+proj=robin")
 
+
+global_data <- st_as_sf(global_therm, coords = c("Lon", "Lat"), crs = 4326)
+global_data <-st_transform(x = global_data, crs = "+proj=robin")
+
 topt_data_neg <- st_as_sf(filter(topts2, topt_change < -2), coords = c("longitude", "latitude"), crs = 4326)
 topt_data_neg <-st_transform(x = topt_data_neg, crs = "+proj=robin")
 
+
+ggplot(global_data) +
+  geom_sf(aes(color = SD)) +
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        line = element_blank(),
+        rect = element_blank(),
+        text = element_text(size=14))
+
 ggplot(topt_data)+
-  scale_color_gradient2(low = ic[8], mid = ic[4], high = "red", name = "Topt shift") +
+  # scale_color_gradient2(low = ic[8], mid = ic[4], high = "red", name = "Topt shift") +
+  scale_color_gradient2(low = "#2c7bb6", mid = "#ffffbf", high = "#fdae61", name = "") +
+  scale_fill_gradient2(low = "#5ab4ac", mid = "#f5f5f5", high = "#d8b365", name = "") +
+  geom_sf(data = global_data, aes(color = SD), alpha = 0.5)+
   geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
-  geom_sf(geom = "point", aes(color = topt_change), size = 3, alpha = 0.7)+
-  geom_sf(data = topt_data_neg, geom = "point", aes(color = topt_change), size = 3, alpha = 0.7)+
+  geom_sf(geom = "point", aes(fill = topt_change), size = 3)+
+  geom_sf(data = topt_data_neg, geom = "point", aes(fill = topt_change), size = 3, alpha = 0.7)+
   geom_sf(geom = "point", shape = 1, color = "black", size = 3)+
   theme_bw()+
   theme(panel.grid = element_blank(),
         line = element_blank(),
         rect = element_blank(),
         text = element_text(size=14))
-ggsave("Tetraselmis_experiment/figures/topt_shift_map.pdf", width = 6.5, height = 4)
+ggsave("Tetraselmis_experiment/figures/topt_shift_mapb.pdf", width = 6.5, height = 4)
 
 ggplot(aes(x = lon, y = lat, color = sst_sd), data = sst_summary) +
   mapWorld +
@@ -364,9 +414,6 @@ ggplot(aes(x = lon, y = lat, color = sst_sd), data = sst_summary) +
   geom_point(size = 4, shape = 1, color = "black") +
   scale_color_viridis(discrete = FALSE, option = "inferno")
 
-library(sf)
-library(maps)
-world1 <- sf::st_as_sf(map('world', plot = FALSE, fill = TRUE, col = 1:10, wrap=c(-180,180)))
 ggplot() + geom_sf(data = world1)
 
 sst_data <- st_as_sf(sst_summary, coords = c("lon", "lat"), crs = 4326)
@@ -403,12 +450,6 @@ all %>%
   ggplot(aes(x = growth_rate_mean, y = growth_rate)) + geom_point() +
   geom_abline(slope = 1, intercept = 0)
 
-
-results5 <- read_csv("Tetraselmis_experiment/data-processed/results5.csv")
-predicted_growth_temperature2 <- read_csv("Tetraselmis_experiment/data-processed/predicted_growth_temperature2.csv")
-
-pred_var <- predicted_growth_temperature2 %>% 
-  select(isolate.code, predicted_growth_variable)
 
 
 # NLA growth rate and growth rate from mean -------------------------------
@@ -544,7 +585,7 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
   ggsave("Tetraselmis_experiment/figures/temps_curves_lims.pdf", height = 10, width = 13)
 
 
-# see how different the tmaxes are w/two approaches -----------------------
+# NLA tmaxes  -----------------------
 
 
   tmax <- high %>% 
@@ -603,16 +644,6 @@ temperatures_above99 <- thomas_split %>%
 
 
 write_csv(temperatures_above99, "Tetraselmis_experiment/data-processed/daily_temperatures_above99.csv")
-
-
-
-# plotting skeletonema isolates -------------------------------------------
-
-thomas3 %>% 
-  filter(grepl("Skeletonema", speciesname)) %>% View
-
-
-
 
 
 
