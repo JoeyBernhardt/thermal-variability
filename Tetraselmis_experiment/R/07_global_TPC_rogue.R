@@ -3,10 +3,7 @@
 ## Topt and mean annual temperature?
 
 
-library(readr)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
+library(tidyverse)
 library(fuzzyjoin)
 library(purrr)
 library(viridis)

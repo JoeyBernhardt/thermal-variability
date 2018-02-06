@@ -200,6 +200,7 @@ tsx2 <- tsx %>%
 
 write_csv(tsx2, "Tetraselmis_experiment/data-processed/OISST_data.csv")
 tsx2 <- read_csv("Tetraselmis_experiment/data-processed/OISST_data.csv")
+
 ### put the temperature and the thermal trait data together
 tc <- left_join(tsx2, thomas3, by = "isolate.code")
 
@@ -213,6 +214,12 @@ growth_summary <- growth_rates %>%
   group_by(isolate.code) %>% 
   summarise_each(funs(mean), growth_rate)
 
+
+### get SD of daily temps
+
+sst_summary <- tsx2 %>% 
+  group_by(isolate.code, lat, lon) %>% 
+  summarise_each(funs(mean, sd), sst) 
 
 
 # mean_temps <- 
@@ -230,6 +237,8 @@ res <- tc %>%
   return(res)
 }
   
+
+### to find limits
 resp <- temps %>% 
   map_df(limits_fun, .id = "temp") %>% 
   group_by(isolate.code) %>% 
@@ -237,7 +246,18 @@ resp <- temps %>%
   group_by(isolate.code) %>% 
   top_n(n = -4, wt = mean_growth) 
 
+### to find topt
+
+resp_topt <- temps %>% 
+  map_df(limits_fun, .id = "temp") %>% 
+  group_by(isolate.code) %>% 
+  # filter(mean_growth > 0) %>% 
+  group_by(isolate.code) %>% 
+  top_n(n = 1, wt = mean_growth) 
+
+
 write_csv(resp, "Tetraselmis_experiment/data-processed/resp.csv")
+write_csv(resp_topt, "Tetraselmis_experiment/data-processed/resp_topt.csv")
 resp <- read_csv("Tetraselmis_experiment/data-processed/resp.csv")
 low <- resp %>% 
   group_by(isolate.code) %>% 
@@ -265,6 +285,77 @@ mean_temps %>%
   facet_wrap( ~ isolate.code, scales = "free_y")
 
 
+### let's compare topt_variable from STT with Topt_variable from averaging
+resp_topt <- resp_topt %>% 
+  rename(topt_averaging = temperature)
+
+topts <- left_join(results5, resp_topt, by = "isolate.code") %>% 
+  filter(mu.rsqrlist > 0.85)
+
+topts %>% 
+  ggplot(aes(x = topt_variable, y = topt_averaging)) + geom_point() +
+  geom_abline(intercept = 0, slope = 1)
+
+topts %>% 
+  mutate(topt_diff = topt_averaging - topt_variable) %>% 
+  mutate(topt_change = topt_averaging - topt) %>% 
+  ggplot(aes(x = topt_change)) + geom_histogram()
+
+topts %>% 
+  mutate(topt_diff = topt_averaging - topt_variable) %>% 
+  mutate(topt_change = topt_averaging - topt) %>% 
+  ggplot(aes(x = rel.curveskew, y = topt_change, color = SD, label = isolate.code)) + geom_point(size = 3) +
+  scale_color_viridis(option = "inferno") + theme_bw() + geom_smooth(method = "lm", color = "grey", alpha = 0.3, size = 0.4) +
+  geom_hline(yintercept = 0) + ylab("Topt(var) - Topt(cons) (°C)") +
+  xlab("") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(color="black")) +
+  theme(text = element_text(size=14, family = "Helvetica")) +
+  geom_vline(xintercept = 0) + geom_point(size = 3, shape = 1, color = "black") + xlim(-0.02, 0.02)
+
+topts %>% 
+  mutate(topt_diff = topt_averaging - topt_variable) %>% 
+  mutate(topt_change = topt_averaging - topt) %>% 
+  ggplot(aes(x = longitude, y = latitude, color = topt_change)) +
+  mapWorld +
+  geom_point(size = 4) +
+  geom_point(size = 4, shape = 1, color = "black") +
+  # geom_point(aes(x = lon, y = lat, color = sst_sd), data = sst_summary, size = 4) +
+  # scale_color_viridis(discrete = FALSE, begin = 0, end = 1, option = "inferno") +
+  scale_color_gradient2(low = "purple", high = "orange")
+
+
+ggplot(aes(x = lon, y = lat, color = sst_sd), data = sst_summary) +
+  mapWorld +
+  geom_point(size = 4) +
+  geom_point(size = 4, shape = 1, color = "black") +
+  scale_color_viridis(discrete = FALSE, option = "inferno")
+
+library(sf)
+library(maps)
+world1 <- sf::st_as_sf(map('world', plot = FALSE, fill = TRUE, col = 1:10, wrap=c(-180,180)))
+ggplot() + geom_sf(data = world1)
+
+sst_data <- st_as_sf(sst_summary, coords = c("lon", "lat"), crs = 4326)
+PROJ <- "+proj=wintri +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+sst_data <-st_transform(x = sst_data, crs = "+proj=robin")
+world2 <- st_transform(world1,crs = 4326)
+
+
+# map of daily sst sd -----------------------------------------------------
+
+
+ggplot(sst_data)+
+  scale_color_viridis(discrete = FALSE, option = "inferno", name = "SD of daily SST")+
+  geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
+  geom_sf(geom = "point", aes(color = sst_sd), size = 4)+
+  geom_sf(geom = "point", shape = 1, color = "black", size = 4)+
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        line = element_blank(),
+        rect = element_blank())
+ggsave("Tetraselmis_experiment/figures/daily_sst_points_map.pdf")
 
 
 all_thermal_data <- read_csv("Tetraselmis_experiment/data-processed/all_thermal_data.csv")
