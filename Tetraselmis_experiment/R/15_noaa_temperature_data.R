@@ -224,9 +224,14 @@ growth_summary <- growth_rates %>%
 
 ### get SD of daily temps
 
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
 sst_summary <- tsx2 %>% 
   group_by(isolate.code, lat, lon) %>% 
-  summarise_each(funs(mean, sd), sst) 
+  summarise_each(funs(mean, sd, median, Mode), sst) 
 
 
 # Get critical temps from NLA ---------------------------------------------
@@ -473,6 +478,41 @@ all2 %>%
   mutate(difference = growth_rate - predicted_growth_variable) %>% 
   ggplot(aes(x = difference)) + geom_histogram() 
 
+all3 %>% 
+  ggplot(aes(x = predicted_growth_variable, y = growth_rate, color = sst_sd)) + geom_point() +
+  scale_color_viridis(discrete = FALSE, option = "inferno")
+
+all3 %>% 
+  mutate(difference = growth_rate - predicted_growth_variable) %>% 
+  # filter(abs(difference) < 0.2) %>% 
+  mutate(skewness = sst_mean - sst_Mode) %>%
+  ggplot(aes(x = skewness, y = difference)) + geom_point() +
+  geom_smooth() +
+  ylab("difference between STT and NLA predictions") +
+  xlab("Skewness, (mean - mode)")
+
+all3 %>% 
+  mutate(growth_diff = growth_rate - predicted_growth_constant) %>% 
+  mutate(STT_difference = growth_rate - predicted_growth_variable) %>% 
+  select(isolate.code, STT_difference, growth_diff) %>% 
+  gather(key = type, value = difference, STT_difference, growth_diff) %>%
+  ggplot(aes( x = difference, color = type)) + geom_density() 
+
+
+all3 %>% 
+  mutate(growth_diff = growth_rate - predicted_growth_constant) %>% 
+  mutate(STT_difference = growth_rate - predicted_growth_variable) %>% 
+  ggplot(aes(x = abs(growth_diff), y = abs(STT_difference))) + geom_point() +
+  geom_abline(slope = 1, intercept = 0)
+
+all3 %>% 
+  mutate(difference = growth_rate - predicted_growth_variable) %>% 
+  mutate(skewness = abs(sst_mean - sst_Mode)) %>%
+  ggplot(aes(x = predicted_growth_variable, y = growth_rate, color = skewness)) + geom_point() +
+  scale_color_viridis(discrete = FALSE, option = "inferno")
+  # filter(abs(difference) < 0.2) %>% 
+  lm(abs(difference) ~ skewness, data = .) %>% summary()
+
 all4 <- all3 %>% 
   # predicted_growth_temperature2 %>% 
   filter(curvequal == "good", minqual == "good", maxqual == "good") %>% 
@@ -623,9 +663,25 @@ ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
  tmaxes %>% 
    mutate(diff_max = temperature_max - tmax_hist) %>% 
    filter(diff_max < 5) %>% 
-   ggplot(aes(x = tmax_hist, y = temperature_max)) + geom_point() +
+   ggplot(aes(x = tmax_hist, y = temperature_max, color = sst_sd)) + geom_point(size = 3) +
+   geom_point(size = 3, shape = 1, color = "black") +
+   scale_color_viridis(discrete = FALSE, option = "inferno") +
    ylab("Tmax from STT") + xlab("Tmax from time averaging") +
    geom_abline(slope = 1, intercept = 0)
+ 
+ tmaxes2 <- tmaxes %>% 
+   mutate(diff_max = temperature_max - tmax_hist) %>% 
+   filter(diff_max < 5) 
+ 
+ tmaxes2 %>% 
+   ggplot(aes(y = diff_max, x = 0, color = sst_sd)) + geom_jitter(width = 0.1, size = 3) +
+   scale_color_viridis(discrete = FALSE, option = "inferno") +
+   geom_vline(xintercept = 0) 
+ 
+ tmaxes2 %>% 
+   lm(diff_max ~ sst_sd + Mean, data = .) %>% 
+   summary()
+ 
  
  tmaxes %>% 
    mutate(diff_max = temperature_max - tmax_hist) %>% 
