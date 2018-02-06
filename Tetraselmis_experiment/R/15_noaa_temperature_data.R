@@ -444,11 +444,11 @@ all2 %>%
         panel.background = element_blank(),
         axis.line = element_line(color="black")) +
   theme(text = element_text(size=16, family = "Helvetica")) +geom_vline(xintercept = 0) + 
-  ylim(-0.4, 0.02) +
+  ylim(-0.28, 0.02) +
   # theme(legend.position = "none") +
   theme(strip.background = element_rect(colour="white", fill="white")) +
   geom_point(size = 3, shape = 1, color = "black")
-
+ggsave("Tetraselmis_experiment/figures/NLA_r_diff_plot.png", width = 6, height = 3)
 
 tc2 <- tc %>% 
   mutate(lat = round(lat, digits = 1)) %>% 
