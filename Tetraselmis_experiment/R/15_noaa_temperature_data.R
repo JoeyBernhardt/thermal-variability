@@ -626,7 +626,8 @@ thomas_growth <- left_join(isolates_temps, thomas3) %>%
   mutate(growth_rate = a*exp(b*temp)*(1-((temp-z)/(w/2))^2))
 
 temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code") %>% 
-  filter(isolate.code != 1) 
+  filter(isolate.code != 1) %>% 
+  mutate(skew_dir = ifelse(rel.curveskew.y > 0, "positive", "negative"))
 
 isol1 <- temps_growth %>% 
   filter(isolate.code ==1) %>% 
@@ -637,18 +638,23 @@ bins <- temps_growth %>%
   distinct(isolate.code, temperature, frequency, .keep_all = TRUE) 
 
 
-ggplot() + geom_bar(aes(x = temperature, y = frequency*4),
-                    stat = "identity", fill = "cadetblue", data = bins) +
+ggplot() +
+  geom_segment(aes(x = sst_mean, y = 0, xend = sst_mean, yend = 2), data = sst_summary, color = "#80cdc1")+
+  geom_segment(aes(x = topt, y = 0, xend = topt, yend = 2), data = thomas3, size = 0.7, color = "black")+
+  geom_bar(aes(x = temperature, y = frequency*4),
+                    stat = "identity", fill = "grey", data = bins) +
   geom_hline(yintercept = 0, color = "grey")+
-  geom_line(data = temps_growth, aes(x = temp, y = growth_rate)) +
+  geom_line(data = temps_growth, aes(x = temp, y = growth_rate, color = rel.curveskew.y)) +
+  scale_color_gradient2(low = "#35978f", mid = "#01665e", high = "#8c510a", name = "Skew") +
   xlim(-3, 40) +
   facet_wrap( ~ isolate.code) +
   ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
   scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 2)) +
+  # geom_point(data = high_low, aes(x = temperature, y = 0), color = "red", size =1) +
   theme(strip.background = element_rect(colour="white", fill="white")) +
-  geom_point(data = high_low, aes(x = temperature, y = 0), color = "red", size =1) 
   
-  ggsave("Tetraselmis_experiment/figures/temps_curves_lims.pdf", height = 10, width = 13)
+  
+  ggsave("Tetraselmis_experiment/figures/temps_curves_lims_mat.pdf", height = 10, width = 13)
 
 
 # NLA tmaxes  -----------------------
