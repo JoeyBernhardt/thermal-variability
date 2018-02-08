@@ -67,6 +67,8 @@ third_deriv_function <- function(df){
 third_derivs <- all_split %>% 
   map_df(third_deriv_function, .id = "isolate.code")
 
+third_derivs %>% 
+  mutate(abs_deriv = abs(deriv_out)) %>% View
 
 third_derivs %>% 
   ggplot(aes(x = deriv_out)) + geom_histogram()

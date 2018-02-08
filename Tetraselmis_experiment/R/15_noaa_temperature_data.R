@@ -637,20 +637,22 @@ bins <- temps_growth %>%
   filter(isolate.code != 1) %>% 
   distinct(isolate.code, temperature, frequency, .keep_all = TRUE) 
 
+STT_predictions <- read_csv("Tetraselmis_experiment/data-processed/STT_predictions.csv")
 
 ggplot() +
   geom_segment(aes(x = sst_mean, y = 0, xend = sst_mean, yend = 2), data = sst_summary, color = "#80cdc1")+
-  geom_segment(aes(x = topt, y = 0, xend = topt, yend = 2), data = thomas3, size = 0.7, color = "black")+
+  geom_segment(aes(x = topt, y = 0, xend = topt, yend = 2), data = thomas3, size = 0.5, color = "orange")+
   geom_bar(aes(x = temperature, y = frequency*4),
-                    stat = "identity", fill = "grey", data = bins) +
+                    stat = "identity", fill = "black", data = bins) +
   geom_hline(yintercept = 0, color = "grey")+
   geom_line(data = temps_growth, aes(x = temp, y = growth_rate, color = rel.curveskew.y)) +
+  geom_line(data = STT_predictions, aes(x = temperature, y = growth.rate), color = "darkgrey", size = 0.3) +
   scale_color_gradient2(low = "#35978f", mid = "#01665e", high = "#8c510a", name = "Skew") +
   xlim(-3, 40) +
   facet_wrap( ~ isolate.code) +
   ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
   scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 2)) +
-  # geom_point(data = high_low, aes(x = temperature, y = 0), color = "red", size =1) +
+  geom_point(data = high_low, aes(x = temperature, y = 0), color = "red", size =0.5) +
   theme(strip.background = element_rect(colour="white", fill="white")) +
   
   
