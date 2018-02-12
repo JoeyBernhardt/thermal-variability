@@ -1,4 +1,7 @@
 
+cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
+cells_v_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_v_exp.csv")
+
 
 avals<-seq(-0.2,1.2,0.02)
 bvals<-seq(-0.2,0.3,0.02)

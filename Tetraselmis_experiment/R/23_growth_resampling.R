@@ -87,7 +87,7 @@ cells_v_exp <- cells_v %>%
 	mutate(keep = ifelse(temp == 5 & time_since_innoc_hours > 175, "no", keep)) %>% 
 	filter(keep != "no") 
 
-
+write_csv(cells_v_exp, "Tetraselmis_experiment/data-processed/cells_v_exp.csv")
 
 estimate_growth <- function(x, temperature) {
 	cells_exp %>% 
