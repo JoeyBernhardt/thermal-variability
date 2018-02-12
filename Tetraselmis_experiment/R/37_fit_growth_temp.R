@@ -208,31 +208,50 @@ fit_c <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(
 avals<-seq(-0.2,1.2,0.02)
 bvals<-seq(-0.2,0.3,0.02)
 
+cd <- cells_days %>% 
+mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+  group_by(temp, time_point) %>% 
+  sample_n(size = 1, replace = FALSE) 
+
 
 df <-  expand.grid(a = avals, b = bvals) %>% 
-  mutate(unique_id = rownames(.))
+  mutate(unique_id = rownames(.)) %>% 
+  mutate(sample_size = 1)
+  
 
-fit_d <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
-               data= cells_days,  
+(fit_d <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
+               data= cd,  
                start=list(z=14.4,w=35,a=-0.2, b=-0.2),
                lower = c(0, 0, -0.2, -0.2),
                upper = c(30, 40, 1.2, 0.3),
-               control = nls.control(maxiter=1024, minFactor=1/204800000))
+               control = nls.control(maxiter=1024, minFactor=1/204800000)))
 
 
-fit_growth <- function(df){
+cd <- cells_days %>% 
+  mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+  group_by(temp, time_point) %>% 
+  sample_n(size = 1, replace = FALSE) 
+
+
+resample <- function(sample_size){
+  cd <- cells_days %>% 
+    mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+    group_by(temp, time_point) %>% 
+    sample_n(size = sample_size, replace = FALSE) 
+  
+
+ fit_growth <- function(df){
   res <- try(nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
-      data= cells_days,  
-      start=list(z=14.4,w=35,a= df$a[[1]], b=df$b[[1]]),
-      lower = c(0, 0, -0.2, -0.2),
-      upper = c(30, 40, 1.2, 0.3),
-      control = nls.control(maxiter=1024, minFactor=1/204800000)))
+                   data= cd,  
+                   start=list(z=14.4,w=35,a= df$a[[1]], b=df$b[[1]]),
+                   lower = c(0, 0, -0.2, -0.2),
+                   upper = c(30, 45, 1.2, 0.3),
+                   control = nls.control(maxiter=1024, minFactor=1/204800000)))
   if(class(res)!="try-error"){
     out1 <- tidy(res) %>% 
       select(estimate, term) %>% 
       spread(key = term, value = estimate)
     out2 <- glance(res)
-    
   }
   all <- bind_cols(out1, out2)
   all
@@ -244,10 +263,36 @@ df_split <- df %>%
 
 
 output <- df_split %>%
-  map_df(fit_growth, .id = "run") 
+  map_df(fit_growth, .id = "run") %>% 
+  filter(df.residual > 5, isConv == "TRUE") %>% 
+  top_n(n = -1, wt = AIC)
+
+return(output)
+}
+
+
+samples <- rep(1, 1000)
+
+bootstrap_time_series_fits <- samples %>% 
+  map_df(resample, .id = "replicate")
+
+write_csv(bootstrap_time_series_fits, "Tetraselmis_experiment/data-processed/bootstrap_time_series_fits.csv")
+
+sums <- bootstrap_time_series_fits %>% 
+  summarise_each(funs(mean, sd), z, w, a, b)
+
+bind_rows(sums, fits_vals) %>% View
+
+
+cd <- cells_days %>% 
+  mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+  group_by(temp, time_point) %>% 
+  sample_n(size = 1, replace = FALSE) 
+
+
   
-tp <- output %>% 
-  top_n(n = -1, wt = AIC) 
+
+bind_rows(tp1, tp2, tp3) %>% View
 
 cfd <- (coef(fit_d))
 
@@ -279,7 +324,7 @@ grfunc<-function(x){
   -nbcurve(x, z = tp$z[[1]],w = tp$w[[1]],a = tp$a[[1]],b = tp$b[[1]])
 }
 
-?optim
+
 optinfo<-optim(c(x=tp$z[[1]]),grfunc)
 opt <-optinfo$par[[1]]
 maxgrowth <- -optinfo$value
