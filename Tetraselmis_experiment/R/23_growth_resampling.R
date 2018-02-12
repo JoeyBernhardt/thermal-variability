@@ -68,6 +68,8 @@ cells_exp <- cells_all %>%
 	mutate(keep = ifelse(temp == 5 & time_since_innoc_hours > 175, "no", keep)) %>% 
 	filter(keep != "no")
 
+write_csv(cells_exp, "Tetraselmis_experiment/data-processed/cells_exp.csv")
+
 ### now let's pick out the exponential phase from the variable
 
 cells_v %>% 
