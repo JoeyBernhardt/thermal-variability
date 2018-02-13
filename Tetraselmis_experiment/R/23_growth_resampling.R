@@ -83,7 +83,7 @@ cells_v_exp <- cells_v %>%
 	mutate(keep = "yes") %>% 
 	mutate(keep = ifelse(temp == 20 & time_since_innoc_hours > 51, "no", keep)) %>% 
 	mutate(keep = ifelse(temp == 24 & time_since_innoc_hours > 51, "no", keep)) %>% 
-	# mutate(keep = ifelse(temp == 29 & time_since_innoc_hours > 60, "no", keep)) %>% 
+	# mutate(keep = ifelse(temp == 27 & time_since_innoc_hours > 50, "no", keep)) %>% 
 	mutate(keep = ifelse(temp == 5 & time_since_innoc_hours > 175, "no", keep)) %>% 
 	filter(keep != "no") 
 
@@ -186,3 +186,8 @@ growth_27v <- samples_rep %>%
 growth_all_v <- bind_rows(growth_15v, growth_10v, growth_5v, growth_20v, growth_24v, growth_27v)	
 
 write_csv(growth_all_v, "Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
+
+growth_all_v %>% 
+  group_by(temp) %>% 
+  summarise_each(funs(mean), growth_per_day) %>% 
+  ggplot(aes(x = temp, y = growth_per_day)) + geom_point()

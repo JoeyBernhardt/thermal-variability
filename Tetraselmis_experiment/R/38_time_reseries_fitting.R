@@ -16,9 +16,14 @@ cells_days <- cells_exp %>%
   mutate(days = time_since_innoc_hours/24) %>% 
   mutate(days = ifelse(days < 0, 0, days))
 
+cells_days_v <- cells_v_exp %>% 
+  mutate(days = time_since_innoc_hours/24) %>% 
+  mutate(days = ifelse(days < 0, 0, days))
+
+
 fit_growth <- function(df){
   res <- try(nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
-                   data= cells_days  
+                   data= cells_days_v,  
                    start=list(z=14.4,w=35,a= df$a[[1]], b=df$b[[1]]),
                    lower = c(0, 0, -0.2, -0.2),
                    upper = c(30, 45, 1.2, 0.3),
@@ -41,16 +46,23 @@ df_split <- df %>%
 output <- df_split %>%
   map_df(fit_growth, .id = "run") 
 
+output_v <- df_split %>%
+  map_df(fit_growth, .id = "run") 
 
+
+results_v <- output_v %>% 
+  filter(df.residual > 5) %>%
+  top_n(n = -1, wt = AIC)
 results <- output %>% 
   filter(df.residual > 5) %>%
   top_n(n = -1, wt = AIC)
 
 
 write_csv(results, "Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
+write_csv(results_v, "Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
 
 
-tp <- results
+tp <- results_v
 
 grfunc<-function(x){
   -nbcurve(x, z = tp$z[[1]],w = tp$w[[1]],a = tp$a[[1]],b = tp$b[[1]])
@@ -65,3 +77,146 @@ library(rootSolve)
 uniroot.all(function(x) nbcurve(x, z = tp$z[[1]],w = tp$w[[1]],a = tp$a[[1]],b = tp$b[[1]]),c(opt,150))
 uniroot.all(function(x) nbcurve(x, z = tp$z[[1]],w = tp$w[[1]],a = tp$a[[1]],b = tp$b[[1]]),c(-15,opt))
 
+
+
+
+
+# plot both curves --------------------------------------------------------
+
+fc <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
+fv <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
+
+tpc_c <-function(x){
+  res<-(fc$a[[1]]*exp(fc$b[[1]]*x)*(1-((x-fc$z[[1]])/(fc$w[[1]]/2))^2))
+  res
+}
+
+tpc_v <-function(x){
+  res<-(fv$a[[1]]*exp(fv$b[[1]]*x)*(1-((x-fv$z[[1]])/(fv$w[[1]]/2))^2))
+  res
+}
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+p + 
+  stat_function(fun = tpc_c, color = "black", size = 1) +
+  xlim(-3, 33) + 
+  ylim(-2, 5) + geom_hline(yintercept = 0) +
+  stat_function(fun = tpc_v, color = "grey", size = 1) + ylab("Growth rate") + xlab("Temperature (°C)") +
+  geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds, alpha = 0.2) +
+  geom_line(aes(x = temperature, y = growth, group = replicate), color = "purple", data = all_preds_v, alpha = 0.2) +
+  geom_line(aes(x = temperature, y = growth, group = replicate), color = "orange", data = all_preds_NLA, alpha = 0.2) +
+  geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01,
+              data = all_preds_average, linetype = "dashed", color = "red", size = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "purple", alpha = 0.5) +
+  geom_vline(xintercept = 27)
+  
+
+
+
+# let’s get the NLA prediction on there -----------------------------------
+
+
+x <- seq(-3, 32, by = 0.01)
+
+
+predict_tpc <- function(x) {
+  y <- 0.5*(tpc_c(x + 5) + tpc_c(x - 5))
+}
+
+
+predictions <- sapply(x, predict_tpc)
+predictions <- data.frame(x, predictions) %>% 
+  rename(temperature = x, 
+         growth = predictions)
+
+
+
+
+all_preds_average <- predictions
+
+
+
+bs <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsb.csv")
+vs <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv.csv")
+
+bs2 <- bs %>% 
+  select(replicate, z, w, a, b)
+
+vs2 <- vs %>% 
+  filter(a != 1.2, w != 45, a!= -0.2, z != 0) %>% 
+  filter(b > 0) %>% 
+  select(replicate, z, w, a, b)
+
+# make predictions --------------------------------------------------------
+
+df <- filter(bs2, replicate ==1)
+
+
+
+prediction_function <- function(df) {
+  tpc <-function(x){
+  res<-(df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2))
+  res
+}
+
+pred <- function(x) {
+  y <- tpc(x)
+}
+
+x <- seq(-3, 32, by = 0.1)
+
+preds <- sapply(x, pred)
+preds <- data.frame(x, preds) %>% 
+  rename(temperature = x, 
+         growth = preds)
+}
+
+
+bs_split <- bs2 %>% 
+  split(.$replicate)
+
+vs_split <- vs2 %>% 
+  split(.$replicate)
+
+all_preds <- bs_split %>% 
+  map_df(prediction_function, .id = "replicate")
+
+all_preds_v <- vs_split %>% 
+  map_df(prediction_function, .id = "replicate")
+
+# Make NLA prediction -----------------------------------------------------
+
+prediction_NLA <- function(df) {
+  tpc <-function(x){
+    res<-(df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2))
+    res
+  }
+  
+  pred <- function(x) {
+    y <-  0.5*(tpc(x + 5) + tpc(x - 5))
+  }
+  
+  x <- seq(-3, 32, by = 0.1)
+  
+  preds <- sapply(x, pred)
+  preds <- data.frame(x, preds) %>% 
+    rename(temperature = x, 
+           growth = preds)
+}
+
+
+all_preds_NLA <- bs_split %>% 
+  map_df(prediction_NLA, .id = "replicate")
+
+
+limits <- all_preds_NLA %>% 
+  group_by(temperature) %>% 
+  summarise(q2.5=quantile(growth, probs=0.025),
+            q97.5=quantile(growth, probs=0.975),
+            mean = mean(growth))
+
+limits_v <- all_preds_v %>% 
+  group_by(temperature) %>% 
+  summarise(q2.5=quantile(growth, probs=0.025),
+            q97.5=quantile(growth, probs=0.975),
+            mean = mean(growth))
