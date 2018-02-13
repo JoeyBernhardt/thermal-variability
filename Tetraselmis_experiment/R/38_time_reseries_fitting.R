@@ -1,4 +1,6 @@
 
+library(cowplot)
+
 cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 cells_v_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_v_exp.csv")
 
@@ -105,10 +107,11 @@ p +
   geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds, alpha = 0.2) +
   geom_line(aes(x = temperature, y = growth, group = replicate), color = "purple", data = all_preds_v, alpha = 0.2) +
   geom_line(aes(x = temperature, y = growth, group = replicate), color = "orange", data = all_preds_NLA, alpha = 0.2) +
-  geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01,
-              data = all_preds_average, linetype = "dashed", color = "red", size = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01,
+              # data = all_preds_average, linetype = "dashed", color = "red", size = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "purple", alpha = 0.5) +
-  geom_vline(xintercept = 27)
+  geom_vline(xintercept = 27) +
+  coord_cartesian()
   
 
 
@@ -144,7 +147,8 @@ bs2 <- bs %>%
 
 vs2 <- vs %>% 
   filter(a != 1.2, w != 45, a!= -0.2, z != 0) %>% 
-  filter(b > 0) %>% 
+  filter(b > 0, z > 15) %>% 
+  distinct(z, .keep_all = TRUE) %>% 
   select(replicate, z, w, a, b)
 
 # make predictions --------------------------------------------------------

@@ -7,6 +7,7 @@ library(dplyr)
 library(tidyr)
 library(readr)
 library(minpack.lm)
+library(broom)
 
 
 growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
@@ -133,19 +134,16 @@ cells_days_v_mod %>%
 resample_variable <- function(sample_size){
   cd <- cells_days_v_mod %>% 
     group_by(temp, sample_group) %>% 
-    sample_n(size = sample_size, replace = FALSE) 
+    sample_n(size = 2, replace = FALSE) 
     # group_by(temp, sample_group, cycle) %>% 
     # summarise_each(funs(mean), cell_density)
-  
-
-  
   
   fit_growth <- function(df){
     res <- try(nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
                      data= cd,  
                      start=list(z=12.5,w=32,a= df$a[[1]], b=df$b[[1]]),
-                     lower = c(0, 0, -0.2, -0.2),
-                     upper = c(30, 45, 1.2, 0.3),
+                     lower = c(0, 0, -0.2, 0),
+                     upper = c(30, 80, 1.2, 0.3),
                      control = nls.control(maxiter=1024, minFactor=1/204800000)))
     if(class(res)!="try-error"){
       out1 <- tidy(res) %>% 
@@ -165,14 +163,14 @@ resample_variable <- function(sample_size){
   output <- df_split %>%
     map_df(fit_growth, .id = "run") %>% 
     filter(df.residual > 5) %>% 
-    filter(a != 1.2, w != 45, w != 0, a!= -0.2, z != 0, z != 30) %>% 
+    filter(a != 1.2, w != 80, w != 0, a!= -0.2, z != 0, z != 30) %>% 
     top_n(n = -1, wt = AIC)
   
   return(output)
 }
 
 
-samples <- rep(1, 10)
+samples <- rep(2, 100)
 
 bootstrap_time_series_fitsv <- samples %>% 
   map_df(resample_variable, .id = "replicate")
