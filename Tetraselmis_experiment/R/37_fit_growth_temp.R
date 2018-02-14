@@ -10,24 +10,44 @@ library(minpack.lm)
 library(broom)
 
 
+# get data in order -------------------------------------------------------
+
+
 growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
 growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
 
 cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 cells_exp_v <- read_csv("Tetraselmis_experiment/data-processed/cells_v_exp.csv")
+cells_mod <- read_csv("Tetraselmis_experiment/data-processed/cells_exp_mod.csv")
+cells_days_v_mod <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv")
 
+
+cells_days_v1 <- cells_exp_v %>% 
+  mutate(days = time_since_innoc_hours/24) %>% 
+  mutate(days = ifelse(days < 0, 0, days)) %>% 
+  mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+  arrange(temp, time_point)
+write_csv(cells_days_v1, "Tetraselmis_experiment/data-processed/cells_days_v.csv")
 
 fits_vals <- fits_real_constant %>% 
   summarise_each(funs(mean, sd), z, w, a, b)
 
 
-cells_days <- cells_exp_v %>% 
+cells_days <- cells_mod %>% 
   mutate(days = time_since_innoc_hours/24) %>% 
   mutate(days = ifelse(days < 0, 0, days))
+
+cells_days_v <- cells_days_v_mod %>% 
+  mutate(days = time_since_innoc_hours/24) %>% 
+  mutate(days = ifelse(days < 0, 0, days))
+
 
 cells_days %>% 
   filter(temp == 27) %>% 
   ggplot(aes(x = time_since_innoc_hours, y = cell_density, color = factor(temp))) + geom_point() 
+
+
+# try out fitting all data together ---------------------------------------
 
 
 
@@ -51,22 +71,96 @@ df <-  expand.grid(a = avals, b = bvals) %>%
 
 (fit_d <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
                data= cells_days,  
-               start=list(z=14.4,w=35,a=-0.2, b=-0.2),
+               start=list(z=15,w=35,a=0.23, b=0.1),
                lower = c(0, 0, -0.2, -0.2),
                upper = c(30, 40, 1.2, 0.3),
                control = nls.control(maxiter=1024, minFactor=1/204800000)))
 
-tidy(fit_d)
+
+(fit_v <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
+                data= cells_days_v,  
+                start=list(z=15,w=35,a=0.22, b=0.1),
+                lower = c(0, 0, -0.2, -0.2),
+                upper = c(30, 40, 1.2, 0.3),
+                control = nls.control(maxiter=1024, minFactor=1/204800000)))
+
+
+# try this with a more systematic search through starting values ----------
+
+avals<-seq(-0.2,1.2,1)
+bvals<-seq(-0.2,0.3,0.1)
+zvals<-seq(12,17,1)
+w.guess <- 30
+mod.list<-list()
+AIC.list<-c()
+
+
+for(ia in 1:length(avals)){
+  for(ib in 1:length(bvals)){
+    for(iz in 1:length(zvals)){
+      a.guess<-avals[ia]
+      b.guess<-bvals[ib]
+      z.guess<-zvals[iz]
+      res2<-nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
+                           data= cells_days,  
+                           start=list(z=z.guess,w=w.guess,a=a.guess, b=b.guess),
+                           lower = c(0, 0, -0.2, -0.2),
+                           upper = c(30, 40, 1.2, 0.3),
+                           control = nls.control(maxiter=1024, minFactor=1/204800000))
+      if(class(res2)!="try-error"){
+        out1 <- tidy(res2) %>% 
+          select(estimate, term) %>% 
+          spread(key = term, value = estimate)
+        out2 <- glance(res2)
+      }
+      all <- bind_cols(out1, out2)
+      all <- bind_rows(all)
+      }
+    }
+  }
+
+mod.list[1]
+
+if(!is.null(AIC.list)){
+  bestmodind<-which(AIC.list==min(AIC.list))
+  if(length(bestmodind)>1){
+    bestmodind<-sample(bestmodind,1)
+  }
+  bestmod<-mod.list[[bestmodind]]
+  cfs<-coef(bestmod)
+}
+
+class(bestmod)
+
+mod.list[1]$getPars()
+
+fitd1 <- tidy(fit_d)
+fitv1 <- tidy(fit_v)
+
+
+tidy(fit_v)
 glance(fit_d)
+
+
 cd <- cells_days %>% 
   mutate(time_point = trunc(time_since_innoc_hours)) %>% 
   group_by(temp, time_point) %>% 
   sample_n(size = 1, replace = FALSE) 
 
-cells_mod <- read_csv("Tetraselmis_experiment/data-processed/cells_exp_mod.csv")
+
+# fit the constant experimental data --------------------------------------
+
+avals<-seq(-0.2,1.2,0.02)
+bvals<-seq(0,0.3,0.02)
+zvals<-seq(10,15,1)
+
+
+df <-  expand.grid(a = avals, b = bvals, z = zvals) %>% 
+  mutate(unique_id = rownames(.)) %>% 
+  mutate(sample_size = 1)
 
 resample <- function(sample_size){
-  cd <- cells_mod %>% 
+  cd <- cells_days %>% 
     group_by(temp, sample_group) %>% 
     sample_n(size = sample_size, replace = FALSE) 
   
@@ -74,9 +168,9 @@ resample <- function(sample_size){
  fit_growth <- function(df){
   res <- try(nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
                    data= cd,  
-                   start=list(z=14.4,w=35,a= df$a[[1]], b=df$b[[1]]),
+                   start=list(z=df$z[[1]],w=35,a= df$a[[1]], b=df$b[[1]]),
                    lower = c(0, 0, -0.2, -0.2),
-                   upper = c(30, 45, 1.2, 0.3),
+                   upper = c(30, 80, 1.2, 0.3),
                    control = nls.control(maxiter=1024, minFactor=1/204800000)))
   if(class(res)!="try-error"){
     out1 <- tidy(res) %>% 
@@ -102,48 +196,42 @@ return(output)
 }
 
 
-samples <- rep(1, 100)
+samples <- rep(1, 10) 
 
-bootstrap_time_series_fitsv <- samples %>% 
+bootstrap_time_series_fits <- samples %>% ### this step gets us the replication
   map_df(resample, .id = "replicate")
 
-write_csv(bootstrap_time_series_fitsb, "Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsb.csv")
-write_csv(bootstrap_time_series_fitsv, "Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv.csv")
+
+write_csv(bootstrap_time_series_fits, "Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsb.csv")
+
 
 
 
 # Resample the variable ---------------------------------------------------
 
-cells_days_v1 <- cells_exp_v %>% 
-  mutate(days = time_since_innoc_hours/24) %>% 
-  mutate(days = ifelse(days < 0, 0, days)) %>% 
-  mutate(time_point = trunc(time_since_innoc_hours)) %>% 
-  arrange(temp, time_point)
-write_csv(cells_days_v1, "Tetraselmis_experiment/data-processed/cells_days_v.csv")
+avals<-seq(-0.2,1.2,0.02)
+bvals<-seq(0,0.3,0.02)
+zvals<-seq(10,15,1)
 
 
-cells_days_v_mod <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv")
+df <-  expand.grid(a = avals, b = bvals, z = zvals) %>% 
+  mutate(unique_id = rownames(.)) %>% 
+  mutate(sample_size = 1)
 
-cells_days_v_mod %>% 
-  filter(temp == 24) %>% View
-
-cells_days_v_mod %>% 
-  group_by(temp, cycle, temp_range) %>% 
-  summarise_each(funs(mean), cell_density) %>% View
 
 resample_variable <- function(sample_size){
   cd <- cells_days_v_mod %>% 
     group_by(temp, sample_group) %>% 
-    sample_n(size = 2, replace = FALSE) 
+    sample_n(size = sample_size, replace = FALSE) 
     # group_by(temp, sample_group, cycle) %>% 
     # summarise_each(funs(mean), cell_density)
   
   fit_growth <- function(df){
     res <- try(nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
                      data= cd,  
-                     start=list(z=12.5,w=32,a= df$a[[1]], b=df$b[[1]]),
-                     lower = c(0, 0, -0.2, 0),
-                     upper = c(30, 80, 1.2, 0.3),
+                     start=list(z=df$z[[1]],w=35,a= df$a[[1]], b=df$b[[1]]),
+                     lower = c(0, 0, -0.2, -0.2),
+                     upper = c(30, 80, 5, 0.5),
                      control = nls.control(maxiter=1024, minFactor=1/204800000)))
     if(class(res)!="try-error"){
       out1 <- tidy(res) %>% 
@@ -163,14 +251,14 @@ resample_variable <- function(sample_size){
   output <- df_split %>%
     map_df(fit_growth, .id = "run") %>% 
     filter(df.residual > 5) %>% 
-    filter(a != 1.2, w != 80, w != 0, a!= -0.2, z != 0, z != 30) %>% 
+    # filter(a != 1.2, w != 80, w != 0, a!= -0.2, z != 0, z != 30) %>% 
     top_n(n = -1, wt = AIC)
   
   return(output)
 }
 
 
-samples <- rep(2, 100)
+samples <- rep(1, 100)
 
 bootstrap_time_series_fitsv <- samples %>% 
   map_df(resample_variable, .id = "replicate")
@@ -178,6 +266,7 @@ bootstrap_time_series_fitsv <- samples %>%
 write_csv(bootstrap_time_series_fitsv, "Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv.csv")
 
 
+# other stuff and plotting ------------------------------------------------
 
 sums <- bootstrap_time_series_fitsb %>% 
   filter(a != 1.2) %>% 
