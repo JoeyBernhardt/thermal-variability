@@ -7,12 +7,18 @@ library(tidyr)
 library(readr)
 
 
-growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
-growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
+growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_exp.csv")
+growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v_exp.csv")
 
-dat.full <- growth_all %>%
+
+
+growth_all %>% 
+  ggplot(aes(x = temp, y = estimate)) + geom_point()
+
+
+dat.full <- growth_all_v %>%
 	group_by(temp) %>% 
-	summarise(growth.rate = mean(growth_per_day)) %>% 
+	summarise(growth.rate = mean(estimate)) %>% 
 	rename(temperature = temp) %>% 
 	mutate(curve.id = "1") %>% 
 	select(curve.id, temperature, growth.rate) 
@@ -147,8 +153,8 @@ for(i in 1:length(curve.id.list)){
 
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
-write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
-write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv") ## this is for the fitting for the variable dataset
+write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
+write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params_v_exp.csv") ## this is for the fitting for the variable dataset
 
 nbcurve2<-function(x){
 	res<-cfs[3]*exp(cfs[4]*x)*(1-((x-cfs[1])/(cfs[2]/2))^2)
