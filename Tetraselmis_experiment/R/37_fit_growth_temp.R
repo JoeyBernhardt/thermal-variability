@@ -55,6 +55,16 @@ fit_c <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(
     data= cells_days,  start=list(z=16,w=36,a=0.2,b=0.1),
     control = nls.control(maxiter=1000, minFactor=1/204800000))
 
+fit_c2 <- nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
+               data= cells_days,  start=list(z=16,w=36,a=0.2,b=0.1),
+               control = nls.control(maxiter=1000, minFactor=1/204800000))
+fit_c3 <- nlsLM(cell_density ~ 800 * exp((a*exp(b*temp)*(1-((temp-z)/(w/2))^2))*days),
+                data= cells_days,  start=list(z=16,w=36,a=0.2,b=0.1),
+                control = nls.control(maxiter=1000, minFactor=1/204800000))
+
+tidy(fit_c3)
+tidy(fit_c)
+tidy(fit_c2)
 avals<-seq(-0.2,1.2,0.02)
 bvals<-seq(0,0.3,0.02)
 

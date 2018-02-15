@@ -19,6 +19,12 @@ TT_raw_round2_extremes <- read_csv("Tetraselmis_experiment/data-processed/TT_cel
 cells <- read_csv("Tetraselmis_experiment/data-processed/all_cell_densities.csv")
 cells_extremes <- read_csv("Tetraselmis_experiment/data-processed/cells_extremes.csv")
 
+cells_days_c <- read_csv("Tetraselmis_experiment/data-processed/cells_exp_mod.csv") %>% 
+  mutate(days = time_since_innoc_hours/24) %>% 
+  mutate(days = ifelse(days < 0, 0, days))
+cells_days_v <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv")
+
+
 ## ok let's try with just one temperature first
 
 cells_extremes_sel <- cells_extremes %>% 
@@ -69,7 +75,7 @@ cells_exp <- cells_all %>%
 	filter(keep != "no")
 
 write_csv(cells_exp, "Tetraselmis_experiment/data-processed/cells_exp.csv")
-
+cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 ### now let's pick out the exponential phase from the variable
 
 cells_v %>% 
@@ -90,14 +96,14 @@ cells_v_exp <- cells_v %>%
 write_csv(cells_v_exp, "Tetraselmis_experiment/data-processed/cells_v_exp.csv")
 
 estimate_growth <- function(x, temperature) {
-	cells_exp %>% 
+	cells_days_c %>% 
 	filter(temp == temperature) %>% 
-		mutate(time_point = trunc(time_since_innoc_hours)) %>% 
-		group_by(time_point) %>% 
+		# mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+		group_by(sample_group) %>% 
 	sample_n(size = x, replace = FALSE) %>% 
 	group_by(temp) %>% 
-	do(tidy(nls(cell_density ~ 800 * (1+a)^(time_since_innoc_hours),
-							data= .,  start=list(a=0.01),
+	do(tidy(nls(cell_density ~ 800 * exp(r*days),
+							data= .,  start=list(r=0.01),
 							control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
 	ungroup() %>%
 	mutate(temp = as.numeric(temp)) %>%
@@ -133,9 +139,9 @@ growth_all <- bind_rows(growth_16, growth_10, growth_5, growth_20, growth_24, gr
 
 growth_all %>% 
 	group_by(temp) %>% 
-	summarise_each(funs(mean, std.error), growth_per_day) %>% 
-	ggplot(aes(x = temp, y = growth_per_day_mean)) + geom_point() +
-	geom_errorbar(aes(ymin = growth_per_day_mean - growth_per_day_std.error, ymax = growth_per_day_mean + growth_per_day_std.error), width = 0.1)
+	summarise_each(funs(mean, std.error), estimate) %>%
+	ggplot(aes(x = temp, y = estimate_mean)) + geom_point() +
+	geom_errorbar(aes(ymin = estimate_mean - estimate_std.error, ymax = estimate_mean + estimate_std.error), width = 0.1)
 
 
 growth_all %>% 
