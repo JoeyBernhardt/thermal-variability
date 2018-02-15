@@ -152,22 +152,22 @@ growth_all %>%
 	ggplot(aes(x = temp, y = mean)) + geom_point() +
 	geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.1)
 
-write_csv(growth_all, "Tetraselmis_experiment/data-processed/growth_resampling.csv")
+write_csv(growth_all, "Tetraselmis_experiment/data-processed/growth_resampling_exp.csv")
 
-growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
+growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_exp.csv")
 ### now do the resampling for the variable 
 
 
 estimate_growth <- function(x, temperature) {
-	cells_v_exp %>% 
-		filter(temp == temperature) %>% 
-		mutate(time_point = trunc(time_since_innoc_hours)) %>% 
-		group_by(time_point) %>% 
-		sample_n(size = x, replace = FALSE) %>% 
-		group_by(temp) %>% 
-		do(tidy(nls(cell_density ~ 800 * (1+a)^(time_since_innoc_hours),
-								data= .,  start=list(a=0.01),
-								control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
+  cells_days_v %>% 
+    filter(temp == temperature) %>% 
+    # mutate(time_point = trunc(time_since_innoc_hours)) %>% 
+    group_by(sample_group) %>% 
+    sample_n(size = x, replace = FALSE) %>% 
+    group_by(temp) %>% 
+    do(tidy(nls(cell_density ~ 800 * exp(r*days),
+                data= .,  start=list(r=0.01),
+                control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
 		ungroup() %>%
 		mutate(temp = as.numeric(temp)) %>%
 		mutate(growth_per_day = estimate*24) %>% 
@@ -191,7 +191,7 @@ growth_27v <- samples_rep %>%
 
 growth_all_v <- bind_rows(growth_15v, growth_10v, growth_5v, growth_20v, growth_24v, growth_27v)	
 
-write_csv(growth_all_v, "Tetraselmis_experiment/data-processed/growth_resampling_v.csv")
+write_csv(growth_all_v, "Tetraselmis_experiment/data-processed/growth_resampling_v_exp.csv")
 
 growth_all_v %>% 
   group_by(temp) %>% 
