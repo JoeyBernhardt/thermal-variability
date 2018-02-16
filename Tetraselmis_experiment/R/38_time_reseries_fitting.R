@@ -1,34 +1,44 @@
 
 library(cowplot)
+library(broom)
+library(purrr)
+library(tidyverse)
+library(minpack.lm)
+library(nlstools)
 
 cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 cells_v_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_v_exp.csv")
+
+cells_days_v <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv")
+cells_days_c <- read_csv("Tetraselmis_experiment/data-processed/cells_exp_mod.csv") %>% 
+  mutate(days = time_since_innoc_hours/24) %>% 
+  mutate(days = ifelse(days < 0, 0, days))
+
+
 
 
 avals<-seq(-0.2,1.2,0.02)
 bvals<-seq(-0.2,0.3,0.02)
 
+avals<-seq(0,0.5,0.07)
+bvals<-seq(0,0.16,0.08)
+zvals<-seq(10,15,1)
+wvals<-seq(34,37,1)
 
-df <-  expand.grid(a = avals, b = bvals) %>% 
+
+df <-  expand.grid(a = avals, b = bvals, z = zvals, w = wvals) %>% 
   mutate(unique_id = rownames(.)) %>% 
   mutate(sample_size = 1)
 
 
-cells_days <- cells_exp %>% 
-  mutate(days = time_since_innoc_hours/24) %>% 
-  mutate(days = ifelse(days < 0, 0, days))
-
-cells_days_v <- cells_v_exp %>% 
-  mutate(days = time_since_innoc_hours/24) %>% 
-  mutate(days = ifelse(days < 0, 0, days))
-
+##cell_density ~ 800 * exp(r*days)
 
 fit_growth <- function(df){
-  res <- try(nlsLM(cell_density ~ 800 * (1+(a*exp(b*temp)*(1-((temp-z)/(w/2))^2)))^(days),
-                   data= cells_days_v,  
-                   start=list(z=14.4,w=35,a= df$a[[1]], b=df$b[[1]]),
-                   lower = c(0, 0, -0.2, -0.2),
-                   upper = c(30, 45, 1.2, 0.3),
+  res <- try(nlsLM(cell_density ~ 800 * exp((a*exp(b*temp)*(1-((temp-z)/(w/2))^2))*(days)),
+                   data= cells_days_c,  
+                   start=list(z=df$z[[1]],w=df$w[[1]],a= df$a[[1]], b=df$b[[1]]),
+                   lower = c(z = 0, w= 0, a = -0.2, b = 0),
+                   upper = c(z = 20, w= 80,a =  0.5, b = 0.15),
                    control = nls.control(maxiter=1024, minFactor=1/204800000)))
   if(class(res)!="try-error"){
     out1 <- tidy(res) %>% 
@@ -62,6 +72,50 @@ results <- output %>%
 
 write_csv(results, "Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
 write_csv(results_v, "Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
+
+
+results <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
+
+fitc <- nlsLM(cell_density ~ 800 * exp((a*exp(b*temp)*(1-((temp-z)/(w/2))^2))*(days)),
+             data= cells_days_c,  
+             start=list(z= results$z[[1]],w= results$w[[1]],a= results$a[[1]], b= results$b[[1]]),
+             lower = c(z = 0, w= 0, a = -0.2, b = 0),
+             upper = c(z = 20, w= 80,a =  0.5, b = 0.15),
+             control = nls.control(maxiter=1024, minFactor=1/204800000))
+
+best_fit_c <- coef(fitc)
+nls_boot_c <- nlsBoot(fitc, niter = 999)
+nls_boot_coefs_c <- as_data_frame(nls_boot_c$coefboot)
+ctpc <- as_data_frame(best_fit_c) %>% 
+  rownames_to_column(.) %>% 
+  spread(key = rowname, value = value)
+
+write_csv(nls_boot_coefs_c, "Tetraselmis_experiment/data-processed/nls_boot_c.csv")
+write_csv(ctpc, "Tetraselmis_experiment/data-processed/ctpc.csv")
+
+
+# bootstrap variable ---------------------------------------------------------------
+library(nlstools)
+results_v <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
+
+fit <- nlsLM(cell_density ~ 800 * exp((a*exp(b*temp)*(1-((temp-z)/(w/2))^2))*(days)),
+                 data= cells_days_v,  
+                 start=list(z= 12.14402,w= 36.23217,a= 0.2672314, b=0.08407602),
+                 lower = c(z = 0, w= 0, a = -0.2, b = 0),
+                 upper = c(z = 20, w= 80,a =  0.5, b = 0.15),
+                 control = nls.control(maxiter=1024, minFactor=1/204800000))
+
+best_fit_v <- coef(fit)
+
+nls_boot <- nlsBoot(fit, niter = 999)
+nls_boot_coefs <- as_data_frame(nls_boot$coefboot)
+vtpc <- as_data_frame(best_fit_v) %>% 
+  rownames_to_column(.) %>% 
+  spread(key = rowname, value = value)
+write_csv(nls_boot_coefs, "Tetraselmis_experiment/data-processed/nls_boot.csv")
+write_csv(vtpc, "Tetraselmis_experiment/data-processed/vtpc.csv")
+
+View(nls_boot$coefboot)
 
 
 tp <- results_v
@@ -123,7 +177,7 @@ x <- seq(-3, 32, by = 0.01)
 
 
 predict_tpc <- function(x) {
-  y <- 0.5*(tpc_c(x + 5) + tpc_c(x - 5))
+  y <- 0.5*(ctpc(x + 5) + ctpc(x - 5))
 }
 
 

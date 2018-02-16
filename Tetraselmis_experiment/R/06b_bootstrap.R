@@ -15,6 +15,10 @@ library(readr)
 # load data ---------------------------------------------------------------
 
 params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")  ## estimated TPC parameters for constant conditions
+params_raw_exp <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")  ## estimated TPC parameters for constant conditions
+
+bind_rows(params_raw, params_raw_exp) %>% View
+
 growth <- read_csv("Tetraselmis_experiment/data-processed/constant_growth_rates.csv") ## empirically observed growth rates
 
 growth2 <- growth

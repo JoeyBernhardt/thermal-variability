@@ -156,34 +156,43 @@ fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.
 write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
 write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params_v_exp.csv") ## this is for the fitting for the variable dataset
 
+
+pc <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
+
+nbcurvec<-function(temp,z,w,a,b){
+  res<-pc$a.list[[1]]*exp(pc$b.list[[1]]*temp)*(1-((temp-pc$z.list[[1]])/(pc$w.list[[1]]/2))^2)
+  res
+}
+
+
 nbcurve2<-function(x){
 	res<-cfs[3]*exp(cfs[4]*x)*(1-((x-cfs[1])/(cfs[2]/2))^2)
 	res
 }
-growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling.csv")
+growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_exp.csv")
 
 growth_sum <- growth_all %>% 
 	group_by(temp) %>% 
-	summarise(lower = quantile(growth_per_day, probs = 0.025),
-						upper = quantile(growth_per_day, probs = 0.975),
-						mean = mean(growth_per_day),
-						sd = sd(growth_per_day)) 
+	summarise(lower = quantile(estimate, probs = 0.025),
+						upper = quantile(estimate, probs = 0.975),
+						mean = mean(estimate),
+						sd = sd(estimate)) 
 
 write_csv(growth_sum, "Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv")
 
 growth_sum_v <- growth_all_v %>% 
 	group_by(temp) %>% 
-	summarise(lower = quantile(growth_per_day, probs = 0.025),
-						upper = quantile(growth_per_day, probs = 0.975),
-						mean = mean(growth_per_day),
-						sd = sd(growth_per_day)) 
+	summarise(lower = quantile(estimate, probs = 0.025),
+						upper = quantile(estimate, probs = 0.975),
+						mean = mean(estimate),
+						sd = sd(estimate)) 
 
 write_csv(growth_sum_v, "Tetraselmis_experiment/data-processed/resampled_growth_rates_summary_v.csv")
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 
-p + geom_point(aes(x = temperature, y = growth.rate), data = dat.full, size = 0.5) +
-	stat_function(fun = nbcurve2, size = 1) +
+p + geom_point(aes(x = temp, y = estimate), data = growth_all, size = 0.05) +
+	stat_function(fun = nbcurvec, size = 1) +
 	geom_point(aes(x = temp, y = mean), data = growth_sum) +
 	geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), width = 0.1, data = growth_sum) +
 	# geom_errorbar(aes(ymin = mean-sd , ymax = mean+sd, x = temp), width = 0.1, data = growth_sum) +

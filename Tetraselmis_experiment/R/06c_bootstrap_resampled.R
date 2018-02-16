@@ -19,7 +19,7 @@ library(tidyverse)
 # load data ---------------------------------------------------------------
 
 
-params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## estimated TPC parameters for constant conditions
+params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv") ## estimated TPC parameters for constant conditions
 growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv") ## empirically observed growth rates
 
 # ps <- read_csv("Tetraselmis_experiment/data-processed/all_params_above_freezing.csv")
