@@ -84,6 +84,7 @@ fitc <- nlsLM(cell_density ~ 800 * exp((a*exp(b*temp)*(1-((temp-z)/(w/2))^2))*(d
              control = nls.control(maxiter=1024, minFactor=1/204800000))
 
 best_fit_c <- coef(fitc)
+nlsResiduals(fitc)
 nls_boot_c <- nlsBoot(fitc, niter = 999)
 nls_boot_coefs_c <- as_data_frame(nls_boot_c$coefboot)
 ctpc <- as_data_frame(best_fit_c) %>% 
