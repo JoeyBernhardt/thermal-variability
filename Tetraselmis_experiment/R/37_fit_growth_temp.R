@@ -88,8 +88,7 @@ zvals<-seq(10,15,1)
 wvals<-seq(30,40,1)
 
 df <-  expand.grid(a = avals, b = bvals, z = zvals, w = wvals) %>% 
-  mutate(unique_id = rownames(.)) %>% 
-  mutate(sample_size = 1)
+  mutate(unique_id = rownames(.))
 
 resample <- function(sample_size){
   cd <- cells_days %>% 
