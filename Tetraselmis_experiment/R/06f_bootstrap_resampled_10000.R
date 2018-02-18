@@ -15,7 +15,8 @@ library(tidyverse)
 # load data ---------------------------------------------------------------
 
 
-params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## estimated TPC parameters for constant conditions
+# params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## estimated TPC parameters for constant conditions
+params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
 growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv") ## empirically observed growth rates
 
 params <- params_raw %>% 
@@ -82,7 +83,7 @@ EqnS.3 <- function(sample_size){
   data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
 }
 
-samples <- rep(1, 10000)
+samples <- rep(1, 1000)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -224,3 +225,4 @@ for(i in 1:length(curve.id.list)){
 
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_alltemps.csv")
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")

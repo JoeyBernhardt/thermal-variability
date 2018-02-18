@@ -160,12 +160,23 @@ write_csv(fits, "Tetraselmis_experiment/data-processed/resampling_TPC_params_v_e
 
 
 pc <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
+dc <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
+tc <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
+
+bind_rows(pc, dc) %>% View
 
 nbcurvec<-function(temp,z,w,a,b){
   res<-pc$a.list[[1]]*exp(pc$b.list[[1]]*temp)*(1-((temp-pc$z.list[[1]])/(pc$w.list[[1]]/2))^2)
   res
 }
-
+etpc<-function(temp,z,w,a,b){
+  res<-tc$a[[1]]*exp(tc$b[[1]]*temp)*(1-((temp-tc$z[[1]])/(tc$w[[1]]/2))^2)
+  res
+}
+dtpc<-function(temp,z,w,a,b){
+  res<-dc$a.list[[1]]*exp(dc$b.list[[1]]*temp)*(1-((temp-dc$z.list[[1]])/(dc$w.list[[1]]/2))^2)
+  res
+}
 
 nbcurve2<-function(x){
 	res<-cfs[3]*exp(cfs[4]*x)*(1-((x-cfs[1])/(cfs[2]/2))^2)
@@ -195,6 +206,8 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 
 p + geom_point(aes(x = temp, y = estimate), data = growth_all, size = 0.05) +
 	stat_function(fun = nbcurvec, size = 1) +
+  stat_function(fun = etpc, size = 1, color = "purple") +
+  stat_function(fun = dtpc, size = 1, color = "blue") +
 	geom_point(aes(x = temp, y = mean), data = growth_sum) +
 	geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), width = 0.1, data = growth_sum) +
 	# geom_errorbar(aes(ymin = mean-sd , ymax = mean+sd, x = temp), width = 0.1, data = growth_sum) +
