@@ -8,7 +8,9 @@ library(readr)
 
 
 growth_all <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_exp.csv")
-growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v_exp.csv")
+growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resampling_v_exp.csv") %>% 
+  select(-growth_per_day) %>% 
+  select(-error)
 
 
 
@@ -24,7 +26,7 @@ dat.full <- growth_all_v %>%
 	select(curve.id, temperature, growth.rate) 
 str(dat.full)
 
-freeze <- data.frame(curve.id = "1", temperature = -1.8, growth.rate = 0)
+# freeze <- data.frame(curve.id = "1", temperature = -1.8, growth.rate = 0)
 
 dat.full <- bind_rows(dat.full, freeze)
 
