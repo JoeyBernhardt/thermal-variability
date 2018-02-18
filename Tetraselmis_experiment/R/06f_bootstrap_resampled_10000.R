@@ -223,6 +223,16 @@ for(i in 1:length(curve.id.list)){
   n.list[i]<-length(dat$temperature)
 }
 
-fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
-write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_alltemps.csv")
-write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
+fits_c <- data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
+# write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_alltemps.csv")
+write_csv(fits_c, "Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
+
+
+
+
+# now plot bootstrapped fits ----------------------------------------------
+
+bsc_fits <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
+
+
+

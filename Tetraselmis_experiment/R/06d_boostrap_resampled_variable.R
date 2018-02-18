@@ -16,7 +16,7 @@ library(ggthemes)
 # load data ---------------------------------------------------------------
 
 
-params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v.csv") ## estimated TPC parameters for constant conditions
+params_raw <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_v_exp.csv") ## estimated TPC parameters for constant conditions
 growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary_v.csv") ## empirically observed growth rates
 
 params <- params_raw %>% 
@@ -82,7 +82,7 @@ EqnS.3 <- function(sample_size){
 samples <- rep(1, 5000)
 
 
-samples <- rep(1, 10000)
+samples <- rep(1, 1000)
 
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
@@ -225,7 +225,7 @@ for(i in 1:length(curve.id.list)){
 
 fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 
-
+write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp.csv")
 
 write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_v_300.csv")
 
