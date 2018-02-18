@@ -78,8 +78,8 @@ write_csv(cells_exp, "Tetraselmis_experiment/data-processed/cells_exp.csv")
 cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 ### now let's pick out the exponential phase from the variable
 
-cells_v %>% 
-	ggplot(aes(x = time_since_innoc_hours, y = cell_density)) + geom_point() +
+cells_days_v %>% 
+	ggplot(aes(x = days, y = cell_density)) + geom_point() +
 	facet_wrap( ~ temp)
 
 
@@ -106,9 +106,7 @@ estimate_growth <- function(x, temperature) {
 							data= .,  start=list(r=0.01),
 							control = nls.control(maxiter=100, minFactor=1/204800000)))) %>% 
 	ungroup() %>%
-	mutate(temp = as.numeric(temp)) %>%
-	mutate(growth_per_day = estimate*24) %>% 
-	mutate(error = std.error*24)
+	mutate(temp = as.numeric(temp))
 }
 
 
