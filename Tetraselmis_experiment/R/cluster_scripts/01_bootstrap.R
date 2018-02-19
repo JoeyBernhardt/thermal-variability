@@ -75,7 +75,7 @@ EqnS.3 <- function(sample_size){
 }
 
 
-samples <- rep(1, 1000)
+samples <- rep(1, 5000)
 
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
