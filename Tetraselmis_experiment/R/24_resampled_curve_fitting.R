@@ -14,7 +14,7 @@ growth_all_v <- read_csv("Tetraselmis_experiment/data-processed/growth_resamplin
 
 
 
-growth_all %>% 
+growth_all_v %>% 
   ggplot(aes(x = temp, y = estimate)) + geom_point()
 
 

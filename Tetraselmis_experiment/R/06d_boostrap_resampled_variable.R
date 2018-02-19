@@ -7,10 +7,7 @@
 library(purrr)
 library(bbmle)
 library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(readr)
-library(ggthemes)
+library(tidyverse)
 
 
 # load data ---------------------------------------------------------------
@@ -78,11 +75,7 @@ EqnS.3 <- function(sample_size){
 }
 
 
-
-samples <- rep(1, 5000)
-
-
-samples <- rep(1, 1000)
+samples <- rep(1, 10)
 
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
