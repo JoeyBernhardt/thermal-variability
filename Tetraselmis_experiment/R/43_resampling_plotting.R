@@ -24,7 +24,8 @@ gs_all %>%
 
 
 fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
-fits_v <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp2.csv")
+fits_v <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp3.csv")
+fits_v_1000 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp2.csv")
 fits_c <- fits_c %>%
   rename(a = a.list,
          b = b.list,
@@ -32,6 +33,12 @@ fits_c <- fits_c %>%
          z = z.list)
 
 fits_v <- fits_v %>%
+  rename(a = a.list,
+         b = b.list,
+         w = w.list,
+         z = z.list)
+
+fits_v_1000 <- fits_v_1000 %>%
   rename(a = a.list,
          b = b.list,
          w = w.list,
@@ -66,14 +73,16 @@ all_preds_c <- fits_c_split %>%
   map_df(prediction_function, .id = "replicate")
 
 fits_v_split <- fits_v %>%
-  # filter(z != 30) %>% 
-  # filter(b > 0, a != 1, z != 20, z != 0, b != 0) %>%
-  # filter(b < 0.12) %>% 
+  split(.$curve.id.list)
+
+fits_v_split_1000 <- fits_v_1000 %>%
   split(.$curve.id.list)
 
 all_preds_v <- fits_v_split %>% 
   map_df(prediction_function, .id = "replicate")
 
+all_preds_v_1000 <- fits_v_split_1000 %>% 
+  map_df(prediction_function, .id = "replicate")
 
 limits_c <- all_preds_c %>% 
   group_by(temperature) %>% 
@@ -82,6 +91,12 @@ limits_c <- all_preds_c %>%
             mean = mean(growth))
 
 limits_v <- all_preds_v %>% 
+  group_by(temperature) %>% 
+  summarise(q2.5=quantile(growth, probs=0.025),
+            q97.5=quantile(growth, probs=0.975),
+            mean = mean(growth))
+
+limits_v_1000 <- all_preds_v_1000 %>% 
   group_by(temperature) %>% 
   summarise(q2.5=quantile(growth, probs=0.025),
             q97.5=quantile(growth, probs=0.975),
@@ -105,11 +120,12 @@ tpc_c <-function(x){
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 p + 
-  geom_line(aes(x = temperature, y = growth, group = replicate), data = all_preds_v, alpha = 0.2) +
+  # geom_line(aes(x = temperature, y = growth, group = replicate), data = all_preds_v, alpha = 0.2) +
   stat_function(fun = tpc_c, color = "cadetblue") +
   stat_function(fun = tpc_v, color = "red") +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
-  geom_point(aes(x = temp, y = mean), data = gs, color = "cadetblue") +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "blue", alpha = 0.8) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v_1000, fill = "red", alpha = 0.5) +
+  # geom_point(aes(x = temp, y = mean), data = gs, color = "cadetblue") +
   geom_point(aes(x = temp, y = mean), data = gsv, color = "red") +
  coord_cartesian(xlim = c(-2, 32), ylim = c(-0.5, 2))

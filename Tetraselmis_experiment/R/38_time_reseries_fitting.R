@@ -93,8 +93,8 @@ ctpc <- as_data_frame(best_fit_c) %>%
 
 write_csv(nls_boot_coefs_c, "Tetraselmis_experiment/data-processed/nls_boot_c.csv")
 write_csv(ctpc, "Tetraselmis_experiment/data-processed/ctpc.csv")
-
-
+nls_boot_coefs_c <- read_csv("Tetraselmis_experiment/data-processed/nls_boot_c.csv")
+ctpc <- read_csv("Tetraselmis_experiment/data-processed/ctpc.csv")
 # bootstrap variable ---------------------------------------------------------------
 library(nlstools)
 results_v <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
@@ -117,8 +117,8 @@ write_csv(nls_boot_coefs, "Tetraselmis_experiment/data-processed/nls_boot.csv")
 write_csv(vtpc, "Tetraselmis_experiment/data-processed/vtpc.csv")
 
 View(nls_boot$coefboot)
-
-
+nls_boot_coefs_v <- read_csv("Tetraselmis_experiment/data-processed/nls_boot.csv")
+vtpc <- read_csv("Tetraselmis_experiment/data-processed/vtpc.csv")
 tp <- results_v
 
 grfunc<-function(x){
@@ -159,12 +159,12 @@ p +
   xlim(-3, 33) + 
   ylim(-2, 5) + geom_hline(yintercept = 0) +
   stat_function(fun = tpc_v, color = "grey", size = 1) + ylab("Growth rate") + xlab("Temperature (°C)") +
-  geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds, alpha = 0.2) +
-  geom_line(aes(x = temperature, y = growth, group = replicate), color = "purple", data = all_preds_v, alpha = 0.2) +
-  geom_line(aes(x = temperature, y = growth, group = replicate), color = "orange", data = all_preds_NLA, alpha = 0.2) +
+  # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds, alpha = 0.2) +
+  # geom_line(aes(x = temperature, y = growth, group = replicate), color = "purple", data = all_preds_v, alpha = 0.2) +
+  # geom_line(aes(x = temperature, y = growth, group = replicate), color = "orange", data = all_preds_NLA, alpha = 0.2) +
   # geom_ribbon(aes(x = temperature, ymin = prediction_lower, ymax = prediction_upper, linetype = NA), fill = "transparent", alpha = 0.01,
               # data = all_preds_average, linetype = "dashed", color = "red", size = 0.5) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "purple", alpha = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "purple", alpha = 0.5) +
   geom_vline(xintercept = 27) +
   coord_cartesian()
   

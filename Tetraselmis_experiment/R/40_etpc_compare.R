@@ -216,14 +216,37 @@ p +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  # geom_point(aes(x = temp, y = mean), data = gs, size = 2, color = "cadetblue") +
+  geom_point(aes(x = temp, y = mean), data = gsv, size = 2, color = "orange") +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = gs, color = "cadetblue", width = 0.2) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = gsv, color = "orange", width = 0.2) +
   # geom_line(aes(x = temperature, y = growth), data = all_preds_average, color = "purple", size = 0.5) +
   # geom_line(aes(x = temperature, y = growth), data = all_preds_NLA, color = "purple", size = 0.5) +
   geom_hline(yintercept = 0) + ylab("Exponential growth rate (per day)") +
-  xlab("Temperature (°C)") + coord_cartesian(xlim = c(-3,33), ylim = c(-1, 2))
+  xlab("Temperature (°C)") + coord_cartesian(xlim = c(-3,33), ylim = c(-1, 1.6))
 ggsave("Tetraselmis_experiment/figures/nls_boot_figure2.png", width = 5, height = 4)
 
 
+# now bring in the growth rates -------------------------------------------
 
+
+growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv") ## empirically observed growth rates
+growth_sum_v <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary_v.csv") ## empirically observed growth rates
+
+
+gs <- growth_sum %>% 
+  mutate(treatment = "constant")
+
+gsv <- growth_sum_v %>% 
+  mutate(treatment = "variable")
+
+gs_all <- bind_rows(gs, gsv)
+
+
+
+
+
+library(viridis)
 
 p + 
   geom_line(aes(x = temperature, y = growth, group = replicate, color = b), data = all_variable, alpha = 1, size = 1.5) +
