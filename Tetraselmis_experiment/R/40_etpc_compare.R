@@ -4,6 +4,7 @@ library(tidyverse)
 etpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
 ctpc_fits <- read_csv("Tetraselmis_experiment/data-processed/ctpc.csv")
 vtpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
+vtpc_fits <- read_csv("Tetraselmis_experiment/data-processed/vtpc.csv") ## new vtpc
 c_fits <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
 
 
@@ -26,7 +27,7 @@ ctpc <-function(x){
   res
 }
 
-vtpc_fits <- read_csv("Tetraselmis_experiment/data-processed/vtpc.csv") ## new vtpc
+
 
 vtpc <-function(x){
   res<-(vtpc_fits$a[[1]]*exp(vtpc_fits$b[[1]]*x)*(1-((x-vtpc_fits$z[[1]])/(vtpc_fits$w[[1]]/2))^2))
@@ -295,4 +296,24 @@ p +
   geom_line(aes(x = temperature, y = growth, group = replicate, color = b), data = all_variable, alpha = 1, size = 1.5) +
   scale_color_viridis(discrete = FALSE) +  xlim(-3, 33) +
   ylim(-1, 2) 
+
+
+# get the roots and topt --------------------------------------------------
+
+
+library(rootSolve)
+nbcurve<-function(temp,z,w,a,b){
+  res<-a*exp(b*temp)*(1-((temp-z)/(w/2))^2)
+  res
+}
+
+## get Tmax
+uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(10,150))
+uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(10,150))
+
+
+## get Tmin
+uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(-15,10))
+uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(-15,10))
+
 
