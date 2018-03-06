@@ -84,8 +84,8 @@ maxgrowth <- -optinfo$value
 
 # now plot on CIs for the etpc approach -----------------------------------
 
-bs_v <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv.csv")
-bs_v <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv_bounds.csv")
+# bs_v <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv.csv")
+# bs_v <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv_bounds.csv")
 
 ## bring in bootstrap TPCs
 bs_v <- read_csv("Tetraselmis_experiment/data-processed/nls_boot.csv") %>% 
@@ -108,12 +108,7 @@ predictions <- data.frame(x, predictions) %>%
   rename(temperature = x, 
          growth = predictions)
 
-
-
-
 all_preds_average <- predictions
-
-
 
 prediction_function <- function(df) {
   tpc <-function(x){
@@ -135,9 +130,6 @@ prediction_function <- function(df) {
 
 
 bs_v_split <- bs_v %>%
-  # filter(z != 30) %>% 
-  # filter(b > 0, a != 1, z != 20, z != 0, b != 0) %>%
-  # filter(b < 0.12) %>% 
   split(.$replicate)
 
 all_preds_v <- bs_v_split %>% 
@@ -316,4 +308,113 @@ uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a =
 uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(-15,10))
 uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(-15,10))
 
+## get the upper and lower bounds on Tmax from the nls bootstrapping 
 
+bs_split <- bs_c %>% 
+  split(.$replicate)
+
+bs_v_split <- bs_v %>%
+  split(.$replicate)
+
+get_tmax <- function(df){
+  uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(10,150))
+}
+
+tmaxes_c <- bs_split %>% 
+  map(get_tmax) %>% 
+  unlist() %>% 
+  as_data_frame() %>% 
+  rename(tmax = value) %>% 
+  mutate(replicate = rownames(.)) %>% 
+  mutate(treatment = "constant")
+
+tmaxes_v <- bs_v_split %>% 
+  map(get_tmax) %>% 
+  unlist() %>% 
+  as_data_frame() %>% 
+  rename(tmax = value) %>% 
+  mutate(replicate = rownames(.)) %>% 
+  mutate(treatment = "variable")
+
+all_tmaxes <- bind_rows(tmaxes_c, tmaxes_v)
+
+tmax_summ <- all_tmaxes %>% 
+  group_by(treatment) %>% 
+  summarise(lower=quantile(tmax, probs=0.025),
+            upper=quantile(tmax, probs=0.975),
+            mean = mean(tmax),
+            median = median(tmax))
+
+tmax_summ %>% 
+  ggplot(aes(x = treatment, y = mean)) + geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
+
+## get tmins
+
+get_tmin <- function(df){
+  uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5))
+}
+
+tmins_c <- bs_split %>% 
+  map(get_tmin) %>% 
+  unlist() %>% 
+  as_data_frame() %>% 
+  rename(tmin = value) %>% 
+  mutate(replicate = rownames(.)) %>% 
+  mutate(treatment = "constant")
+
+tmins_v <- bs_v_split %>% 
+  map(get_tmin) %>% 
+  unlist() %>% 
+  as_data_frame() %>% 
+  rename(tmin = value) %>% 
+  mutate(replicate = rownames(.)) %>% 
+  mutate(treatment = "variable")
+
+all_tmins <- bind_rows(tmins_c, tmins_v)
+
+tmin_summ <- all_tmins %>% 
+  group_by(treatment) %>% 
+  summarise(lower=quantile(tmin, probs=0.025),
+            upper=quantile(tmin, probs=0.975),
+            mean = mean(tmin),
+            median = median(tmin))
+
+tmin_summ %>% 
+  ggplot(aes(x = treatment, y = mean)) + geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
+
+
+### get topts
+
+get_topt <- function(df){
+grfunc<-function(x){
+  -nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]],b = df$b[[1]])
+}
+optinfo<-optim(c(x=df$z[[1]]),grfunc)
+opt <-c(optinfo$par[[1]])
+maxgrowth <- c(-optinfo$value)
+results <- data.frame(topt = opt, rmax = maxgrowth)
+return(results)
+}
+
+topts_c <- bs_split %>% 
+  map_df(get_topt, .id = "replicate") %>% 
+  mutate(treatment = "constant")
+
+topts_v <- bs_v_split %>% 
+  map_df(get_topt, .id = "replicate") %>% 
+  mutate(treatment = "variable")
+
+all_topts <- bind_rows(topts_c, topts_v)
+
+topts_summ <- all_topts %>% 
+  group_by(treatment) %>% 
+  summarise(lower=quantile(topt, probs=0.025),
+            upper=quantile(topt, probs=0.975),
+            mean = mean(topt),
+            median = median(topt))
+
+topts_summ %>% 
+  ggplot(aes(x = treatment, y = mean)) + geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
