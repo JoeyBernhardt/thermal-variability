@@ -85,12 +85,14 @@ maxgrowth <- -optinfo$value
 
 bs_v <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv.csv")
 bs_v <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fitsv_bounds.csv")
+
+## bring in bootstrap TPCs
 bs_v <- read_csv("Tetraselmis_experiment/data-processed/nls_boot.csv") %>% 
   mutate(replicate = rownames(.))
 
 bs_c <- read_csv("Tetraselmis_experiment/data-processed/nls_boot_c.csv") %>% 
   mutate(replicate = rownames(.))
-bs_c <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fits.csv")
+# bs_c1 <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fits.csv")
 
 x <- seq(-3, 32, by = 0.01)
 
@@ -219,13 +221,58 @@ p +
   # geom_point(aes(x = temp, y = mean), data = gs, size = 2, color = "cadetblue") +
   geom_point(aes(x = temp, y = mean), data = gsv, size = 2, color = "orange") +
   # geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = gs, color = "cadetblue", width = 0.2) +
-  geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = gsv, color = "orange", width = 0.2) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = gsv, color = "red", width = 0.2) +
+  # geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd, x = temp), data = gsv, color = "orange", width = 0.2) +
   # geom_line(aes(x = temperature, y = growth), data = all_preds_average, color = "purple", size = 0.5) +
   # geom_line(aes(x = temperature, y = growth), data = all_preds_NLA, color = "purple", size = 0.5) +
   geom_hline(yintercept = 0) + ylab("Exponential growth rate (per day)") +
   xlab("Temperature (°C)") + coord_cartesian(xlim = c(-3,33), ylim = c(-1, 1.6))
 ggsave("Tetraselmis_experiment/figures/nls_boot_figure2.png", width = 5, height = 4)
 
+
+
+# plot this again ---------------------------------------------------------
+
+
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+p + 
+  # stat_function(fun = vtpc, color = "orange", size = 1) +
+  # stat_function(fun = tpc_c, color = "green", size = 1) +
+  geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+  stat_function(fun = ctpc, color = "black", size = 1) +
+  stat_function(fun = vtpc, color = "orange", size = 1) +
+  # # geom_line(aes(x = temperature, y = growth, group = replicate), color = "orange", data = all_preds_v, alpha = 0.1) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+              fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  # geom_point(aes(x = temp, y = mean), data = gs, size = 2, color = "cadetblue") +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  # geom_point(aes(y = mean, x = temp), data = gsv, color = "red") +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temp), data = gs, color = "cadetblue", width = 0.2) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "orange", width = 0.2) +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd, x = temp), data = gsv, color = "orange", width = 0.2) +
+  # geom_line(aes(x = temperature, y = growth), data = all_preds_average, color = "purple", size = 0.5) +
+  # geom_line(aes(x = temperature, y = growth), data = all_preds_NLA, color = "purple", size = 0.5) +
+  geom_hline(yintercept = 0) + ylab("Exponential growth rate (per day)") +
+  xlab("Temperature (°C)") + coord_cartesian(xlim = c(-3,33), ylim = c(-1, 1.6))
+
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+p + 
+geom_point(aes(x = temp_num, y = estimate), data = all_growth_estimated_v, size = 2, color = "orange") +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temp_num), data = all_growth_estimated_v, color = "orange", width = 0.2) 
+  # geom_point(aes(y = mean, x = temp), data = gsv, color = "red") +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd, x = temp), data = gsv, color = "orange", width = 0.2) 
+
+  
+  p + 
+    geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+    geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "orange", width = 0.2) +
+  # geom_point(aes(y = mean, x = temp), data = gsv, color = "red") +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd, x = temp), data = gs, color = "orange", width = 0.2) 
+  
 
 # now bring in the growth rates -------------------------------------------
 

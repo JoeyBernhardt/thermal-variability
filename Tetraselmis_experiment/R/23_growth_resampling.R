@@ -47,7 +47,7 @@ cells_all %>%
 	ggplot(aes(x = time_since_innoc_hours, y = cell_density)) + geom_point() +
 	facet_wrap( ~ temp)
 
-cells_v %>% 
+cells_c %>% 
 	ggplot(aes(x = time_since_innoc_hours, y = cell_density)) + geom_point() +
 	facet_wrap( ~ temp)
 
@@ -78,10 +78,11 @@ write_csv(cells_exp, "Tetraselmis_experiment/data-processed/cells_exp.csv")
 cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 ### now let's pick out the exponential phase from the variable
 
-cells_days_v %>% 
+cells_days_c %>% 
+  filter(temp == 5) %>% 
 	ggplot(aes(x = days, y = cell_density)) + geom_point() +
-	facet_wrap( ~ temp)
-
+	facet_wrap( ~ temp) + stat_function(fun = function(x) 800*exp(0.28956 *x))
+1.130026
 
 cells_v_exp <- cells_v %>% 
 	# filter(temp == 15) %>% 
@@ -195,3 +196,255 @@ growth_all_v %>%
   group_by(temp) %>% 
   summarise_each(funs(mean), growth_per_day) %>% 
   ggplot(aes(x = temp, y = growth_per_day)) + geom_point()
+
+
+### now estimating growth rates and bootstrapping with nlsBoot
+library(nlstools)
+?nlsBoot
+
+## temp = 0
+temperature <- 0
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_0 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 5
+
+temperature <- 5
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_5 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 10
+temperature <- 10
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_10 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+## temp = 16
+temperature <- 16
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_16 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+
+## temp = 20
+temperature <- 20
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_20 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 24
+temperature <- 24
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_24 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 27
+temperature <- 27
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_27 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 29
+temperature <- 29
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_29 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 32
+temperature <- 32
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_c, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_32 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+all_estimates <- bind_rows(output_0, output_5, output_10, output_16, output_20, output_24, output_27, output_29, output_32)
+write_csv(all_estimates, "Tetraselmis_experiment/data-processed/growth_estimates_boot_car.csv")
+
+### now onto variable
+## temp = 5
+temperature <- 5
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_v, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_v5 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+## temp = 10
+temperature <- 10
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_v, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_v10 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+## temp = 15
+temperature <- 15
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_v, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_v15 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 20
+temperature <- 20
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_v, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_v20 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 24
+temperature <- 24
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_v, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_v24 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+
+## temp = 27
+temperature <- 27
+growth <- nls(cell_density ~ 800 * exp(r*days),
+              data= filter(cells_days_v, temp == temperature),  start=list(r=0.01),
+              control = nls.control(maxiter=100, minFactor=1/204800000))
+boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+lower <-  quantile(boot_growth$r, probs=0.025)
+upper = quantile(boot_growth$r, probs=0.975)
+cis <- as_data_frame(cbind(lower, upper))
+tidy_growth <- tidy(growth, conf.int = TRUE)
+output_v27 <- bind_cols(cis, tidy_growth) %>% 
+  mutate(temperature = temperature)
+
+all_estimates_v <- bind_rows(output_v5, output_v10, output_v15, output_v20, output_v24, output_v27)
+write_csv(all_estimates_v, "Tetraselmis_experiment/data-processed/growth_estimates_boot_car_v.csv")
+
+
+### make this into a function!
+
+estimate_growth_function <- function(df){
+  growth <- nls(cell_density ~ 800 * exp(r*days),
+                  data= df,  start=list(r=0.01),
+                  control = nls.control(maxiter=100, minFactor=1/204800000))
+  boot_growth <- as_data_frame((bootCase(growth, B = 999)))
+  
+  lower <-  quantile(boot_growth$r, probs=0.025)
+  upper = quantile(boot_growth$r, probs=0.975)
+  cis <- as_data_frame(cbind(lower, upper))
+  tidy_growth <- tidy(growth, conf.int = TRUE)
+  output <- bind_cols(cis, tidy_growth) %>% 
+    mutate(temperature = df$temp[[1]])
+  return(output)
+}
+
+
+cells_c_split <- cells_days_c %>% 
+  split(.$temp)
+
+cells_v_split <- cells_days_v %>% 
+  split(.$temp)
+
+all_growth_estimated <- cells_c_split %>% 
+  map_df(estimate_growth_function, .id = "temperature_rep") %>% 
+  mutate(temp_num = as.numeric(temperature))
+
+all_growth_estimated_v <- cells_v_split %>% 
+  map_df(estimate_growth_function, .id = "temperature_rep") %>% 
+  mutate(temp_num = as.numeric(temperature))
