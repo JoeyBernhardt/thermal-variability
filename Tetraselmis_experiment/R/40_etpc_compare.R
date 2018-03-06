@@ -253,7 +253,7 @@ all_estimates <- read_csv("Tetraselmis_experiment/data-processed/growth_estimate
 all_estimates_v <- read_csv("Tetraselmis_experiment/data-processed/growth_estimates_boot_car_v.csv")
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
-p + 
+panel_a_np <- p + 
   geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
   stat_function(fun = ctpc, color = "black", size = 1) +
   stat_function(fun = vtpc, color = "orange", size = 1) +
@@ -261,32 +261,32 @@ p +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
-  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
-  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
-  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
-  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "cadetblue", width = 0.2) +
-  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
   geom_hline(yintercept = 0) + ylab("") +
   xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
 ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width = 5, height = 3)
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
-p + 
+panel_b_no <- p + 
   geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
   stat_function(fun = ctpc, color = "black", size = 1) +
-  # stat_function(fun = vtpc, color = "orange", size = 1) +
-  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
-  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
-  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "orange", width = 0.2) +
-  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
-  geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
-  geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
   geom_hline(yintercept = 0) + ylab("") +
   xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
 ggsave("Tetraselmis_experiment/figures/nls_boot_figure2A_with_points.png", width = 5, height = 3)
+
+
+## plot together
+
+figure2_vasseur <- plot_grid(panel_b_no, panel_a_np, labels = c("A", "B"), align = "v", ncol = 1)
+save_plot("Tetraselmis_experiment/figures/figure2_vasseur_no_points.png", figure2_vasseur, ncol = 1, base_height = 7, base_width = 6.2)
 
 
 library(viridis)
