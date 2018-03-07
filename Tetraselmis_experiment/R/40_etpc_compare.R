@@ -201,6 +201,8 @@ limits_prediction <- all_preds_NLA %>%
             mean = mean(growth),
             median = median(growth))
 
+write_csv(limits_prediction, "Tetraselmis_experiment/data-processed/limits_prediction.csv")
+
 ### ok now let's get the actual predicted (mean) under variable conditions
 
 prediction_NLA <-  prediction_NLA(ctpc_fits)
@@ -437,19 +439,32 @@ mean_line <- approxfun(limits_prediction$temperature, limits_prediction$mean)
 median_line <- approxfun(limits_prediction$temperature, limits_prediction$median)
 prediction_line <- approxfun(prediction_NLA$temperature, prediction_NLA$growth)
 
+
+limits_prediction$temperature[which.max(limits_prediction$median)]
+limits_prediction$temperature[which.max(limits_prediction$mean)]
+limits_prediction$temperature[which.max(limits_prediction$q2.5)]
+limits_prediction$temperature[which.max(limits_prediction$q97.5)]
+limits_prediction$temperature[which.max(limits_prediction$q50)]
+
+
+
+
+
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
  p + 
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
-              # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+               # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
    stat_function(fun = lower_line, color = "red") +
+   # stat_function(fun = dtpc, color = "pink") +
+   stat_function(fun = ftpc, color = "orange") +
    stat_function(fun = upper_line, color = "blue") +
-   geom_hline(yintercept = 0) + xlim(21.85, 22) + ylim(1.26, 1.295) +
+   geom_hline(yintercept = 0) + xlim(0, 32) + ylim(0, 1.6) +
    # geom_vline(xintercept =  tmax_lower, color = "red") +
-   geom_vline(xintercept =  21.95, color = "green") +
-   geom_vline(xintercept =  21.90, color = "blue") +
-   geom_vline(xintercept =  21.88, color = "red") +
+   # geom_vline(xintercept =  21.95, color = "green") +
+   # geom_vline(xintercept =  21.90, color = "blue") +
+   # geom_vline(xintercept =  21.88, color = "red") +
    stat_function(fun = mean_line, color = "green")
- 
+ ggsave("Tetraselmis_experiment/figures/prediction_nla_colors.png")
 
 uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5)) 
  (tmax_lower <- uniroot.all(lower_line,c(20,35)))
@@ -475,7 +490,7 @@ results_lower$limit <- "lower"
 grfunc_upper<-function(x){
      -upper_line(x)
    }
-   optinfo<-optim(c(x=ctpc_fits$z[[1]]),grfunc_upper)
+   optinfo<-optim(c(x=vtpc_fits$z[[1]]),grfunc_upper)
    opt <-c(optinfo$par[[1]])
    maxgrowth <- c(-optinfo$value)
    (results_upper <- data.frame(topt = opt, rmax = maxgrowth))
@@ -511,12 +526,23 @@ grfunc_upper<-function(x){
    opt <-c(optinfo$par[[1]])
    maxgrowth <- c(-optinfo$value)
    (results_prediction <- data.frame(topt = opt, rmax = maxgrowth))
-   results_prediction$limit <- "prediction"   
+   results_prediction$limit <- "prediction"  
+   
+   
+   grfunc_ftpc<-function(x){
+     -ftpc(x)
+   }
+   
+   optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_ftpc)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   (results_ftpc <- data.frame(topt = opt, rmax = maxgrowth))
+   results_ftpc$limit <- "ftpc"  
    
    
    ### ok let's put all the predictions and observations together
   
-   topt_predictions <- bind_rows(results_lower, results_upper, results_mean, results_median, results_prediction) 
+   topt_predictions <- bind_rows(results_ftpc, results_lower, results_upper, results_mean, results_median, results_prediction) 
    
    
    topt_predictions %>% 
@@ -537,9 +563,7 @@ grfunc_upper<-function(x){
    ### new option: find the first derivative, and find where that function crosses 0
 
    dtpc <-function(x) ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x)*(1-((x-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2)
-
-   deriv((y ~ sin(cos(x) * y)), c("x","y"), func = TRUE)
-   
+   ftpc <- function(x) 0.5*(dtpc(x + 5) + dtpc(x - 5))
    pred <- function(x) 0.5*(ctpc(x + 5) + ctpc(x - 5))
 
    # fderiv <- approxfun(deriv(0.5*(ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x+5)*(1-((x+5-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2) + 
@@ -557,5 +581,32 @@ grfunc_upper<-function(x){
      stat_function(fun = fderiv, color = "red") + xlim(0, 30) + ylim(0, 1)
    
    
+   #### ok trying this again!!
    
+   get_topts <- function(df){
+   
+  dtpc <-function(x) df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2)
+   ftpc <- function(x) 0.5*(dtpc(x + 5) + dtpc(x - 5))
+   
+   grfunc_ftpc<-function(x){
+     -ftpc(x)
+   }
+   
+   optinfo<-optim(c(df$z[[1]]),grfunc_ftpc)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   results_ftpc <- data.frame(topt = opt, rmax = maxgrowth)
+   return(results_ftpc)
+   }
+   
+   
+   topts_predicted <- bs_split %>% 
+     map_df(get_topts, .id = "replicate") 
+   
+   topt_lims <- topts_predicted %>% 
+     summarise(lower=quantile(topt, probs=0.025),
+               upper=quantile(topt, probs=0.975),
+               mean = mean(topt),
+               median = median(topt)) %>% 
+     gather(key = limit_type, value = value)
    
