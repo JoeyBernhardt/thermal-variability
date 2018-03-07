@@ -187,6 +187,7 @@ prediction_NLA <- function(df) {
 }
 
 
+### this contains all the predictions using NLA
 all_preds_NLA <- bs_split %>% 
   map_df(prediction_NLA, .id = "replicate")
 
@@ -199,6 +200,11 @@ limits_prediction <- all_preds_NLA %>%
             q50=quantile(growth, probs=0.5),
             mean = mean(growth),
             median = median(growth))
+
+### ok now let's get the actual predicted (mean) under variable conditions
+
+prediction_NLA <-  prediction_NLA(ctpc_fits)
+
 
 # now bring in the growth rates -------------------------------------------
 
@@ -429,6 +435,7 @@ lower_line <- approxfun(limits_prediction$temperature, limits_prediction$q2.5)
 upper_line <- approxfun(limits_prediction$temperature, limits_prediction$q97.5)
 mean_line <- approxfun(limits_prediction$temperature, limits_prediction$mean)
 median_line <- approxfun(limits_prediction$temperature, limits_prediction$median)
+prediction_line <- approxfun(prediction_NLA$temperature, prediction_NLA$growth)
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
  p + 
@@ -436,7 +443,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
               # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
    stat_function(fun = lower_line, color = "red") +
    stat_function(fun = upper_line, color = "blue") +
-   geom_hline(yintercept = 0) + xlim(0, 33) + ylim(0, 1.5) +
+   geom_hline(yintercept = 0) + xlim(21.85, 22) + ylim(1.26, 1.295) +
    # geom_vline(xintercept =  tmax_lower, color = "red") +
    geom_vline(xintercept =  21.95, color = "green") +
    geom_vline(xintercept =  21.90, color = "blue") +
@@ -444,7 +451,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    stat_function(fun = mean_line, color = "green")
  
 
- uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5)) 
+uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5)) 
  (tmax_lower <- uniroot.all(lower_line,c(20,35)))
  (tmax_upper <- uniroot.all(upper_line,c(20,35)))
  (tmax_mean <- uniroot.all(mean_line,c(20,35)))
@@ -496,10 +503,24 @@ grfunc_upper<-function(x){
    (results_median <- data.frame(topt = opt, rmax = maxgrowth))
    results_median$limit <- "median"   
    
+   grfunc_prediction<-function(x){
+     -prediction_line(x)
+   }
+   
+   optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_prediction)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   (results_prediction <- data.frame(topt = opt, rmax = maxgrowth))
+   results_prediction$limit <- "prediction"   
+   
    
    ### ok let's put all the predictions and observations together
   
-   topt_predictions <- bind_rows(results_lower, results_upper, results_mean, results_median) 
+   topt_predictions <- bind_rows(results_lower, results_upper, results_mean, results_median, results_prediction) 
+   
+   
+   topt_predictions %>% 
+     ggplot(aes(x = limit, y = topt)) + geom_point()
    
    limits_prediction %>% 
      top_n(mean, n = 1) %>% View
@@ -511,4 +532,30 @@ grfunc_upper<-function(x){
      gather(key = limit, value = value, 2:6) %>% 
      group_by(limit) %>% 
      top_n(value, n = 1) %>% View
+   
+   
+   ### new option: find the first derivative, and find where that function crosses 0
+
+   dtpc <-function(x) ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x)*(1-((x-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2)
+
+   deriv((y ~ sin(cos(x) * y)), c("x","y"), func = TRUE)
+   
+   pred <- function(x) 0.5*(ctpc(x + 5) + ctpc(x - 5))
+
+   # fderiv <- approxfun(deriv(0.5*(ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x+5)*(1-((x+5-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2) + 
+                # ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x-5)*(1-((x-5-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2)), c("x")))
+   
+   fderiv <- deriv(0.5*(dtpc(x + 5) + dtpc(x - 5)), c("x"), func = TRUE)
+   
+   uniroot(fderiv, c(1, 40))
+
+   
+   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+   p + 
+     # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+     # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+     stat_function(fun = fderiv, color = "red") + xlim(0, 30) + ylim(0, 1)
+   
+   
+   
    
