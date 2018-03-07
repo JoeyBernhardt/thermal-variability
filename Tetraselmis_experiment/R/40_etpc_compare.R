@@ -178,7 +178,7 @@ prediction_NLA <- function(df) {
     y <-  0.5*(tpc(x + 5) + tpc(x - 5))
   }
   
-  x <- seq(-3, 32, by = 0.1)
+  x <- seq(-20, 32, by = 0.01)
   
   preds <- sapply(x, pred)
   preds <- data.frame(x, preds) %>% 
@@ -196,7 +196,9 @@ limits_prediction <- all_preds_NLA %>%
   group_by(temperature) %>% 
   summarise(q2.5=quantile(growth, probs=0.025),
             q97.5=quantile(growth, probs=0.975),
-            mean = mean(growth))
+            q50=quantile(growth, probs=0.5),
+            mean = mean(growth),
+            median = median(growth))
 
 # now bring in the growth rates -------------------------------------------
 
@@ -418,3 +420,95 @@ topts_summ <- all_topts %>%
 topts_summ %>% 
   ggplot(aes(x = treatment, y = mean)) + geom_point() +
   geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
+
+
+### now need to get the upper and lower limits predictions
+
+## try with approx fun
+lower_line <- approxfun(limits_prediction$temperature, limits_prediction$q2.5)
+upper_line <- approxfun(limits_prediction$temperature, limits_prediction$q97.5)
+mean_line <- approxfun(limits_prediction$temperature, limits_prediction$mean)
+median_line <- approxfun(limits_prediction$temperature, limits_prediction$median)
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+ p + 
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+              # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+   stat_function(fun = lower_line, color = "red") +
+   stat_function(fun = upper_line, color = "blue") +
+   geom_hline(yintercept = 0) + xlim(0, 33) + ylim(0, 1.5) +
+   # geom_vline(xintercept =  tmax_lower, color = "red") +
+   geom_vline(xintercept =  21.95, color = "green") +
+   geom_vline(xintercept =  21.90, color = "blue") +
+   geom_vline(xintercept =  21.88, color = "red") +
+   stat_function(fun = mean_line, color = "green")
+ 
+
+ uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5)) 
+ (tmax_lower <- uniroot.all(lower_line,c(20,35)))
+ (tmax_upper <- uniroot.all(upper_line,c(20,35)))
+ (tmax_mean <- uniroot.all(mean_line,c(20,35)))
+ 
+ tmin_upper <- uniroot.all(upper_line,c(-20,10))
+ tmin_lower <- uniroot.all(lower_line,c(-20,10))
+ tmin_mean <- uniroot.all(mean_line,c(-20,10))
+ 
+ ### topt predicted
+ 
+ lower_line
+ grfunc<-function(x){
+   -lower_line(x)
+ }
+   optinfo<-optim(c(x = ctpc_fits$z[[1]]),grfunc)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   (results_lower <- data.frame(topt = opt, rmax = maxgrowth))
+results_lower$limit <- "lower"
+   
+grfunc_upper<-function(x){
+     -upper_line(x)
+   }
+   optinfo<-optim(c(x=ctpc_fits$z[[1]]),grfunc_upper)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   (results_upper <- data.frame(topt = opt, rmax = maxgrowth))
+   results_upper$limit <- "upper"
+   
+   
+   grfunc_mean<-function(x){
+     -mean_line(x)
+   }
+   
+  optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_mean)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   (results_mean <- data.frame(topt = opt, rmax = maxgrowth))
+   results_mean$limit <- "mean"   
+   
+   
+   grfunc_median<-function(x){
+     -median_line(x)
+   }
+   
+   optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_median)
+   opt <-c(optinfo$par[[1]])
+   maxgrowth <- c(-optinfo$value)
+   (results_median <- data.frame(topt = opt, rmax = maxgrowth))
+   results_median$limit <- "median"   
+   
+   
+   ### ok let's put all the predictions and observations together
+  
+   topt_predictions <- bind_rows(results_lower, results_upper, results_mean, results_median) 
+   
+   limits_prediction %>% 
+     top_n(mean, n = 1) %>% View
+   
+   limits_prediction %>% 
+     top_n(q2.5, n = 1) %>% View
+   
+   limits_prediction %>% 
+     gather(key = limit, value = value, 2:6) %>% 
+     group_by(limit) %>% 
+     top_n(value, n = 1) %>% View
+   
