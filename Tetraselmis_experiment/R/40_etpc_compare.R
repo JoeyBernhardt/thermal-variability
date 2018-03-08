@@ -257,9 +257,9 @@ panel_a_np <- p +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
-  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
-  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
-  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
   geom_hline(yintercept = 0) + ylab("") +
   xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
 ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width = 5, height = 3)
@@ -356,7 +356,7 @@ tmax_summ %>%
 ## get tmins
 
 get_tmin <- function(df){
-  uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5))
+  uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-40,5))
 }
 
 tmins_c <- bs_split %>% 
@@ -420,6 +420,15 @@ topts_summ <- all_topts %>%
             mean = mean(topt),
             median = median(topt)) %>% 
   mutate(param = "topt")
+
+rmax_summ <- all_topts %>% 
+  group_by(treatment) %>% 
+  summarise(lower=quantile(rmax, probs=0.025),
+            upper=quantile(rmax, probs=0.975),
+            mean = mean(rmax),
+            median = median(rmax)) %>% 
+  mutate(param = "rmax")
+
 
 topts_summ %>% 
   ggplot(aes(x = treatment, y = mean)) + geom_point() +
@@ -487,19 +496,18 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      mutate(param = "predicted_topt") %>% 
      mutate(treatment = "variable")
    
+   rmax_lims <- topts_predicted %>% 
+     summarise(lower=quantile(rmax, probs=0.025),
+               upper=quantile(rmax, probs=0.975),
+               mean = mean(rmax),
+               median = median(rmax)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "predicted_rmax") %>% 
+     mutate(treatment = "variable")
    
+
    
-   
-   all_critical_temps <- bind_rows(topts_summ, tmin_summ, tmax_summ, topt_lims)
-   
-   
-   all_critical_temps %>% 
-     ggplot(aes(x = param, y = mean, color = treatment)) + geom_point() +
-     geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
-     facet_wrap( ~ param, scales = "free")
-   
-   
-# get predicted tmax ------------------------------------------------------
+  # get predicted tmax ------------------------------------------------------
 
    get_tmaxes <- function(df){
      
@@ -529,7 +537,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      dtpc <-function(x) df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2)
      ftpc <- function(x) 0.5*(dtpc(x + 5) + dtpc(x - 5))
      
-     tmin <- uniroot.all(ftpc,c(-20,10))
+     tmin <- uniroot.all(ftpc,c(-70,10))
      return(data.frame(tmin))
    }
    
@@ -537,6 +545,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      map_df(get_tmins, .id = "replicate") 
    
    tmin_lims <- tmin_predicted %>% 
+     # mutate(tmin = ifelse(tmin < 1.8, 1.8, tmin)) %>% 
      summarise(lower=quantile(tmin, probs=0.025),
                upper=quantile(tmin, probs=0.975),
                mean = mean(tmin),
@@ -545,7 +554,41 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      mutate(param = "predicted_tmin") %>% 
      mutate(treatment = "variable")
    
-   all_critical_temps <- bind_rows(topts_summ, tmin_summ, tmax_summ, topt_lims, tmin_lims, tmax_lims)
+  
+   
+ 
+   
+   crit_temps_c <- left_join(tmins_c, tmaxes_c) %>% 
+     mutate(tmin = ifelse(tmin <-1.8, -1.8, tmin)) %>% 
+     mutate(width = tmax - tmin)
+   
+   
+   width_summ_c <- crit_temps_c %>% 
+     summarise(lower=quantile(width, probs=0.025),
+               upper=quantile(width, probs=0.975),
+               mean = mean(width),
+               median = median(width)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "width") %>% 
+     mutate(treatment = "constant")
+   
+   
+   crit_temps_v <- left_join(tmins_v, tmaxes_v) %>% 
+     mutate(tmin = ifelse(tmin <-1.8, -1.8, tmin)) %>% 
+     mutate(width = tmax - tmin)
+   
+   
+   width_summ_v <- crit_temps_v %>% 
+     summarise(lower=quantile(width, probs=0.025),
+               upper=quantile(width, probs=0.975),
+               mean = mean(width),
+               median = median(width)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "width") %>% 
+     mutate(treatment = "variable")
+   
+  
+     
    
    
    all_critical_temps %>% 
@@ -556,7 +599,76 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    
    all_critical_temps %>% 
      filter(grepl("tmin", param), treatment == "variable") %>% 
-  ggplot(aes(x = param, y = mean, color = treatment)) + geom_point() +
-  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
+     ggplot(aes(x = param, y = mean, color = treatment)) + geom_point() +
+     geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
    
+   ### find the limits on w
+   
+   w_summ_c <- bs_c %>% 
+     summarise(lower=quantile(w, probs=0.025),
+               upper=quantile(w, probs=0.975),
+               mean = mean(w),
+               median = median(w)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "w") %>% 
+     mutate(treatment = "constant")
+   
+   w_summ_v <- bs_v %>% 
+     summarise(lower=quantile(w, probs=0.025),
+               upper=quantile(w, probs=0.975),
+               mean = mean(w),
+               median = median(w)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "w") %>% 
+     mutate(treatment = "variable")
+   
+   
+   all_critical_temps <- bind_rows(w_summ_c, w_summ_v, topts_summ, tmin_summ, tmax_summ, topt_lims, tmin_lims, tmax_lims, rmax_summ, rmax_lims, width_summ_c, width_summ_v)
+   
+   all_critical_temps %>% 
+     mutate_at(.funs = round, digits = 2, .vars = 1:4) %>% View
+   
+   write_csv(all_critical_temps, "Tetraselmis_experiment/data-processed/all_critical_temps.csv")
+   
+   
+   
+   
+# big plot with critical temps --------------------------------------------
+
+   crit_temps <- all_critical_temps %>% 
+     filter(param %in% c("topt", "tmax"))
+   
+   crit_temps_predicted <- all_critical_temps %>% 
+     filter(param %in% c("predicted_topt", "predicted_tmax"))
+   
+   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+   p + 
+     # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+     stat_function(fun = ctpc, color = "black", size = 1) +
+     stat_function(fun = vtpc, color = "orange", size = 1) +
+     geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
+     geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.7) +
+     geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+                 fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+     geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+     geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+     geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
+     geom_point(aes(x = mean, y = -0.1), data = crit_temps) +
+     geom_errorbarh(aes(xmin = lower, xmax = upper, y = -0.1, x = mean), data = crit_temps, height = 0.05) +
+     geom_hline(yintercept = 0) + ylab("") +
+     xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
+   ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width = 5, height = 3)
+   
+   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+   panel_b_no <- p + 
+     geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+     stat_function(fun = ctpc, color = "black", size = 1) +
+     geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
+     geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+                 fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+     # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+     # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
+     # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+     geom_hline(yintercept = 0) + ylab("") +
+     xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
    
