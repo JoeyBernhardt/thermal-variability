@@ -1,22 +1,22 @@
 library(cowplot)
 library(tidyverse)
 
-etpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
+# etpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
 ctpc_fits <- read_csv("Tetraselmis_experiment/data-processed/ctpc.csv")
-vtpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
+# vtpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits_v.csv")
 vtpc_fits <- read_csv("Tetraselmis_experiment/data-processed/vtpc.csv") ## new vtpc
-c_fits <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
+# c_fits <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params_exp.csv")
 
 
-
-c_fits <- c_fits %>% 
-  rename(z = z.list,
-         a = a.list, 
-         b = b.list, 
-         w = w.list)
-
-
-
+# 
+# c_fits <- c_fits %>% 
+#   rename(z = z.list,
+#          a = a.list, 
+#          b = b.list, 
+#          w = w.list)
+# 
+# 
+# 
 etpc <-function(x){
   res<-(etpc_fits$a[[1]]*exp(etpc_fits$b[[1]]*x)*(1-((x-etpc_fits$z[[1]])/(etpc_fits$w[[1]]/2))^2))
   res
@@ -158,13 +158,6 @@ bs_v2 <- bs_v %>%
   mutate(replicate = as.character(replicate))
 
 all_variable <- left_join(all_preds_v, bs_v2, by = "replicate")
-
-
-hist(bs_v$a)
-hist(bs_v$b)
-hist(bs_v$w)
-hist(bs_v$z)
-
 
 # NLA predictions ---------------------------------------------------------
 
@@ -310,13 +303,13 @@ nbcurve<-function(temp,z,w,a,b){
 }
 
 ## get Tmax
-uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(10,150))
-uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(10,150))
+tmax_c <- uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(10,150))
+tmax_v <- uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(10,150))
 
 
 ## get Tmin
-uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(-15,10))
-uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(-15,10))
+tmin_c <- uniroot.all(function(x) nbcurve(x, z = ctpc_fits$z[[1]],w = ctpc_fits$w[[1]],a = ctpc_fits$a[[1]], b = ctpc_fits$b[[1]]),c(-15,10))
+tmin_v <- uniroot.all(function(x) nbcurve(x, z = vtpc_fits$z[[1]],w = vtpc_fits$w[[1]],a = vtpc_fits$a[[1]], b = vtpc_fits$b[[1]]),c(-15,10))
 
 ## get the upper and lower bounds on Tmax from the nls bootstrapping 
 
@@ -353,7 +346,8 @@ tmax_summ <- all_tmaxes %>%
   summarise(lower=quantile(tmax, probs=0.025),
             upper=quantile(tmax, probs=0.975),
             mean = mean(tmax),
-            median = median(tmax))
+            median = median(tmax)) %>% 
+  mutate(param = "tmax")
 
 tmax_summ %>% 
   ggplot(aes(x = treatment, y = mean)) + geom_point() +
@@ -388,7 +382,8 @@ tmin_summ <- all_tmins %>%
   summarise(lower=quantile(tmin, probs=0.025),
             upper=quantile(tmin, probs=0.975),
             mean = mean(tmin),
-            median = median(tmin))
+            median = median(tmin)) %>% 
+  mutate(param = "tmin")
 
 tmin_summ %>% 
   ggplot(aes(x = treatment, y = mean)) + geom_point() +
@@ -423,33 +418,20 @@ topts_summ <- all_topts %>%
   summarise(lower=quantile(topt, probs=0.025),
             upper=quantile(topt, probs=0.975),
             mean = mean(topt),
-            median = median(topt))
+            median = median(topt)) %>% 
+  mutate(param = "topt")
 
 topts_summ %>% 
   ggplot(aes(x = treatment, y = mean)) + geom_point() +
   geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
 
 
+
+
+
 ### now need to get the upper and lower limits predictions
 
 ## try with approx fun
-lower_line <- approxfun(limits_prediction$temperature, limits_prediction$q2.5)
-upper_line <- approxfun(limits_prediction$temperature, limits_prediction$q97.5)
-mean_line <- approxfun(limits_prediction$temperature, limits_prediction$mean)
-median_line <- approxfun(limits_prediction$temperature, limits_prediction$median)
-prediction_line <- approxfun(prediction_NLA$temperature, prediction_NLA$growth)
-
-
-limits_prediction$temperature[which.max(limits_prediction$median)]
-limits_prediction$temperature[which.max(limits_prediction$mean)]
-limits_prediction$temperature[which.max(limits_prediction$q2.5)]
-limits_prediction$temperature[which.max(limits_prediction$q97.5)]
-limits_prediction$temperature[which.max(limits_prediction$q50)]
-
-
-
-
-
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
  p + 
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
@@ -466,121 +448,14 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    stat_function(fun = mean_line, color = "green")
  ggsave("Tetraselmis_experiment/figures/prediction_nla_colors.png")
 
-uniroot.all(function(x) nbcurve(x, z = df$z[[1]],w = df$w[[1]],a = df$a[[1]], b = df$b[[1]]),c(-10,5)) 
- (tmax_lower <- uniroot.all(lower_line,c(20,35)))
- (tmax_upper <- uniroot.all(upper_line,c(20,35)))
- (tmax_mean <- uniroot.all(mean_line,c(20,35)))
- 
- tmin_upper <- uniroot.all(upper_line,c(-20,10))
- tmin_lower <- uniroot.all(lower_line,c(-20,10))
- tmin_mean <- uniroot.all(mean_line,c(-20,10))
- 
- ### topt predicted
- 
- lower_line
- grfunc<-function(x){
-   -lower_line(x)
- }
-   optinfo<-optim(c(x = ctpc_fits$z[[1]]),grfunc)
-   opt <-c(optinfo$par[[1]])
-   maxgrowth <- c(-optinfo$value)
-   (results_lower <- data.frame(topt = opt, rmax = maxgrowth))
-results_lower$limit <- "lower"
-   
-grfunc_upper<-function(x){
-     -upper_line(x)
-   }
-   optinfo<-optim(c(x=vtpc_fits$z[[1]]),grfunc_upper)
-   opt <-c(optinfo$par[[1]])
-   maxgrowth <- c(-optinfo$value)
-   (results_upper <- data.frame(topt = opt, rmax = maxgrowth))
-   results_upper$limit <- "upper"
-   
-   
-   grfunc_mean<-function(x){
-     -mean_line(x)
-   }
-   
-  optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_mean)
-   opt <-c(optinfo$par[[1]])
-   maxgrowth <- c(-optinfo$value)
-   (results_mean <- data.frame(topt = opt, rmax = maxgrowth))
-   results_mean$limit <- "mean"   
-   
-   
-   grfunc_median<-function(x){
-     -median_line(x)
-   }
-   
-   optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_median)
-   opt <-c(optinfo$par[[1]])
-   maxgrowth <- c(-optinfo$value)
-   (results_median <- data.frame(topt = opt, rmax = maxgrowth))
-   results_median$limit <- "median"   
-   
-   grfunc_prediction<-function(x){
-     -prediction_line(x)
-   }
-   
-   optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_prediction)
-   opt <-c(optinfo$par[[1]])
-   maxgrowth <- c(-optinfo$value)
-   (results_prediction <- data.frame(topt = opt, rmax = maxgrowth))
-   results_prediction$limit <- "prediction"  
-   
-   
-   grfunc_ftpc<-function(x){
-     -ftpc(x)
-   }
-   
-   optinfo<-optim(c(ctpc_fits$z[[1]]),grfunc_ftpc)
-   opt <-c(optinfo$par[[1]])
-   maxgrowth <- c(-optinfo$value)
-   (results_ftpc <- data.frame(topt = opt, rmax = maxgrowth))
-   results_ftpc$limit <- "ftpc"  
-   
-   
-   ### ok let's put all the predictions and observations together
-  
-   topt_predictions <- bind_rows(results_ftpc, results_lower, results_upper, results_mean, results_median, results_prediction) 
-   
-   
-   topt_predictions %>% 
-     ggplot(aes(x = limit, y = topt)) + geom_point()
-   
-   limits_prediction %>% 
-     top_n(mean, n = 1) %>% View
-   
-   limits_prediction %>% 
-     top_n(q2.5, n = 1) %>% View
-   
-   limits_prediction %>% 
-     gather(key = limit, value = value, 2:6) %>% 
-     group_by(limit) %>% 
-     top_n(value, n = 1) %>% View
+
    
    
    ### new option: find the first derivative, and find where that function crosses 0
 
    dtpc <-function(x) ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x)*(1-((x-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2)
    ftpc <- function(x) 0.5*(dtpc(x + 5) + dtpc(x - 5))
-   pred <- function(x) 0.5*(ctpc(x + 5) + ctpc(x - 5))
 
-   # fderiv <- approxfun(deriv(0.5*(ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x+5)*(1-((x+5-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2) + 
-                # ctpc_fits$a[[1]]*exp(ctpc_fits$b[[1]]*x-5)*(1-((x-5-ctpc_fits$z[[1]])/(ctpc_fits$w[[1]]/2))^2)), c("x")))
-   
-   fderiv <- deriv(0.5*(dtpc(x + 5) + dtpc(x - 5)), c("x"), func = TRUE)
-   
-   uniroot(fderiv, c(1, 40))
-
-   
-   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
-   p + 
-     # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
-     # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
-     stat_function(fun = fderiv, color = "red") + xlim(0, 30) + ylim(0, 1)
-   
-   
    #### ok trying this again!!
    
    get_topts <- function(df){
@@ -608,5 +483,80 @@ grfunc_upper<-function(x){
                upper=quantile(topt, probs=0.975),
                mean = mean(topt),
                median = median(topt)) %>% 
-     gather(key = limit_type, value = value)
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "predicted_topt") %>% 
+     mutate(treatment = "variable")
+   
+   
+   
+   
+   all_critical_temps <- bind_rows(topts_summ, tmin_summ, tmax_summ, topt_lims)
+   
+   
+   all_critical_temps %>% 
+     ggplot(aes(x = param, y = mean, color = treatment)) + geom_point() +
+     geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+     facet_wrap( ~ param, scales = "free")
+   
+   
+# get predicted tmax ------------------------------------------------------
+
+   get_tmaxes <- function(df){
+     
+     dtpc <-function(x) df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2)
+     ftpc <- function(x) 0.5*(dtpc(x + 5) + dtpc(x - 5))
+     
+     tmax <- uniroot.all(ftpc,c(10,150))
+     return(data.frame(tmax))
+   }
+   
+   tmax_predicted <- bs_split %>% 
+     map_df(get_tmaxes, .id = "replicate") 
+   
+   tmax_lims <- tmax_predicted %>% 
+     summarise(lower=quantile(tmax, probs=0.025),
+               upper=quantile(tmax, probs=0.975),
+               mean = mean(tmax),
+               median = median(tmax)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "predicted_tmax") %>% 
+     mutate(treatment = "variable")
+   
+   # get predicted tmin ------------------------------------------------------
+   
+   get_tmins <- function(df){
+     
+     dtpc <-function(x) df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2)
+     ftpc <- function(x) 0.5*(dtpc(x + 5) + dtpc(x - 5))
+     
+     tmin <- uniroot.all(ftpc,c(-20,10))
+     return(data.frame(tmin))
+   }
+   
+   tmin_predicted <- bs_split %>% 
+     map_df(get_tmins, .id = "replicate") 
+   
+   tmin_lims <- tmin_predicted %>% 
+     summarise(lower=quantile(tmin, probs=0.025),
+               upper=quantile(tmin, probs=0.975),
+               mean = mean(tmin),
+               median = median(tmin)) %>% 
+     # gather(key = limit_type, value = value) %>% 
+     mutate(param = "predicted_tmin") %>% 
+     mutate(treatment = "variable")
+   
+   all_critical_temps <- bind_rows(topts_summ, tmin_summ, tmax_summ, topt_lims, tmin_lims, tmax_lims)
+   
+   
+   all_critical_temps %>% 
+     ggplot(aes(x = param, y = mean, color = treatment)) + geom_point() +
+     geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+     facet_wrap( ~ param, scales = "free")
+   
+   
+   all_critical_temps %>% 
+     filter(grepl("tmin", param), treatment == "variable") %>% 
+  ggplot(aes(x = param, y = mean, color = treatment)) + geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2)
+   
    
