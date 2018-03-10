@@ -642,8 +642,8 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      filter(param %in% c("predicted_topt", "predicted_tmax"))
    
    p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
-   p + 
-     # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+   panel_a <- 
+    p + 
      stat_function(fun = ctpc, color = "black", size = 1) +
      stat_function(fun = vtpc, color = "orange", size = 1) +
      geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
@@ -653,22 +653,70 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
      geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
      geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
-     geom_point(aes(x = mean, y = -0.1), data = crit_temps) +
-     geom_errorbarh(aes(xmin = lower, xmax = upper, y = -0.1, x = mean), data = crit_temps, height = 0.05) +
+     # geom_point(aes(x = mean, y = 1.58), data = filter(crit_temps, treatment == "constant"), color = "cadetblue", shape = 17) +
+     # geom_point(aes(x = mean, y = 1.65), data = filter(all_critical_temps, param == "predicted_topt"), color = "black", shape = 17) +
+     # geom_errorbarh(aes(xmin = lower, xmax = upper, y = 1.65, x = mean), data = filter(all_critical_temps, param == "predicted_topt"), height = 0.1, color = "black", shape = 17) +
+     # geom_point(aes(x = mean, y = 1.65), data = filter(all_critical_temps, param == "predicted_tmax"), color = "black", shape = 17) +
+     # geom_errorbarh(aes(xmin = lower, xmax = upper, y = 1.65, x = mean), data = filter(all_critical_temps, param == "predicted_tmax"), height = 0.1, color = "black", shape = 17) +
+     # geom_point(aes(x = mean, y = 1.58), data = filter(crit_temps, treatment == "variable"), color = "orange", shape = 17) +
+     # geom_point(aes(x = -1.5, y = mean), data = filter(all_critical_temps, param == "predicted_rmax"), color = "black", shape = 17) +
+     # geom_errorbar(aes(ymin = lower, ymax = upper, x = -1.5), data = filter(all_critical_temps, param == "predicted_rmax"), height = 0.1, color = "black", shape = 17) +
+     # geom_point(aes(x = -1.5, y = mean), data = filter(all_critical_temps, param == "rmax", treatment == "variable"), color = "orange", shape = 17) +
+     # geom_errorbar(aes(ymin = lower, ymax = upper, x =-1.5), data = filter(all_critical_temps, param == "rmax", treatment == "variable"), height = 0.1, color = "orange", shape = 17) +
+     # geom_point(aes(x = -1.5, y = mean), data = filter(all_critical_temps, param == "rmax", treatment == "constant"), color = "cadetblue", shape = 17) +
+     # geom_errorbar(aes(ymin = lower, ymax = upper, x =-1.5), data = filter(all_critical_temps, param == "rmax", treatment == "constant"), height = 0.1, color = "cadetblue", shape = 17) +
+     # geom_errorbarh(aes(xmin = lower, xmax = upper, y = 1.58, x = mean), data = filter(crit_temps, treatment == "constant"), height = 0.1, color = "cadetblue", shape = 17) +
+     # geom_errorbarh(aes(xmin = lower, xmax = upper, y = 1.58, x = mean), data = filter(crit_temps, treatment == "variable"), height = 0.1, color = "orange", shape = 17) +
+     # geom_point(aes(x = mean, y = 1.58), data = crit_temps, color = "black", shape = 2) +
      geom_hline(yintercept = 0) + ylab("") +
-     xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
-   ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width = 5, height = 3)
+     xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6)) 
+   ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width = 6.5, height = 4)
    
    p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    panel_b_no <- p + 
-     geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+     # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
      stat_function(fun = ctpc, color = "black", size = 1) +
      geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
      geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
                  fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
-     # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
-     # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
-     # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+     geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+     geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
+     geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+     # geom_errorbarh(aes(xmin = lower, xmax = upper, y = 1.64, x = mean), data = filter(crit_temps, treatment == "constant"), height = 0.1, color = "cadetblue") +
+     # geom_point(aes(x = mean, y = 1.64), data = filter(crit_temps, treatment == "constant"), color = "cadetblue", shape = 17) +
+     # geom_point(aes(x = mean, y = 1.64), data = filter(crit_temps, treatment == "constant"), color = "black", shape = 2) +
      geom_hline(yintercept = 0) + ylab("") +
-     xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
+     xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6)) 
+
+   figure2_direct <- plot_grid(panel_b_no, panel_a, labels = c("A", "B"), align = "v", ncol = 1)
+   save_plot("Tetraselmis_experiment/figures/figure2_direct.png", figure2_direct, ncol = 1, base_height = 7, base_width = 6.2)
+   
+   
+   constant_lims <- p +
+     geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0, x = mean), height = 0.05, data = filter(crit_temps, treatment == "constant"), height = 0.05, color = "cadetblue") +
+     geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "cadetblue", shape = 17) +
+     geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "black", shape = 2) +
+   geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0, x = mean), data = filter(crit_temps, treatment == "constant"), height = 0.05, color = "cadetblue") +
+   geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "cadetblue", shape = 17) +
+   geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "black", shape = 2) +
+   geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "cadetblue", shape = 17) +
+   geom_point(aes(x = mean, y = 0.05), data = filter(all_critical_temps, param == "predicted_topt"), color = "black", shape = 17) +
+   geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0.05, x = mean), data = filter(all_critical_temps, param == "predicted_topt"), height = 0.05, color = "black", shape = 17) +
+   geom_point(aes(x = mean, y = 0.05), data = filter(all_critical_temps, param == "predicted_tmax"), color = "black", shape = 17) +
+   geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0.05, x = mean), data = filter(all_critical_temps, param == "predicted_tmax"), height = 0.05, color = "black", shape = 17) +
+   geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "variable"), color = "orange", shape = 17) +
+   # geom_point(aes(x = -1.5, y = mean), data = filter(all_critical_temps, param == "predicted_rmax"), color = "black", shape = 17) +
+   # geom_errorbar(aes(ymin = lower, ymax = upper, x = -1.5), data = filter(all_critical_temps, param == "predicted_rmax"), height = 0.1, color = "black", shape = 17) +
+   # geom_point(aes(x = -1.5, y = mean), data = filter(all_critical_temps, param == "rmax", treatment == "variable"), color = "orange", shape = 17) +
+   # geom_errorbar(aes(ymin = lower, ymax = upper, x =-1.5), data = filter(all_critical_temps, param == "rmax", treatment == "variable"), height = 0.1, color = "orange", shape = 17) +
+   # geom_point(aes(x = -1.5, y = mean), data = filter(all_critical_temps, param == "rmax", treatment == "constant"), color = "cadetblue", shape = 17) +
+   # geom_errorbar(aes(ymin = lower, ymax = upper, x =-1.5), data = filter(all_critical_temps, param == "rmax", treatment == "constant"), height = 0.1, color = "cadetblue", shape = 17) +
+   geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0, x = mean), data = filter(crit_temps, treatment == "constant"), height = 0.05, color = "cadetblue", shape = 17) +
+   geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0, x = mean), data = filter(crit_temps, treatment == "variable"), height = 0.05, color = "orange", shape = 17) +
+   geom_point(aes(x = mean, y = 0), data = crit_temps, color = "black", shape = 2) +
+     coord_cartesian(xlim = c(-2,33), ylim = c(0.05, 1.66)) + ylab("") + xlab("")
+   
+   figure2_limits <- plot_grid(constant_lims, labels = c("A"), align = "v", ncol = 1)
+     save_plot("Tetraselmis_experiment/figures/figure2_limits.png", figure2_limits, ncol = 1, base_height = 7, base_width = 6.2)
+   
    
