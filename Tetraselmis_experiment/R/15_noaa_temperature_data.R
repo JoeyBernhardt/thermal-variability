@@ -261,6 +261,10 @@ resp <- temps %>%
   group_by(isolate.code) %>% 
   top_n(n = -4, wt = mean_growth) 
 
+growth_temps <- temps %>% 
+  map_df(limits_fun, .id = "temp")
+
+
 ### to find topt
 
 resp_topt <- temps %>% 
@@ -280,6 +284,9 @@ write_csv(resp_topt, "Tetraselmis_experiment/data-processed/resp_topt.csv")
 
 resp_topt <- read_csv("Tetraselmis_experiment/data-processed/resp_topt.csv")
 resp <- read_csv("Tetraselmis_experiment/data-processed/resp.csv")
+
+View(resp_topt)
+
 low <- resp %>% 
   group_by(isolate.code) %>% 
   top_n(n = -1, wt = temperature) 
@@ -640,25 +647,47 @@ bins <- temps_growth %>%
 STT_predictions <- read_csv("Tetraselmis_experiment/data-processed/STT_predictions.csv")
 
 ggplot() +
-  geom_segment(aes(x = sst_mean, y = 0, xend = sst_mean, yend = 2), data = sst_summary, color = "#80cdc1")+
-  geom_segment(aes(x = topt, y = 0, xend = topt, yend = 2), data = thomas3, size = 0.5, color = "orange")+
+  geom_segment(aes(x = sst_mean, y = 0, xend = sst_mean, yend = 2), data = sst_summary, color = "darkgrey")+
+  geom_segment(aes(x = topt, y = 0, xend = topt, yend = 2), data = thomas3, size = 0.5, color = "cadetblue")+
   geom_bar(aes(x = temperature, y = frequency*4),
                     stat = "identity", fill = "black", data = bins) +
   geom_hline(yintercept = 0, color = "grey")+
-  geom_line(data = temps_growth, aes(x = temp, y = growth_rate, color = rel.curveskew.y)) +
+  geom_line(data = temps_growth, aes(x = temp, y = growth_rate), color = "cadetblue") +
   geom_line(data = STT_predictions, aes(x = temperature, y = growth.rate), color = "darkgrey", size = 0.3) +
+  geom_line(data = growth_temps, aes(x = temperature, y = mean_growth), color = "orange", size = 0.3) +
   scale_color_gradient2(low = "#35978f", mid = "#01665e", high = "#8c510a", name = "Skew") +
   xlim(-3, 40) +
   facet_wrap( ~ isolate.code) +
-  ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
-  scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 2)) +
-  geom_point(data = high_low, aes(x = temperature, y = 0), color = "red", size =0.5) +
-  theme(strip.background = element_rect(colour="white", fill="white")) +
+  ylab("Frequency of daily temperatures") + xlab("Daily SST at isolation location (°C)") +
+  scale_y_continuous(sec.axis = dup_axis(name = expression ("Population growth rate"~day^-1)), limits = c(-0.5, 2)) +
+  # geom_point(data = high_low, aes(x = temperature, y = 0), color = "orange", size =0.5) +
+  theme(strip.background = element_rect(colour="white", fill="white")) 
   
   
   ggsave("Tetraselmis_experiment/figures/temps_curves_lims_mat.pdf", height = 10, width = 13)
+  ggsave("Tetraselmis_experiment/figures/temps_curves_lims_mat_NLA.pdf", height = 10, width = 13)
 
 
+  
+  ### now compare the STT and NLA curves
+  
+  iso_372 <- STT_predictions %>% 
+    filter(isolate.code == 337)
+  
+  iso_372n <- growth_temps %>% 
+    filter(isolate.code == 337)
+  
+  
+  ggplot() +
+    geom_line(data = iso_372, aes(x = temperature, y = growth.rate), color = "darkgrey", size = 0.3) +
+    # geom_line(data = iso_372n, aes(x = temperature, y = mean_growth), color = "orange", size = 0.3) +
+    scale_color_gradient2(low = "#35978f", mid = "#01665e", high = "#8c510a", name = "Skew") +
+    xlim(-3, 40) +
+    ylab("Frequency") + xlab("Daily SST at isolation location (°C)") +
+    scale_y_continuous(sec.axis = dup_axis(name = "Growth rate"), limits = c(-0.5, 2)) +
+    theme(strip.background = element_rect(colour="white", fill="white")) 
+  
+    
 # NLA tmaxes  -----------------------
 
 
