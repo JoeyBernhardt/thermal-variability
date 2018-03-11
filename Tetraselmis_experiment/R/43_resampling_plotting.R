@@ -124,8 +124,10 @@ p +
   stat_function(fun = tpc_c, color = "cadetblue") +
   stat_function(fun = tpc_v, color = "red") +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "blue", alpha = 0.8) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v_1000, fill = "red", alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.8) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v_1000, fill = "red", alpha = 0.5) +
   # geom_point(aes(x = temp, y = mean), data = gs, color = "cadetblue") +
   geom_point(aes(x = temp, y = mean), data = gsv, color = "red") +
- coord_cartesian(xlim = c(-2, 32), ylim = c(-0.5, 2))
+  geom_point(aes(x = temp, y = mean), data = gs, color = "cadetblue") +
+  geom_hline(yintercept = 0) +
+ coord_cartesian(xlim = c(-2, 32), ylim = c(-0.5, 1.6))
