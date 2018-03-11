@@ -486,11 +486,16 @@ all2 %>%
   ggplot(aes(x = difference)) + geom_histogram() 
 
 all3 %>% 
-  ggplot(aes(x = predicted_growth_variable, y = growth_rate, color = sst_sd)) + geom_point() +
-  scale_color_viridis(discrete = FALSE, option = "inferno")
+  ggplot(aes(x = predicted_growth_variable, y = growth_rate, color = sst_sd)) + geom_point(size = 2) +
+  scale_color_viridis(discrete = FALSE, option = "inferno") +
+  geom_point(size = 2, color= "black", shape = 1)+
+  geom_abline(intercept = 0, slope = 1) +
+  ylab("r from NLA") + xlab("r from STT")
+ggsave("Tetraselmis_experiment/figures/r_from_NLA_vs_STT_SST_SD.png", width = 5, height = 4)
+
 
 all3 %>% 
-  mutate(difference = growth_rate - predicted_growth_variable) %>% 
+  mutate(difference = growth_rate - predicted_growth_variable) %>% ## growth_rate is STT prediction
   # filter(abs(difference) < 0.2) %>% 
   mutate(skewness = sst_mean - sst_Mode) %>%
   ggplot(aes(x = skewness, y = difference)) + geom_point() +
@@ -504,6 +509,7 @@ all3 %>%
   select(isolate.code, STT_difference, growth_diff) %>% 
   gather(key = type, value = difference, STT_difference, growth_diff) %>%
   ggplot(aes( x = difference, color = type)) + geom_density() 
+ggsave("Tetraselmis_experiment/figures/density_STT_diff_variability_diff.png", width = 7, height = 4)
 
 
 all3 %>% 
@@ -515,10 +521,13 @@ all3 %>%
 all3 %>% 
   mutate(difference = growth_rate - predicted_growth_variable) %>% 
   mutate(skewness = abs(sst_mean - sst_Mode)) %>%
-  ggplot(aes(x = predicted_growth_variable, y = growth_rate, color = skewness)) + geom_point() +
-  scale_color_viridis(discrete = FALSE, option = "inferno")
-  # filter(abs(difference) < 0.2) %>% 
-  lm(abs(difference) ~ skewness, data = .) %>% summary()
+  ggplot(aes(x = predicted_growth_variable, y = growth_rate, color = skewness)) + geom_point(size = 2) +
+  geom_point(size = 2, color= "black", shape = 1)+
+  scale_color_viridis(discrete = FALSE, option = "inferno") +
+  geom_abline(intercept = 0, slope = 1) +
+  ylab("r from NLA") + xlab("r from STT")
+ggsave("Tetraselmis_experiment/figures/r_from_NLA_vs_STT.png", width = 5, height = 4)
+ 
 
 all4 <- all3 %>% 
   # predicted_growth_temperature2 %>% 
@@ -530,7 +539,7 @@ all4 <- all3 %>%
   mutate(skew_dir = ifelse(rel.curveskew<0, "negative skew", "positive skew")) 
  
 r_data <- st_as_sf(all4, coords = c("longitude", "latitude"), crs = 4326)
-r_data <-st_transform(x = r_data, crs = "+proj=robin")
+r_data <- st_transform(x = r_data, crs = "+proj=robin")
 
  
 all4 %>% 
