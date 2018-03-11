@@ -116,6 +116,8 @@ tpc_c <-function(x){
 }
 
 
+all_estimates <- read_csv("Tetraselmis_experiment/data-processed/growth_estimates_boot_car.csv")
+all_estimates_v <- read_csv("Tetraselmis_experiment/data-processed/growth_estimates_boot_car_v.csv")
 
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
@@ -130,4 +132,24 @@ p +
   geom_point(aes(x = temp, y = mean), data = gsv, color = "red") +
   geom_point(aes(x = temp, y = mean), data = gs, color = "cadetblue") +
   geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
  coord_cartesian(xlim = c(-2, 32), ylim = c(-0.5, 1.6))
+
+
+p + 
+  stat_function(fun = tpc_c, color = "cadetblue") +
+  stat_function(fun = tpc_v, color = "orange") +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+              # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
+  geom_hline(yintercept = 0) + ylab("") +
+  xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
