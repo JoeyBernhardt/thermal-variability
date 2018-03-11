@@ -355,6 +355,13 @@ topts %>%
   geom_vline(xintercept = 0) + geom_point(size = 3, shape = 1, color = "black") + xlim(-0.02, 0.02)
 ggsave("Tetraselmis_experiment/figures/topt_diff_NLA.png", width = 6, height = 3)
 
+library(broom)
+topts %>% 
+  mutate(topt_diff = topt_averaging - topt_variable) %>% 
+  mutate(topt_change = topt_averaging - topt) %>% 
+  lm(topt_change ~ rel.curveskew + sst_sd, data = .) %>% 
+  tidy(., conf.int = TRUE)
+
 
 topts2 <- topts %>% 
   mutate(topt_diff = topt_averaging - topt_variable) %>% 
@@ -746,6 +753,15 @@ ggplot() +
    xlim(-0.02, 0.02) + geom_vline(xintercept = 0) 
  ggsave("Tetraselmis_experiment/figures/tmax_diff_NLA.png", width = 6, height = 3) 
   
+ 
+ tmaxes %>% 
+   mutate(diff_max = temperature_max - tmax_hist) %>% 
+   filter(diff_max < 5) %>% 
+   mutate(rev_max_diff = tmax_hist - tmax) %>% 
+   lm(rev_max_diff ~ rel.curveskew + sst_sd, data = .) %>% 
+ tidy(., conf.int = TRUE)
+ 
+ 
 tc3 %>% 
   ggplot(aes(x = sst)) + geom_density(fill = "blue") +
   stat_function(color = "blue", fun = function(sst,z,w,a,b) tc3$a[[1]]*exp(tc3$b[[1]]*sst)*(1-((sst-tc3$z[[1]])/(tc3$w[[1]]/2))^2)) +
@@ -757,6 +773,12 @@ tc3 %>%
   
 ggsave("Tetraselmis_experiment/figures/temp_histograms.pdf", width = 18, height = 14)
 ggsave("Tetraselmis_experiment/figures/temp_density.pdf", width = 18, height = 14)
+
+
+
+
+# other temperature scavenging from NOAA -----------------------------------------------
+
 
 
 function(sst,z,w,a,b) a*exp(b*sst)*(1-((sst-z)/(w/2))^2)
