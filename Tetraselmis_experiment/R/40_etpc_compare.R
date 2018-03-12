@@ -196,11 +196,61 @@ limits_prediction <- all_preds_NLA %>%
 
 write_csv(limits_prediction, "Tetraselmis_experiment/data-processed/limits_prediction.csv")
 
+
 ### ok now let's get the actual predicted (mean) under variable conditions
 
 prediction_NLA <-  prediction_NLA(ctpc_fits)
 
 
+### here's the scale transition theory prediction
+derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
+  # Numerically computes the specified order derivative of f at x
+  vals <- matrix(NA, nrow = order + 1, ncol = order + 1)
+  grid <- seq(x - delta/2, x + delta/2, length.out = order + 1)
+  vals[1, ] <- sapply(grid, f, ...) - f(x, ...)
+  for (i in 2:(order + 1)) {
+    for (j in 1:(order - i + 2)) {
+      stepsize <- grid[i + j - 1] - grid[i + j - 2]
+      vals[i, j] <- (vals[i - 1, j + 1] - vals[i - 1, j])/stepsize
+    }
+  }
+  return(signif(vals[order + 1, 1], sig))
+}
+
+
+prediction_STT <- function(df) {
+  tpc <-function(x){
+    res<-(df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2))
+    res
+  }
+  
+  pred <- function(x) {
+    y <-  y <- tpc(x) + derivative(f = tpc, x = x, order = 2)*0.5*25
+  }
+  
+  x <- seq(-2, 32, by = 0.01)
+  
+  preds <- sapply(x, pred)
+  preds <- data.frame(x, preds) %>% 
+    rename(temperature = x, 
+           growth = preds)
+}
+
+
+all_preds_STT <- bs_split %>% 
+  map_df(prediction_STT, .id = "replicate")
+
+
+
+limits_prediction_STT <- all_preds_STT %>% 
+  group_by(temperature) %>% 
+  summarise(q2.5=quantile(growth, probs=0.025),
+            q97.5=quantile(growth, probs=0.975),
+            q50=quantile(growth, probs=0.5),
+            mean = mean(growth),
+            median = median(growth))
+
+write_csv(limits_prediction_STT, "Tetraselmis_experiment/data-processed/limits_prediction_STT.csv")
 # now bring in the growth rates -------------------------------------------
 
 
