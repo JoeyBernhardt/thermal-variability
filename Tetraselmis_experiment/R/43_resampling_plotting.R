@@ -23,7 +23,8 @@ gs_all %>%
 
 
 
-fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
+fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_5000_exp.csv")
+# fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
 fits_v <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp3.csv")
 fits_v_1000 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp2.csv")
 fits_c <- fits_c %>%
@@ -138,16 +139,34 @@ p +
  coord_cartesian(xlim = c(-2, 32), ylim = c(-0.5, 1.6))
 
 
-p + 
+panel_a <- p + 
   stat_function(fun = tpc_c, color = "cadetblue") +
-  stat_function(fun = tpc_v, color = "orange") +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
+  # stat_function(fun = tpc_v, color = "orange") +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
   geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
   geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+              fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  geom_hline(yintercept = 0) + ylab("") +
+  xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
+
+panel_b <- p + 
+  stat_function(fun = tpc_c, color = "cadetblue") +
+  stat_function(fun = tpc_v, color = "orange") +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+  # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "cadetblue") +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
   geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
   geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
