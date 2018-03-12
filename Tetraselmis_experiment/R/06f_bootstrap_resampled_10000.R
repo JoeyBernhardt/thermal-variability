@@ -83,7 +83,7 @@ EqnS.3 <- function(sample_size){
   data.frame(x_0, x_5, x_10, x_16, x_20, x_24, x_27, x_29, x_32)
 }
 
-samples <- rep(1, 1000)
+samples <- rep(1, 5000)
 
 ## generate all our new synthetic datasets to which we will fit our TPCs
 dat.full <- samples %>% 
@@ -225,8 +225,8 @@ for(i in 1:length(curve.id.list)){
 
 fits_c <- data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 # write_csv(fits, "Tetraselmis_experiment/data-processed/boot_fits_resample_10000_alltemps.csv")
-write_csv(fits_c, "Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
-
+# write_csv(fits_c, "Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
+write_csv(fits_c, "Tetraselmis_experiment/data-processed/boot_fits_resample_5000_exp.csv")
 
 
 
