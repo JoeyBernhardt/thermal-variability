@@ -448,3 +448,34 @@ all_growth_estimated <- cells_c_split %>%
 all_growth_estimated_v <- cells_v_split %>% 
   map_df(estimate_growth_function, .id = "temperature_rep") %>% 
   mutate(temp_num = as.numeric(temperature))
+
+
+## looking at cell sizes
+
+cells %>% 
+  filter(variability == "c") %>% 
+  ggplot(aes(x = time_since_innoc_days, y = cell_density)) + geom_point() +
+  facet_wrap(~ temp, scales = "free")
+
+cells %>% 
+  filter(variability == "c") %>% 
+  ggplot(aes(x = time_since_innoc_days, y = cell_volume)) + geom_point() +
+  facet_wrap(~ temp, scales = "free")
+
+cells %>% 
+  group_by(temp) %>% 
+  filter(cell_volume < 3000, temp < 27) %>% 
+ggplot(aes(x = temp, y = cell_volume)) + geom_boxplot() +
+  geom_smooth(method = "lm")
+
+cells %>% 
+  # group_by(temp) %>% 
+  filter(cell_volume < 3000, temp < 27) %>% 
+  lm(cell_volume ~ temp, data = .) %>% 
+  tidy(., conf.int =  TRUE) 
+
+
+cells %>% 
+  filter(variability == "c") %>% 
+  ggplot(aes(x = time_since_innoc_days, y = cell_density)) + geom_point() + 
+  facet_wrap( ~ temp)

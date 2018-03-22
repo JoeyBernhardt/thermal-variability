@@ -10,7 +10,7 @@ library(stringr)
 library(rootSolve)
 library(bbmle)
 
-all_r <- read_csv("Tetraselmis_experiment/data-processed/all_r_with0.csv")
+all_r1 <- read_csv("Tetraselmis_experiment/data-processed/all_r_with0.csv")
 all_r <- read_csv("Tetraselmis_experiment/data-processed/growth_estimates_round3.csv")
 
 all_r %>% 

@@ -18,6 +18,7 @@ library(readr)
 TT_raw <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_round2.csv")
 TT_raw_round2 <- read_csv("Tetraselmis_experiment/data-processed/TT.csv")
 TT_raw_round2_extremes <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_round3_extremes.csv")
+
 TT_0 <- read_csv("Tetraselmis_experiment/data-processed/TT_cells_round2_0.csv")
 
 TT <- TT_raw %>% 
@@ -157,9 +158,14 @@ all_densities2 %>%
 	facet_wrap( ~ temp) + theme_bw() + ylab("abundbance") + xlab("time (hours)")
 
 
-all_growth <- all_densities2 %>% 
+
+  
+  all_densities3 <- all_densities2 %>% 
 	mutate(keep = NA) %>% 
-	mutate(keep = ifelse(temp > 19 & time_since_innoc_hours > 60, "drop", "keep")) %>% 
+	mutate(keep = ifelse(temp > 19 & time_since_innoc_hours > 60, "drop", "keep")) 
+
+
+  all_growth <- all_densities3 %>% 
 	# filter(keep == "keep") %>%
 	# ggplot(aes(x = time_since_innoc_hours, y = cell_density, color = variability)) + geom_point() +
 	# facet_wrap( ~ temp)
@@ -170,7 +176,7 @@ all_growth <- all_densities2 %>%
 	ungroup() %>%
 	mutate(temp = as.numeric(temp)) %>%
 	mutate(growth_per_day = estimate*24) %>% 
-	mutate(error = std.error*24) 
+	mutate(error = std.error*24) %>% 
 	# filter(temp > 6) %>% 
 	ggplot(aes(x = temp, y = growth_per_day, color = variability)) + geom_point(size = 2, alpha = 0.5) +
 	geom_line() +

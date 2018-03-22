@@ -14,7 +14,9 @@ cells_days_c <- read_csv("Tetraselmis_experiment/data-processed/cells_exp_mod.cs
   mutate(days = time_since_innoc_hours/24) %>% 
   mutate(days = ifelse(days < 0, 0, days))
 
-
+cells_days_c %>% 
+  ggplot(aes(x = days, y = cell_density)) + geom_point() +
+  facet_wrap( ~ temp)
 
 
 avals<-seq(-0.2,1.2,0.02)
