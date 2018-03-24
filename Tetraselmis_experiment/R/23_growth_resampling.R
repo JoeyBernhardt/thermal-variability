@@ -465,15 +465,25 @@ cells %>%
 cells %>% 
   group_by(temp) %>% 
   filter(cell_volume < 3000, temp < 27) %>% 
-ggplot(aes(x = temp, y = cell_volume)) + geom_boxplot() +
+  ungroup() %>% 
+ggplot(aes(x = temp, y = cell_volume)) + geom_point() +
   geom_smooth(method = "lm")
 
 cells %>% 
-  # group_by(temp) %>% 
-  filter(cell_volume < 3000, temp < 27) %>% 
-  lm(cell_volume ~ temp, data = .) %>% 
+  group_by(temp, replicate) %>% 
+  filter(cell_volume < 3000, temp < 24) %>% 
+  summarise(mean_size = mean(cell_volume)) %>% 
+  lm(mean_size ~ temp, data = .) %>% 
   tidy(., conf.int =  TRUE) 
 
+
+cells %>% 
+  group_by(temp, replicate) %>% 
+  filter(cell_volume < 3000, temp < 24) %>% 
+  summarise(mean_size = mean(cell_volume)) %>%
+  ungroup() %>% 
+  ggplot(aes(x = temp, y = mean_size)) + geom_point() +
+  geom_smooth(method = "lm")
 
 cells %>% 
   filter(variability == "c") %>% 
