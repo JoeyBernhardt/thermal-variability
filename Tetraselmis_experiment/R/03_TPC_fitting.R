@@ -9,6 +9,8 @@ library(tidyverse)
 library(stringr)
 library(rootSolve)
 library(bbmle)
+library(extrafont)
+loadfonts()
 
 all_r1 <- read_csv("Tetraselmis_experiment/data-processed/all_r_with0.csv")
 all_r <- read_csv("Tetraselmis_experiment/data-processed/growth_estimates_round3.csv")
@@ -22,7 +24,8 @@ data_full <- all_r %>%
 	# filter(var == "variable temperature") %>% 
 	select(-temperature) %>% 
 	rename(temperature = temp) %>% 
-	rename(growth.rate = estimate) %>% 
+	rename(growth.rate = estimate) %>%
+  mutate(growth.rate = growth.rate*24) %>% 
 	# mutate(var = str_replace(var, "constant temperature" ,"1")) %>% 
 	# mutate(var = str_replace(var, "variable temperature" ,"2")) %>% 
 	rename(`thermal environment` = variability) %>% 
@@ -34,6 +37,7 @@ dat.full <- all_r %>%
 	select(-temperature) %>% 
 	rename(temperature = temp) %>% 
 	rename(growth.rate = estimate) %>% 
+  mutate(growth.rate = growth.rate*24) %>% 
 	mutate(var = str_replace(variability, "constant temperature" ,"1")) %>% 
 	mutate(var = str_replace(variability, "variable temperature" ,"2")) %>% 
 	rename(curve.id = variability) %>% 
@@ -187,21 +191,49 @@ nbcurve1<-function(x){
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 
 p + geom_point(aes(x = temperature, y = growth.rate), data = dat.full, size = 0.5, alpha = 0) +
-	stat_function(fun = nbcurve1, color = "red", size = 2) +
-	stat_function(fun = nbcurve2, color = "black", size = 2) +
+	# stat_function(fun = nbcurve1, color = "red", size = 2) +
+	stat_function(fun = nbcurve2, color = "black", size = 1) +
 	stat_function(fun = nbcurve3, color = "blue", size = 2) +
 	geom_point(aes(x = temperature, y = growth.rate, color = `thermal environment`), data = data_full, size = 2, alpha = 0.9) + scale_color_manual(values = c("black", "red")) 
 
 
-curve(nbcurve(x,cfs[1],cfs[2],cfs[3],cfs[4]),col='red', lwd=2,add=TRUE)
+trans = yearmon_trans()
+k <- 8.62 * 10^(-5)
 
-curve(nbcurve(x,16.57264,35.61432,0.1203635,0.07903706),col='black', lwd=4,add=TRUE)
+temp_arr_trans <- function(x) {(1/(.00008617*(x+273.15)))}
+temp_arr_trans(15)
+
+p <- ggplot(data = data.frame(x = 0), mapping = aes(x = 0))
+
+dat.full2 <- dat.full %>% 
+  mutate(inverse_temp = (1/(.00008617*(temperature+273.15))))
+
+p + geom_point(aes(x = inverse_temp, y = growth.rate), data = dat.full2, size = 0.5, alpha = 0) +
+  stat_function(fun = nbcurve2, color = "black", size = 1) +
+  xlab("Temperature (°C)") +
+  ylab(bquote('Exponential growth rate'*~day^-1*'')) +
+  theme_bw(base_family = "Arial", base_size = 12) +
+  scale_x_continuous(sec.axis = sec_axis(~(temp_arr_trans(.))), limits = c(0, 32)) + 
+   ylim(-0.2, 1.7) +
+  geom_hline(yintercept = 0, color = "grey") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14)) +
+  theme_bw() +
+  theme(text = element_text(size=12, family = "Arial"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(colour = "black", size=0.5),
+        plot.title = element_text(hjust = 0.5, size = 12)) +
+  ggtitle("Temperature (1/kT)") 
+ggsave("Tetraselmis_experiment/figures/TPC_old_k-temp.pdf", width = 5, height = 3.5)
 
 
 nbcurve2<-function(x){
 	res<-cfs[3]*exp(cfs[4]*x)*(1-((x-cfs[1])/(cfs[2]/2))^2)
 	res
 }
+
+uniroot.all(function(x) nbcurve2(x),c(20,150))
+                    
 
 nbcurve3<-function(x){
 	res<-0.1203635*exp(0.0899376*x)*(1-((x-13.57264)/(41.61432/2))^2)

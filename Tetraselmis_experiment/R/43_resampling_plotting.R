@@ -1,7 +1,8 @@
 
 library(tidyverse)
 library(cowplot)
-
+library(extrafont)
+loadfonts()
 growth_sum <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary.csv") ## empirically observed growth rates
 growth_sum_v <- read_csv("Tetraselmis_experiment/data-processed/resampled_growth_rates_summary_v.csv") ## empirically observed growth rates
 
@@ -149,7 +150,7 @@ panel_a <- p +
   stat_function(fun = tpc_c, color = ic[3], size = 1.5) +
   # stat_function(fun = tpc_v, color = "orange") +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
@@ -189,3 +190,33 @@ panel_b <- p +
 
 plots <- plot_grid(panel_a, panel_b, labels = c("A", "B"), align = "v", nrow = 2)
 ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_indirect.png", width = 6, height = 7)
+
+
+# fig for k-temp-supp -----------------------------------------------------
+
+temp_arr_trans <- function(x) {(1/(.00008617*(x+273.15)))}
+
+p + 
+  geom_hline(yintercept = 0, color = "grey") +
+  stat_function(fun = tpc_c, color ="black", size = 1.5) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "grey") +
+  geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+  geom_hline(yintercept = 0) + ylab("") +
+  xlab("Temperature (°C)") + coord_cartesian(xlim = c(0,33), ylim = c(-0.1, 1.6)) +
+  scale_x_continuous(sec.axis = sec_axis(~(temp_arr_trans(.))), limits = c(0, 32)) + 
+  labs(y = expression ("Exponential growth rate"~day^-1))+
+  xlab("Temperature (°C)") +
+  ylab(bquote('Exponential growth rate'*~day^-1*'')) +
+  theme_bw(base_family = "Arial", base_size = 12) +
+  scale_x_continuous(sec.axis = sec_axis(~(temp_arr_trans(.))), limits = c(0, 32)) + 
+  ylim(-0.2, 1.7) +
+  theme(plot.title = element_text(hjust = 0.5, size = 14)) +
+  theme_bw() +
+  theme(text = element_text(size=12, family = "Arial"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(colour = "black", size=0.5),
+        plot.title = element_text(hjust = 0.5, size = 12)) +
+  ggtitle("Temperature (1/kT)") 
+ggsave("Tetraselmis_experiment/figures/k-temp-supp-TPC.pdf", width = 6, height = 4)
