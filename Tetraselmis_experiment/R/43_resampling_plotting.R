@@ -192,6 +192,40 @@ plots <- plot_grid(panel_a, panel_b, labels = c("A", "B"), align = "v", nrow = 2
 ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_indirect.png", width = 6, height = 7)
 
 
+# figure comparing STT prediction with NLA prediction ---------------------
+boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv") ### these are for the new resampled curve
+fits_c2 <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
+
+
+curve_constant_resamp<-function(x){
+  res<-fits_c2$a.list[1]*exp(fits_c2$b.list[1]*x)*(1-((x-fits_c2$z.list[1])/(fits_c2$w.list[1]/2))^2)
+  res
+}
+p + 
+  # stat_function(fun = tpc_c, color = ic[3], size = 1.5) +
+  stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
+  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
+  # stat_function(fun = tpc_v, color = "orange") +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+  # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = ic[3]) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates, size = 2, color = "black", shape = 1) +
+  # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
+  # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+              fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_STT,
+              fill = "transparent", alpha = 0.01, linetype = "dashed", color = "darkgrey", size = 0.5) +
+  geom_hline(yintercept = 0) + ylab("") +
+  xlab("Temperature (°C)") + coord_cartesian(xlim = c(0,33), ylim = c(-0.1, 1.6)) +
+  labs(y = expression ("Population growth rate"~day^-1))
+
+ggsave("Tetraselmis_experiment/figures/STT_NLA_pred_comparison.pdf", width = 6, height = 3.5)
+
 # fig for k-temp-supp -----------------------------------------------------
 
 temp_arr_trans <- function(x) {(1/(.00008617*(x+273.15)))}
