@@ -263,7 +263,7 @@ resp <- temps %>%
 
 growth_temps <- temps %>% 
   map_df(limits_fun, .id = "temp")
-
+write_csv(growth_temps, "Tetraselmis_experiment/data-processed/growth_temps.csv")
 
 ### to find topt
 
@@ -668,12 +668,12 @@ ggplot() +
   geom_bar(aes(x = temperature, y = frequency*4),
                     stat = "identity", fill = "black", data = bins) +
   geom_hline(yintercept = 0, color = "grey")+
-  geom_line(data = temps_growth, aes(x = temp, y = growth_rate), color = "cadetblue") +
-  geom_line(data = STT_predictions, aes(x = temperature, y = growth.rate), color = "darkgrey", size = 0.3) +
-  geom_line(data = growth_temps, aes(x = temperature, y = mean_growth), color = "orange", size = 0.3) +
+  geom_line(data = temps_growth, aes(x = temp, y = growth_rate), color = "cadetblue") + ## TPC
+  geom_line(data = growth_temps, aes(x = temperature, y = mean_growth), color = "orange", size = 0.3) + #NLA
+  geom_line(data = STT_predictions, aes(x = temperature, y = growth.rate), color = "black", size = 0.3, linetype = "dashed") + #STT 
   scale_color_gradient2(low = "#35978f", mid = "#01665e", high = "#8c510a", name = "Skew") +
   xlim(-3, 40) +
-  facet_wrap( ~ isolate.code) +
+  facet_wrap( ~ isolate.code, nrow = 20, ncol = 5) +
   ylab("Frequency of daily temperatures") + xlab("Daily SST at isolation location (°C)") +
   scale_y_continuous(sec.axis = dup_axis(name = expression ("Population growth rate"~day^-1)), limits = c(-0.5, 2)) +
   # geom_point(data = high_low, aes(x = temperature, y = 0), color = "orange", size =0.5) +
@@ -682,7 +682,7 @@ ggplot() +
   
   ggsave("Tetraselmis_experiment/figures/temps_curves_lims_mat.pdf", height = 10, width = 13)
   ggsave("Tetraselmis_experiment/figures/temps_curves_lims_mat_NLA.pdf", height = 10, width = 13)
-
+  ggsave("Tetraselmis_experiment/figures/temps_curves_lims_mat_NLA_dashed.pdf", height = 18, width = 13)
 
   
   ### now compare the STT and NLA curves
