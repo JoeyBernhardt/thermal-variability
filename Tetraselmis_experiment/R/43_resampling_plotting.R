@@ -27,7 +27,7 @@ gs_all %>%
 fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_5000_exp.csv")
 # fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_1000_exp.csv")
 fits_v <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp3.csv")
-fits_v_1000 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp2.csv")
+# fits_v_1000 <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_v_exp2.csv")
 fits_c <- fits_c %>%
   rename(a = a.list,
          b = b.list,
@@ -92,11 +92,15 @@ limits_c <- all_preds_c %>%
             q97.5=quantile(growth, probs=0.975),
             mean = mean(growth))
 
+write_csv(limits_c, "Tetraselmis_experiment/data-processed/limits_c_indirect.csv")
+
 limits_v <- all_preds_v %>% 
   group_by(temperature) %>% 
   summarise(q2.5=quantile(growth, probs=0.025),
             q97.5=quantile(growth, probs=0.975),
             mean = mean(growth))
+
+write_csv(limits_v, "Tetraselmis_experiment/data-processed/limits_v_indirect.csv")
 
 limits_v_1000 <- all_preds_v_1000 %>% 
   group_by(temperature) %>% 
@@ -159,10 +163,12 @@ panel_a <- p +
   # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
   # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "orange") +
   # geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+              # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_indirect,
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_STT,
-              fill = "transparent", alpha = 0.01, linetype = "dashed", color = "darkgrey", size = 0.5) +
+  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_STT,
+              # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "darkgrey", size = 0.5) +
   geom_hline(yintercept = 0) + ylab("") +
   xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6)) +
   labs(y = expression ("Population growth rate"~day^-1))
@@ -180,7 +186,7 @@ panel_b <- p +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates_v, color = "black", width = 0.2) +
   geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = ic[5]) +
   geom_point(aes(x = temperature, y = estimate), data = all_estimates_v, size = 2, color = "black", shape = 1) +
-  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_indirect,
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_STT,
   #             fill = "transparent", alpha = 0.01, linetype = "dashed", color = "darkgrey", size = 0.5) +
@@ -189,7 +195,7 @@ panel_b <- p +
   labs(y = expression ("Population growth rate"~day^-1))
 
 plots <- plot_grid(panel_a, panel_b, labels = c("A", "B"), align = "v", nrow = 2)
-ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_indirect.png", width = 6, height = 7)
+ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_indirect_NLA_pred.png", width = 6, height = 7)
 
 
 # figure comparing STT prediction with NLA prediction ---------------------
