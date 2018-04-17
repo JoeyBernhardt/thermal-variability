@@ -1,5 +1,6 @@
 library(cowplot)
 library(tidyverse)
+library(purrr)
 
 # etpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
 ctpc_fits <- read_csv("Tetraselmis_experiment/data-processed/ctpc.csv")
@@ -93,6 +94,9 @@ bs_v <- read_csv("Tetraselmis_experiment/data-processed/nls_boot.csv") %>%
 
 bs_c <- read_csv("Tetraselmis_experiment/data-processed/nls_boot_c.csv") %>% 
   mutate(replicate = rownames(.))
+
+
+
 # bs_c1 <- read_csv("Tetraselmis_experiment/data-processed/bootstrap_time_series_fits.csv")
 
 x <- seq(-3, 32, by = 0.01)
@@ -196,6 +200,37 @@ limits_prediction <- all_preds_NLA %>%
 
 write_csv(limits_prediction, "Tetraselmis_experiment/data-processed/limits_prediction.csv")
 
+
+
+### update April 17 2018, ok now let's get the NLA predictions for the variable treatment
+## but based on the constant curve derived from the indirect approach
+
+fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_5000_exp.csv")
+fits_c <- fits_c %>%
+  rename(a = a.list,
+         b = b.list,
+         w = w.list,
+         z = z.list) %>% 
+  filter(maxgrowth.list < 2)
+
+
+fits_c_split <- fits_c %>% 
+  split(.$curve.id.list)
+
+
+all_preds_NLA_indirect <- fits_c_split %>% 
+  map_df(prediction_NLA, .id = "replicate")
+
+
+
+limits_prediction_indirect <- all_preds_NLA_indirect %>% 
+  group_by(temperature) %>% 
+  summarise(q2.5=quantile(growth, probs=0.025),
+            q97.5=quantile(growth, probs=0.975),
+            q50=quantile(growth, probs=0.5),
+            mean = mean(growth),
+            median = median(growth))
+write_csv(limits_prediction_indirect, "Tetraselmis_experiment/data-processed/limits_prediction_indirect.csv")
 
 ### ok now let's get the actual predicted (mean) under variable conditions
 

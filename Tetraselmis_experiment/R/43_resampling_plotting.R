@@ -150,7 +150,7 @@ panel_a <- p +
   stat_function(fun = tpc_c, color = ic[3], size = 1.5) +
   # stat_function(fun = tpc_v, color = "orange") +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
-  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
               # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
   geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
@@ -193,21 +193,28 @@ ggsave(plots, file = "Tetraselmis_experiment/figures/figure2_indirect.png", widt
 
 
 # figure comparing STT prediction with NLA prediction ---------------------
-boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv") ### these are for the new resampled curve
-fits_c2 <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
+boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv") ### also old
+fits_c2 <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv") ## this one is the old one
 
 
 curve_constant_resamp<-function(x){
   res<-fits_c2$a.list[1]*exp(fits_c2$b.list[1]*x)*(1-((x-fits_c2$z.list[1])/(fits_c2$w.list[1]/2))^2)
   res
 }
+
+## check to make sure that the limits_prediction is from the continous exp approach
+## ok they are, but now need to make the blue constant curve be the one from the direct approach
+## ps the other ingredients for this plot are in 40_etpc_compare.R
+
 p + 
-  # stat_function(fun = tpc_c, color = ic[3], size = 1.5) +
-  stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
-  geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
+  stat_function(fun = tpc_c, color = ic[3], size = 1.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
+  stat_function(fun = ctpc, color = "black", size = 1) +
+  # stat_function(fun = curve_constant_resamp, color = ic[3], size = 1.5, alpha = 0.7) +
+  # geom_ribbon(aes(x = x, ymin = q2.5, ymax = q97.5, linetype=NA), data = boot_limits_constant, fill = ic[3], alpha = 0.5) +
   # stat_function(fun = tpc_v, color = "orange") +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_v, fill = "orange", alpha = 0.5) +
-  # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
+  geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = ic[3], alpha = 0.5) +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
   # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
   # geom_errorbar(aes(ymin = lower, ymax = upper, x = temperature), data = all_estimates, color = "black", width = 0.2) +
