@@ -170,7 +170,7 @@ panel_a <- p +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_STT,
               # fill = "transparent", alpha = 0.01, linetype = "dashed", color = "darkgrey", size = 0.5) +
   geom_hline(yintercept = 0) + ylab("") +
-  xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6)) +
+  xlab("") + coord_cartesian(xlim = c(0,33), ylim = c(-0.1, 1.6)) +
   labs(y = expression ("Population growth rate"~day^-1))
 
 panel_b <- p + 
@@ -190,8 +190,8 @@ panel_b <- p +
               fill = "transparent", alpha = 0.01, linetype = "dashed", color = "black", size = 0.5) +
   # geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction_STT,
   #             fill = "transparent", alpha = 0.01, linetype = "dashed", color = "darkgrey", size = 0.5) +
-  geom_hline(yintercept = 0) + ylab("") +
-  xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6)) +
+  geom_hline(yintercept = 0) + 
+  xlab("Temperature (°C)") + coord_cartesian(xlim = c(0,33), ylim = c(-0.1, 1.6)) +
   labs(y = expression ("Population growth rate"~day^-1))
 
 plots <- plot_grid(panel_a, panel_b, labels = c("A", "B"), align = "v", nrow = 2)

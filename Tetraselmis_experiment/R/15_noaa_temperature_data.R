@@ -245,7 +245,7 @@ limits_fun <- function(x){
 res <- tc %>% 
   group_by(isolate.code) %>% 
   mutate(cent_temp = sst - mean(sst)) %>%
-  mutate(cent1 = cent_temp + x) %>% 
+  mutate(cent1 = cent_temp + x) %>% View
   mutate(growth_rate_mean = a*exp(b*cent1)*(1-((cent1-z)/(w/2))^2)) %>% 
   summarise(mean_growth = mean(growth_rate_mean)) %>% 
   mutate(temperature = x)

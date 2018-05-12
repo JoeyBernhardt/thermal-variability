@@ -1,6 +1,7 @@
 library(cowplot)
 library(tidyverse)
 library(purrr)
+library(rootSolve)
 
 # etpc_fits <- read_csv("Tetraselmis_experiment/data-processed/time_resampling_fits.csv")
 ctpc_fits <- read_csv("Tetraselmis_experiment/data-processed/ctpc.csv")
@@ -44,7 +45,8 @@ tpc_c <-function(x){
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 p + 
-  stat_function(fun = etpc, color = "black", size = 1) +
+  # stat_function(fun = etpc, color = "black", size = 1) +
+  stat_function(fun = ctpc, color = "black", size = 1) +
   stat_function(fun = tpc_c, color = "green", size = 1) +
   xlim(-3, 33) + 
   ylim(-1, 2) + geom_hline(yintercept = 0) + ylab("Exponential growth rate (per day)") +
@@ -158,6 +160,8 @@ limits_c <- all_preds_c %>%
             q97.5=quantile(growth, probs=0.975),
             mean = mean(growth))
 
+
+write_csv(limits_c, "Tetraselmis_experiment/data-processed/limits_c_direct.csv")
 bs_v2 <- bs_v %>% 
   mutate(replicate = as.character(replicate))
 
@@ -200,7 +204,7 @@ limits_prediction <- all_preds_NLA %>%
 
 write_csv(limits_prediction, "Tetraselmis_experiment/data-processed/limits_prediction.csv")
 
-
+limits_prediction <- read_csv("Tetraselmis_experiment/data-processed/limits_prediction.csv")
 
 ### update April 17 2018, ok now let's get the NLA predictions for the variable treatment
 ## but based on the constant curve derived from the indirect approach
@@ -351,7 +355,7 @@ ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width 
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 panel_b_no <- p + 
-  geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+  # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
   stat_function(fun = ctpc, color = "black", size = 1) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
   geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_prediction,
@@ -552,6 +556,18 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 
    #### ok trying this again!!
    
+   bs_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_5000_exp.csv") %>% 
+     mutate(replicate = rownames(.))
+   fits_c <- bs_c %>%
+     rename(a = a.list,
+            b = b.list,
+            w = w.list,
+            z = z.list)
+   
+   bs_split <- fits_c %>%
+     filter(maxgrowth.list < 2) %>% 
+     split(.$curve.id.list)
+   
    get_topts <- function(df){
    
   dtpc <-function(x) df$a[[1]]*exp(df$b[[1]]*x)*(1-((x-df$z[[1]])/(df$w[[1]]/2))^2)
@@ -573,6 +589,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      map_df(get_topts, .id = "replicate") 
    
    topt_lims <- topts_predicted %>% 
+     filter(topt < 30) %>% 
      summarise(lower=quantile(topt, probs=0.025),
                upper=quantile(topt, probs=0.975),
                mean = mean(topt),
@@ -582,6 +599,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      mutate(treatment = "variable")
    
    rmax_lims <- topts_predicted %>% 
+     filter(topt < 30) %>% 
      summarise(lower=quantile(rmax, probs=0.025),
                upper=quantile(rmax, probs=0.975),
                mean = mean(rmax),
@@ -602,6 +620,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      tmax <- uniroot.all(ftpc,c(10,150))
      return(data.frame(tmax))
    }
+   
    
    tmax_predicted <- bs_split %>% 
      map_df(get_tmaxes, .id = "replicate") 

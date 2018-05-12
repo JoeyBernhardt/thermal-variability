@@ -3,6 +3,12 @@ library(tidyverse)
 library(bbmle)
 
 fits_c <- read_csv("Tetraselmis_experiment/data-processed/resampling_TPC_params.csv")
+fits_c <- read_csv("Tetraselmis_experiment/data-processed/boot_fits_resample_5000_exp.csv")
+fits_c <- read_csv("Tetraselmis_experiment/data-processed/ctpc.csv") %>% 
+  rename(a.list = a,
+         z.list = z,
+         b.list = b,
+         w.list = w)
 
 ### Goal: find inflection point of the constant temperature TPC
 
@@ -54,7 +60,7 @@ derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
 }
 ###
 
-x <- seq(-5, 38, by = 0.001)
+x <- seq(16, 18, by = 0.001)
 
 
 deriv_2 <- function(x) {
@@ -67,7 +73,7 @@ variable_upper2 <- data.frame(x, deriv_value) %>%
 
 
 variable_upper2 %>% 
-	filter(deriv_value < 0.001) %>% View
+	filter(deriv_value < 0.001) %>% View ### inflection point of constant curve is 16.763
 	ggplot(aes(x = temperature, y = deriv_value)) + geom_line() +
 	geom_hline(yintercept = 0) + xlim(16.5, 17) + ylim(-0.01, 0.01)
 	
@@ -75,12 +81,12 @@ variable_upper2 %>%
 	### find the inflection points of the upper and lower curves
 	
 	boot_limits_constant <- read_csv("Tetraselmis_experiment/data-processed/boot_limits_constant_resample_10k.csv")
+	limits_c <- read_csv("Tetraselmis_experiment/data-processed/limits_c_direct.csv")
 
 	
-	dat.full <- boot_limits_constant %>% 
+	dat.full <- limits_c %>% 
 	  gather(key = type, value = y, 2:4) %>% 
 	  rename(curve.id = type, 
-	         temperature = x, 
 	         growth.rate = y) %>% 
 	  mutate(curve.id = ifelse(curve.id == "mean", 1, curve.id),
 	         curve.id = ifelse(curve.id == "q2.5", 2, curve.id),
@@ -211,6 +217,7 @@ variable_upper2 %>%
 	
 	fits<-data.frame(curve.id.list, topt.list,maxgrowth.list,z.list,w.list,a.list,b.list,rsqr.list,s.list,n.list)
 	
+	write_csv(fits, "Tetraselmis_experiment/data-processed/upper_lower_curve_constant_fits_direct.csv")
 	write_csv(fits, "Tetraselmis_experiment/data-processed/upper_lower_curve_constant_fits.csv")
 	
 	curve_lower<-function(x){
@@ -223,6 +230,10 @@ variable_upper2 %>%
 	  res
 	}
 	
+	curve_mean<-function(x){
+	  res<-fits$a.list[curve.id.list == 1]*exp(fits$b.list[curve.id.list == 1]*x)*(1-((x-fits$z.list[curve.id.list == 1])/(fits$w.list[curve.id.list == 1]/2))^2)
+	  res
+	}
 	
 	deriv_lower <- function(x) {
 	  y <- derivative(f = curve_lower, x = x, order = 2)
@@ -233,7 +244,7 @@ variable_upper2 %>%
 	  rename(temperature = x) %>% 
 	  filter(deriv_lower < 0.0001) 
 	
-	## inflection of the lower curve is at 15.669, 16.71
+	## inflection of the lower curve is at 15.669, 16.71 (indirect) and 16.813, 16.764, 16.761 (direct) (update may12 2018)
 	
 	deriv_upper <- function(x) {
 	  y <- derivative(f = curve_upper, x = x, order = 2)
@@ -241,6 +252,16 @@ variable_upper2 %>%
 	
 	deriv_upper <- sapply(x, deriv_upper)
 	constant_upper <- data.frame(x, deriv_upper) %>% 
+	  rename(temperature = x) %>% 
+	  filter(deriv_upper < 0.0001)
+	
+	
+	deriv_mean <- function(x) {
+	  y <- derivative(f = curve_mean, x = x, order = 2)
+	}
+	
+	deriv_mean <- sapply(x, deriv_mean)
+	constant_mean <- data.frame(x, deriv_mean) %>% 
 	  rename(temperature = x) %>% 
 	  filter(deriv_upper < 0.0001)
 	
