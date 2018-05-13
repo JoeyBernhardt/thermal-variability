@@ -5,19 +5,33 @@ library(purrr)
 library(tidyverse)
 library(minpack.lm)
 library(nlstools)
+library(viridis)
 
 cells_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_exp.csv")
 cells_v_exp <- read_csv("Tetraselmis_experiment/data-processed/cells_v_exp.csv")
 
-cells_days_v <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv")
+cells_days_v <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv") %>% 
+  mutate(environment = "variable")
 cells_days_c <- read_csv("Tetraselmis_experiment/data-processed/cells_exp_mod.csv") %>% 
   mutate(days = time_since_innoc_hours/24) %>% 
-  mutate(days = ifelse(days < 0, 0, days))
+  mutate(days = ifelse(days < 0, 0, days)) %>% 
+  mutate(environment = "constant")
 
 cells_days_c %>% 
   ggplot(aes(x = days, y = cell_density)) + geom_point() +
   facet_wrap( ~ temp)
 
+### make a plot of time series
+
+all_cells_plot <- bind_rows(cells_days_c, cells_days_v)
+
+all_cells_plot %>%
+  ggplot(aes(x = days, y = cell_density, color = temp)) + geom_point() +
+  facet_wrap( ~ environment) + scale_color_viridis() +
+  stat_function(fun = growth_function(temp = 5))
+  
+
+growth_function <- function(temp, days)(800 * exp((results$a*exp(results$b*temp)*(1-((temp-results$z)/(results$w/2))^2))*(days)))
 
 avals<-seq(-0.2,1.2,0.02)
 bvals<-seq(-0.2,0.3,0.02)
@@ -159,7 +173,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 p + 
   stat_function(fun = tpc_c, color = "black", size = 1) +
   xlim(-3, 33) + 
-  ylim(-2, 5) + geom_hline(yintercept = 0) +
+  ylim(0, 2) + geom_hline(yintercept = 0) +
   stat_function(fun = tpc_v, color = "grey", size = 1) + ylab("Growth rate") + xlab("Temperature (°C)") +
   # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds, alpha = 0.2) +
   # geom_line(aes(x = temperature, y = growth, group = replicate), color = "purple", data = all_preds_v, alpha = 0.2) +
