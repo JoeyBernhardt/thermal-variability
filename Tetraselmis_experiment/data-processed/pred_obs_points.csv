@@ -1,0 +1,10 @@
+environment,approach,predicted,obs_type,obs,lower,upper
+variable,indirect,predicted,Topt,21.76,21.47,22.07
+variable,indirect,predicted,Tmax,29.6,28.7,41.23
+variable,indirect,predicted,rmax,1.27,1.19,1.34
+variable,indirect,observed,Topt,21.55,20.37471,23.00681
+variable,indirect,observed,Tmax,31.91,28.49883,44.68371
+variable,indirect,observed,rmax,1.19,1.043121,1.346105
+constant,indirect,observed,Topt,24.60597,24.09156,25.15863
+constant,indirect,observed,Tmax,32.51241,31.71699,45.80404
+constant,indirect,observed,rmax,1.562081,1.480519,1.645858
