@@ -97,8 +97,9 @@ all_cells_plot %>%
   rename(Environment = variability) %>% 
   mutate(Environment = ifelse(Environment == "c", "constant", "variable")) %>% 
   rename(Temperature = temp) %>% 
-  ggplot(aes(x = days, y = cell_density, color = factor(Temperature), shape = Environment)) + geom_point(size = 4) +
-  # geom_point(size = 4, shape= variability, color = "black") +
+  ggplot(aes(x = days, y = cell_density, color = factor(Temperature), shape = Environment)) +
+  geom_point(size = 4) +
+  # # geom_point(size = 4, shape= variability, color = "black") +
   stat_function(fun = growth_fun_27v, color = ic[7], size = 1) +
   stat_function(fun = growth_fun_27c, color = ic[7], size = 1, linetype = "dashed") +
   stat_function(fun = growth_fun_29c, color = ic[8], size = 1, linetype = "dashed") +
@@ -108,7 +109,7 @@ all_cells_plot %>%
   stat_function(fun = growth_fun_5v, color = ic[2], size = 1) +
   stat_function(fun = growth_fun_20c, color = ic[5], size = 1, linetype = "dashed") +
   stat_function(fun = growth_fun_20v, color = ic[5], size = 1) +
-  ylim(0, 30000) +
+   ylim(0, 30000) +
   stat_function(fun = growth_fun_10c, color = ic[3], size = 1, linetype = "dashed") +
   stat_function(fun = growth_fun_10v, color = ic[3], size = 1) +
   stat_function(fun = growth_fun_24c, color = ic[6], size = 1, linetype = "dashed") +
@@ -116,6 +117,6 @@ all_cells_plot %>%
   stat_function(fun = growth_fun_32c, color = ic[9], size = 1, linetype = "dashed") +
   stat_function(fun = growth_fun_0c, color = ic[1], size = 1, linetype = "dashed") +
   scale_color_viridis(discrete = TRUE, name = "Temperature") +
-  ylab("Cell abundance (cells/mL)") + xlab("Days") 
-ggsave("Tetraselmis_experiment/figures/cell_abundance_days.pdf", width = 8, height = 6)
+  ylab("Population abundance (cells/mL)") + xlab("Days")
+ggsave("Tetraselmis_experiment/figures/cell_abundance_days.pdf", width = 10, height = 6)
 
