@@ -448,7 +448,7 @@ sst_data <- st_as_sf(sst_summary, coords = c("lon", "lat"), crs = 4326)
 sst_data <-st_transform(x = sst_data, crs = "+proj=robin")
 world2 <- st_transform(world1,crs = 4326)
 
-
+??mapWorld
 # map of daily sst sd -----------------------------------------------------
 
 
