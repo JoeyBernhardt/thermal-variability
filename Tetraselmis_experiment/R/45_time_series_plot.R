@@ -1,4 +1,7 @@
-
+library(viridis)
+library(colormap)
+library(cowplot)
+library(tidyverse)
 
 cells_days_v <- read_csv("Tetraselmis_experiment/data-processed/cells_days_v_mod.csv") %>% 
   mutate(environment = "variable")
@@ -87,9 +90,7 @@ growth_fun_20v <- function(x, temp = 20){
 }
 
 
-library(viridis)
-library(colormap)
-library(cowplot)
+
 ic <- colormap(colormap = colormaps$viridis, nshades = 9, format = "hex",
                alpha = 1, reverse = FALSE)
 
