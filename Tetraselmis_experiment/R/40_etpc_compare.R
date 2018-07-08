@@ -797,8 +797,16 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    figure2_direct <- plot_grid(panel_b_no, panel_a, labels = c("A", "B"), align = "v", ncol = 1)
    save_plot("Tetraselmis_experiment/figures/figure2_direct.png", figure2_direct, ncol = 1, base_height = 7, base_width = 6.2)
    
+   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
+   p + 
+     # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
+     stat_function(fun = ctpc, color = "black", size = 1) +
+     geom_hline(yintercept = 0) + xlab("Temperature (°C)") +ylab("Population growth rate (r)") + ylim(-0.2, 1.6) + xlim(-3, 33)
+   ggsave("Tetraselmis_experiment/figures/constant-TPC.pdf", width = 6, height = 4)
    
-   constant_lims <- p +
+   
+   
+    constant_lims <- p +
      geom_errorbarh(aes(xmin = lower, xmax = upper, y = 0, x = mean), height = 0.05, data = filter(crit_temps, treatment == "constant"), height = 0.05, color = "cadetblue") +
      geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "cadetblue", shape = 17) +
      geom_point(aes(x = mean, y = 0), data = filter(crit_temps, treatment == "constant"), color = "black", shape = 2) +

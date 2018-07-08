@@ -121,3 +121,66 @@ all_cells_plot %>%
   ylab("Population abundance (cells/mL)") + xlab("Days")
 ggsave("Tetraselmis_experiment/figures/cell_abundance_days.pdf", width = 10, height = 6)
 
+
+all_cells_plot %>% 
+  rename(Environment = variability) %>% 
+  mutate(Environment = ifelse(Environment == "c", "constant", "variable")) %>% 
+  rename(Temperature = temp) %>% 
+  filter(Environment == "constant") %>% 
+  ggplot(aes(x = days, y = cell_density, color = factor(Temperature))) +
+  # geom_point(size = 4) +
+  # geom_point(size = 4, shape= variability, color = "black") +
+  # stat_function(fun = growth_fun_27v, color = ic[7], size = 1) +
+  stat_function(fun = growth_fun_27c, color = ic[7], size = 1) +
+  stat_function(fun = growth_fun_29c, color = ic[8], size = 1) +
+  stat_function(fun = growth_fun_16c, color = ic[4], size = 1) +
+  # stat_function(fun = growth_fun_15v, color = ic[4], size = 1) +
+  stat_function(fun = growth_fun_5c, color = ic[2], size = 1) +
+  # stat_function(fun = growth_fun_5v, color = ic[2], size = 1) +
+  stat_function(fun = growth_fun_20c, color = ic[5], size = 1) +
+  # stat_function(fun = growth_fun_20v, color = ic[5], size = 1) +
+  ylim(0, 30000) +
+  stat_function(fun = growth_fun_10c, color = ic[3], size = 1) +
+  # stat_function(fun = growth_fun_10v, color = ic[3], size = 1) +
+  stat_function(fun = growth_fun_24c, color = ic[6], size = 1) +
+  # stat_function(fun = growth_fun_24v, color = ic[6], size = 1) +
+  stat_function(fun = growth_fun_32c, color = ic[9], size = 1) +
+  stat_function(fun = growth_fun_0c, color = ic[1], size = 1) +
+  scale_color_viridis(discrete = TRUE, name = "Temperature") +
+  theme(text = element_text(size=20)) +
+  theme(axis.text = element_text(size=20)) +
+  ylab("Population abundance (cells/mL)") + xlab("Days")
+ggsave("Tetraselmis_experiment/figures/cell_abundance_days_constant_lines.pdf", width = 10, height = 6)
+
+
+all_cells_plot %>% 
+  rename(Environment = variability) %>% 
+  mutate(Environment = ifelse(Environment == "c", "constant", "variable")) %>% 
+  rename(Temperature = temp) %>% 
+  filter(Environment == "variable") %>% 
+  ggplot(aes(x = days, y = cell_density, color = factor(Temperature))) +
+  geom_point(size = 4) +
+  # # geom_point(size = 4, shape= variability, color = "black") +
+  # stat_function(fun = growth_fun_27v, color = ic[7], size = 1) +
+  # # stat_function(fun = growth_fun_27c, color = ic[7], size = 1) +
+  # # stat_function(fun = growth_fun_29c, color = ic[8], size = 1) +
+  # # stat_function(fun = growth_fun_16c, color = ic[4], size = 1) +
+  # stat_function(fun = growth_fun_15v, color = ic[4], size = 1) +
+  # # stat_function(fun = growth_fun_5c, color = ic[2], size = 1) +
+  # stat_function(fun = growth_fun_5v, color = ic[2], size = 1) +
+  # # stat_function(fun = growth_fun_20c, color = ic[5], size = 1) +
+  # stat_function(fun = growth_fun_20v, color = ic[5], size = 1) +
+  # ylim(0, 30000) +
+  # # stat_function(fun = growth_fun_10c, color = ic[3], size = 1) +
+  # stat_function(fun = growth_fun_10v, color = ic[3], size = 1) +
+  # # stat_function(fun = growth_fun_24c, color = ic[6], size = 1) +
+  # stat_function(fun = growth_fun_24v, color = ic[6], size = 1) +
+  # # stat_function(fun = growth_fun_32c, color = ic[9], size = 1) +
+  # # stat_function(fun = growth_fun_0c, color = ic[1], size = 1) +
+  scale_color_viridis(discrete = TRUE, name = "Temperature") +
+  theme(text = element_text(size=20)) +
+  theme(axis.text = element_text(size=20)) +
+  ylab("Population abundance (cells/mL)") + xlab("Days")
+ggsave("Tetraselmis_experiment/figures/cell_abundance_days_variable_lines.pdf", width = 10, height = 6)
+ggsave("Tetraselmis_experiment/figures/cell_abundance_days_variable_points.pdf", width = 10, height = 6)
+ 
