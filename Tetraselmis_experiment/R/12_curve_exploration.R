@@ -1,6 +1,7 @@
 library(tidyverse)
 library(janitor)
 library(purrr)
+library(cowplot)
 
 growth_raw <- read_csv("Tetraselmis_experiment/data-processed/growth_data_20140606.csv")
 all_thermal_data <- read_csv("Tetraselmis_experiment/data-processed/all_thermal_data.csv") %>% 
@@ -118,12 +119,13 @@ write_csv(all3, "Tetraselmis_experiment/data-processed/global_TPCs.csv")
 all3 <- read_csv("Tetraselmis_experiment/data-processed/global_TPCs.csv")
 all3 %>% 
 	filter(!is.na(topt)) %>% 
-	# filter(curve_code %in% pos_curves) %>% 
+  filter(mu_n > 4) %>% 
+	filter(curve_code %in% pos_curves) %>% 
 	mutate(skew_dir = ifelse(rel_curveskew<0, "negative skew", "positive skew")) %>% 
 	filter(curvequal == "good", maxqual == "good", minqual == "good") %>% 
-	filter(mu_rsqrlist > 0.90) %>% 
+	filter(mu_rsqrlist > 0.85) %>% 
 	filter(mu_n > 4) %>% 
-	# distinct(isolate_code) %>% View
+	distinct(isolate_code, .keep_all = TRUE) %>% View
 	ggplot(aes(x = temperature, y = growth_rate_mu, color = skew_dir)) + geom_point() +
 	geom_line(aes(x = x, y = y)) + facet_wrap( ~ isolate_code, scales = "free_y") +theme_bw() +
 	theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -142,12 +144,12 @@ ggsave("Tetraselmis_experiment/figures/all_curves_fits_skew_rsq90_samex_axis.png
 
 all3 %>% 
 	filter(!is.na(topt)) %>% 
-	# filter(curve_code %in% pos_curves) %>% 
+	filter(curve_code %in% pos_curves) %>% 
 	mutate(skew_dir = ifelse(rel_curveskew<0, "negative skew", "positive skew")) %>% 
 	# filter(curvequal == "good", maxqual == "good", minqual == "good") %>% 
-	# filter(mu_rsqrlist > 0.90) %>% 
-	# filter(mu_n > 4) %>% 
-	# distinct(isolate_code) %>% View
+	filter(mu_rsqrlist > 0.90) %>% 
+	filter(mu_n > 4) %>% 
+	distinct(isolate_code, .keep_all = TRUE) %>% View
 	ggplot(aes(x = temperature, y = growth_rate_mu)) +
 	# geom_point() +
 	geom_line(aes(x = x, y = y)) + facet_wrap( ~ isolate_code, scales = "free_y") +theme_bw() +
