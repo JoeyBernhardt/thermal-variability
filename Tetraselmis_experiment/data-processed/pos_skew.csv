@@ -1,0 +1,10 @@
+isolate_code,source,latitude,longitude,habitat,speciesname,class,group
+34,"Port Smith, near Broome, Western Australia",-18.51,121.8,marine,Isochrysis,Coccolithophyceae,haptophytes
+40,"Darwin Harbour, Northern Territory, Australia",-12.48,130.8,estuarine,Cylindrotheca closterium,Bacillariophyceae,diatoms
+86,"Manasota, US",27.01,-82.42,marine,Karenia brevis,Dinophyceae,dinoflagellates
+140,Sagami Bay,35.15,139.35,marine,Chaetoceros pseudocurvisetus,Bacillariophyceae,diatoms
+194,"Great South Bay, Long Island, NY, USA",40.68,-73.13,estuarine,Phaeodactylum tricornutum,Bacillariophyceae,diatoms
+221,"Cape Cod, MA, USA",41.9,-70.32,marine,Rhizosolenia setigera,Bacillariophyceae,diatoms
+324,Northern Baltic,58.88,20.32,marine,Gymnodinium corollarium,Dinophyceae,dinoflagellates
+345,"Drøbak Sound, Oslofjord, Norway",59.67,10.61,estuarine,Neoceratium fusus,Dinophyceae,dinoflagellates
+556,"Santa Cruz, CA, USA",36.96,-122.02,marine,Akashiwo sanguinea,Dinophyceae,dinoflagellates

@@ -13,7 +13,8 @@ library(dplyr)
 global_therm <- read_csv("Tetraselmis_experiment/data-processed/global_therm.csv")
 
 global_therm %>% 
-	filter(Lat == 49.5, Lon == -126.5) %>% View
+  filter(Lat > 48, Lat < 50.5) %>% 
+	filter(Lon < -124, Lon > -126) %>% View
 
 
 thomas <- read_csv("data/thermal_trait_data/Thomas_2014_traits_derived_20140606.csv")

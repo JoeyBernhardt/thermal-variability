@@ -9,16 +9,20 @@ library(purrr)
 library(ncdf4)
 library(cowplot)
 library(viridis)
+library(stringr)
 
 cache_details()
 cache_delete_all(force = TRUE)
 
 
 #### search for data ####
-out <- ed_search(query = 'CPC')
-SST <- str_subset(string = out$info$title, pattern = "SST, Daily Optimum Interpolation")
+out <- ed_search(query = 'SST')
+
+View(out)
+SST <- str_subset(string = out$info$title, pattern = "Optimum")
+SST
 out$info[[out$info$title == "SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180"]]
-info('SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011, Lon+/-180')
+info("SST, Daily Optimum Interpolation (OI), AMSR+AVHRR, Version 2, 2002-2011")
 
 info_df <- out$info
 
@@ -31,17 +35,52 @@ info_df %>%
 
 griddap('ncdcOisst2AmsrAgg_LonPM180')
 
+(out <- info('ncdcOisst2AmsrAgg_LonPM180'))
 
-out <- griddap('ncdcOisst2AmsrAgg_LonPM180',
-								time = c('2006-01-01', '1995-01-01'),
-								latitude = c(33.875, 33.875),
-								longitude = c(131.125, 131.125),
+?griddap
+out_tt <- griddap('ncdcOisst2AmsrAgg_LonPM180',
+								time = c('2009-01-01', '2010-01-01'),
+								latitude = c(48, 49),
+								longitude = c(-126, -125),
 								fields = "sst")
 
+out <- griddap('ncdcOisst2AmsrAgg_LonPM180',
+               time = c('2006-01-01', '1995-01-01'),
+               latitude = c(33.875, 33.875),
+               longitude = c(131.125, 131.125),
+               fields = "sst",
+               fmt = "csv")
+?nc_open
 
+griddap('noaa_esrl_fce0_4aad_340a',
+        time = c('2008-01-01','2009-01-01'),
+        latitude = c('last', 'last'),
+        longitude = c(3, 5)
+)
+
+
+(out <- info('noaa_esrl_027d_0fb5_5d38'))
+(res <- griddap(out,
+                time = c('2012-01-01','2012-06-12'),
+                latitude = c(21, 18),
+                longitude = c(-80, -75)
+))
 
 reprex(venue = "gh", si = TRUE)
 
+extract_function <- function(df) {
+  results <- griddap('ncdcOisst2AmsrAgg_LonPM180',
+                     time = c(time_end, time_start),
+                     latitude = c(df$latitude[[1]], df$latitude[[1]]),
+                     longitude = c(df$longitude[[1]], df$longitude[[1]]),
+                     fields = "sst")
+  output <- results$data
+}
+
+df <- data.frame(latitude = c(48.908615), longitude = c(-125.699653))
+time_start <- c("2002-07-01")
+time_end <- c("2002-12-31")
+out_tt <- extract_function(df)
 
 ### ok so it looks like rerddap doesn't like to have to get more than 7 years of data at a time. What if we try and get only 5 years of data at a time, but then iterate over several chunks of time?
 
@@ -207,6 +246,10 @@ write_csv(tsx2, "Tetraselmis_experiment/data-processed/OISST_data.csv")
 
 
 tsx2 <- read_csv("Tetraselmis_experiment/data-processed/OISST_data.csv")
+
+tsx2 %>% 
+  filter(lat > 48, lat < 49, lon > -125, lon < 124 ) %>% View
+
 
 ### put the temperature and the thermal trait data together
 tc <- left_join(tsx2, thomas3, by = "isolate.code")

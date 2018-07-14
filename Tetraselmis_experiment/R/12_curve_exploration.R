@@ -141,6 +141,18 @@ ggsave("Tetraselmis_experiment/figures/all_curves_fits_skew_rsq90.png", width = 
 ggsave("Tetraselmis_experiment/figures/all_curves_fits_skew_rsq90_samex_axis.png", width = 15, height = 12)
 	
 
+pos_skews <- all3 %>% 
+  filter(!is.na(topt)) %>% 
+  filter(mu_n > 4) %>% 
+  filter(curve_code %in% pos_curves) %>% 
+  mutate(skew_dir = ifelse(rel_curveskew<0, "negative skew", "positive skew")) %>% 
+  filter(curvequal == "good", maxqual == "good", minqual == "good") %>% 
+  filter(mu_rsqrlist > 0.85) %>% 
+  filter(mu_n > 4) %>% 
+  distinct(isolate_code, .keep_all = TRUE) %>% 
+  select(isolate_code, source, latitude, longitude, habitat, speciesname, class, group)
+
+write_csv(pos_skews, "Tetraselmis_experiment/data-processed/pos_skew.csv")
 
 all3 %>% 
 	filter(!is.na(topt)) %>% 
