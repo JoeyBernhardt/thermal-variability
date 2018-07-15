@@ -28,7 +28,7 @@ derivative <- function(f, x, ..., order = 1, delta = 0.1, sig = 6) {
 
 
 curve_constant_resamp<-function(x){
-	res<-fits_c$a.list[1]*exp(fits_c$b.list[1]*x)*(1-((x-fits_c$z.list[1])/(fits_c$w.list[1]/2))^2)
+	res<-fits_c$a.list[1]*exp(fits_c$b.list[1]*x)*(1-((x-(fits_c$z.list[1]+5))/(fits_c$w.list[1]/2))^2)
 	res
 }
 
@@ -60,7 +60,7 @@ derivative <- function(f, x, ..., order = i, delta = 0.1, sig = 6) {
 }
 ###
 
-x <- seq(16, 18, by = 0.001)
+x <- seq(-2, 35, by = 0.001)
 
 
 deriv_2 <- function(x) {
@@ -272,21 +272,31 @@ variable_upper2 %>%
 	
 	
 	p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x)) 
+	curve_constant_resamp<-function(x){
+	  res<-0.75*(fits_c$a.list[1]-0.2)*exp((fits_c$b.list[1]-0.04)*x)*(1-((x-(fits_c$z.list[1]+3.5))/((fits_c$w.list[1]+1)/2))^2)
+	  res
+	}
+	
+	curve_constant_resamp<-function(x){
+	  res<-(fits_c$a.list[1]*exp(fits_c$b.list[1]*x)*(1-((x-(fits_c$z.list[1]+0))/(fits_c$w.list[1]/2))^2))-0.12
+	  res
+	}
+	
 TPC <- p +
   # geom_hline(yintercept = 0, color = "grey") +
-  geom_vline(xintercept = 16.96, color = "grey")+
+  geom_vline(xintercept = 16.763, color = "grey")+
   stat_function(fun = curve_constant_resamp, size = 1.5) +
-  ylim(0, 1.8) + xlim(-2, 32) +
-  ylab("P(T)") + xlab(expression("")) 
+  ylim(-0.2, 1.6) + xlim(-2, 35) +
+  ylab("P(T)") + xlab(expression("")) + geom_hline(yintercept = 0)
 
 deriv <- p +
   geom_hline(yintercept = 0, color = "grey") +
-  geom_vline(xintercept = 16.96, color = "grey") +
+  geom_vline(xintercept = 16.763, color = "grey") +
   ylab("P''(T)") + xlab(expression("Temperature (" *degree * "C)")) +
-  xlim(-2, 32) + ylim(-0.05, 0.05) +
+  xlim(-2, 35) + ylim(-0.1, 0.005) +
   geom_line(aes(x = temperature, y = deriv_value), data = variable_upper2, size = 1.5)
   
 
 plot1 <- plot_grid(TPC, deriv, labels = c("A", "B"), align = "v", nrow = 2)
-ggsave(plot1, file = "Tetraselmis_experiment/figures/figure1.png", width = 6, height = 7)
+ggsave(plot1, file = "Tetraselmis_experiment/figures/figure1_cross.png", width = 6, height = 7)
 
