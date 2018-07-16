@@ -6,5 +6,5 @@ isolate_code,source,latitude,longitude,habitat,speciesname,class,group
 194,"Great South Bay, Long Island, NY, USA",40.68,-73.13,estuarine,Phaeodactylum tricornutum,Bacillariophyceae,diatoms
 221,"Cape Cod, MA, USA",41.9,-70.32,marine,Rhizosolenia setigera,Bacillariophyceae,diatoms
 324,Northern Baltic,58.88,20.32,marine,Gymnodinium corollarium,Dinophyceae,dinoflagellates
-345,"Drøbak Sound, Oslofjord, Norway",59.67,10.61,estuarine,Neoceratium fusus,Dinophyceae,dinoflagellates
+345,"Dr¿bak Sound, Oslofjord, Norway",59.67,10.61,estuarine,Neoceratium fusus,Dinophyceae,dinoflagellates
 556,"Santa Cruz, CA, USA",36.96,-122.02,marine,Akashiwo sanguinea,Dinophyceae,dinoflagellates
