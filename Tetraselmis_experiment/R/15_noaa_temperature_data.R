@@ -593,13 +593,12 @@ all4 <- all3 %>%
 r_data <- st_as_sf(all4, coords = c("longitude", "latitude"), crs = 4326)
 r_data <- st_transform(x = r_data, crs = "+proj=robin")
 
- 
+ library(viridis)
 all4 %>% 
   ggplot(aes(x = temp_diff, y = rev_growth_diff, color = sst_sd, label = isolate.code)) + geom_point(size = 3) +
-  scale_color_viridis(option = "inferno") + theme_bw() +
+  scale_color_viridis(option = "inferno") + 
   ylab("r(var) - r(cons)") +
   xlab("TOpt - Mean temperature at isolation location (°C)") + 
-  theme_bw() +
   geom_hline(yintercept = 0) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(),
@@ -608,7 +607,7 @@ all4 %>%
   ylim(-0.62, 0.02) +
   geom_point(size = 3, shape = 1, color = "black")
 ggsave("Tetraselmis_experiment/figures/NLA_r_diff_plot.png", width = 6, height = 3)
-
+ggsave("Tetraselmis_experiment/figures/NLA_r_diff_plot.pdf", width = 6, height = 3)
 ### try to plot the differences in r over the map
 ggplot(r_data) +
   scale_color_viridis(discrete = FALSE, option = "viridis", name = "") +
