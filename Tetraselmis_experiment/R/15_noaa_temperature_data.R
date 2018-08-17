@@ -367,6 +367,17 @@ pred_var <- predicted_growth_temperature2 %>%
 results5b <- left_join(results5, sst_summary, by = "isolate.code") %>% 
   filter(mu.rsqrlist > 0.85)
 
+### find out how many species have topts above or below mean temperatures
+results5b %>% 
+  mutate(live_below_topt = ifelse(topt > sst_mean, 1, 0)) %>% 
+  mutate(neg_skew = ifelse(rel.curveskew < 0, 1, 0)) %>% 
+  filter(live_below_topt == 0) %>% 
+  summarise(sum(neg_skew))
+
+results5b %>% 
+  mutate(live_below_topt = ifelse(topt > sst_mean, 1, 0)) %>% 
+  mutate(topt_diff = topt - sst_mean) %>% 
+  summarise(mean_diff = mean(topt_diff))
 
 topts <- left_join(results5b, resp_topt, by = "isolate.code") %>% 
   filter(mu.rsqrlist > 0.85)
