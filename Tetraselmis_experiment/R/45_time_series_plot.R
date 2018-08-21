@@ -94,6 +94,20 @@ growth_fun_20v <- function(x, temp = 20){
 ic <- colormap(colormap = colormaps$viridis, nshades = 9, format = "hex",
                alpha = 1, reverse = FALSE)
 
+abundances_over_time <- all_cells_plot %>% 
+  rename(Environment = variability) %>% 
+  mutate(Environment = ifelse(Environment == "c", "constant", "variable")) %>% 
+  rename(Temperature = temp) %>% 
+  select(Temperature, replicate, Environment, days, sample_group)
+ 
+write_csv(abundances_over_time, "Tetraselmis_experiment/data-processed/abundances_over_time.csv") 
+  
+  
+  abundances_over_time %>% 
+    group_by(Temperature, replicate, sample_group, Environment) %>% 
+    distinct(replicate) %>% 
+    arrange(Environment, sample_group, Temperature, replicate) %>% View
+
 all_cells_plot %>% 
   rename(Environment = variability) %>% 
   mutate(Environment = ifelse(Environment == "c", "constant", "variable")) %>% 
