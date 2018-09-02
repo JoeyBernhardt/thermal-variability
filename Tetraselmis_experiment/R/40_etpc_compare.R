@@ -735,7 +735,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    write_csv(all_critical_temps, "Tetraselmis_experiment/data-processed/all_critical_temps.csv")
    
    
-   
+   all_critical_temps <- read_csv("Tetraselmis_experiment/data-processed/all_critical_temps.csv")
    
 # big plot with critical temps --------------------------------------------
 
@@ -777,6 +777,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6))
      
    ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.png", width = 6.5, height = 4)
+   ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points.pdf", width = 6.5, height = 4)
    ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_with_points_w_inflection.png", width = 6.4, height = 3.8)
    ggsave("Tetraselmis_experiment/figures/nls_boot_variable.png", width = 6.5, height = 4)
    ggsave("Tetraselmis_experiment/figures/variable_prediction.png", width = 6.5, height = 4)
@@ -785,7 +786,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    # panel_b_no <-
      
      p + 
-       geom_vline(xintercept = 16.76, color = "grey") +
+       # geom_vline(xintercept = 16.76, color = "grey") +
      # geom_line(aes(x = temperature, y = growth, group = replicate), color = "cadetblue", data = all_preds_c, alpha = 0.2) +
      stat_function(fun = ctpc, color = "black", size = 1) +
      geom_ribbon(aes(x = temperature, ymin = q2.5, ymax = q97.5, linetype=NA), data = limits_c, fill = "cadetblue", alpha = 0.5) +
@@ -799,6 +800,7 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
      # geom_point(aes(x = mean, y = 1.64), data = filter(crit_temps, treatment == "constant"), color = "black", shape = 2) +
      geom_hline(yintercept = 0) + ylab("") +
      xlab("") + coord_cartesian(xlim = c(-2,33), ylim = c(-0.1, 1.6)) 
+     ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_constant_with_points_wo_inflection.pdf", width = 6.5, height = 4)
      ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_constant_w_inflection.png", width = 6.4, height = 3.8)
      ggsave("Tetraselmis_experiment/figures/nls_boot_figure2_constant_w_inflection.pdf", width = 4, height = 2.5)
      ggsave("Tetraselmis_experiment/figures/mini-fig-constant-tpc.png", width = 6.4, height = 3.8)
@@ -846,5 +848,8 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
    
    figure2_limits <- plot_grid(constant_lims, labels = c("A"), align = "v", ncol = 1)
      save_plot("Tetraselmis_experiment/figures/figure2_limits.png", figure2_limits, ncol = 1, base_height = 7, base_width = 6.2)
-   
+  
+     figure2_limits <- plot_grid(constant_lims, labels = c("A"), align = "v", ncol = 1)
+     save_plot("Tetraselmis_experiment/figures/figure2_limits.pdf", figure2_limits, ncol = 1, base_height = 7, base_width = 6.5)
+     
    

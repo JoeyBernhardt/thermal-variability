@@ -98,7 +98,8 @@ abundances_over_time <- all_cells_plot %>%
   rename(Environment = variability) %>% 
   mutate(Environment = ifelse(Environment == "c", "constant", "variable")) %>% 
   rename(Temperature = temp) %>% 
-  select(Temperature, replicate, Environment, days, sample_group)
+  select(Temperature, replicate, Environment, days, sample_group) %>% 
+  arrange(Environment, sample_group, Temperature, replicate) 
  
 write_csv(abundances_over_time, "Tetraselmis_experiment/data-processed/abundances_over_time.csv") 
   
