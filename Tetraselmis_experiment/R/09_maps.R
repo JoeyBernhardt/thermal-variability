@@ -49,7 +49,7 @@ wmap_robin <- spTransform(wmap, CRS("+proj=robin"))
 wmap_df_robin <- fortify(wmap_robin)
 
 global_therm %>% 
-	filter(Biome == "marine") %>% 
+	# filter(Biome == "marine") %>% 
 ggplot(aes(x=Lon,y=Lat,fill=SD)) +
 	mapWorld +
 	geom_tile(alpha = 0.8) +

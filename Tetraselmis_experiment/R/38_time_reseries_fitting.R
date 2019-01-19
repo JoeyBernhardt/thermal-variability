@@ -99,6 +99,7 @@ fitc <- nlsLM(cell_density ~ 800 * exp((a*exp(b*temp)*(1-((temp-z)/(w/2))^2))*(d
              upper = c(z = 20, w= 80,a =  0.5, b = 0.15),
              control = nls.control(maxiter=1024, minFactor=1/204800000))
 
+summary(fitc)
 best_fit_c <- coef(fitc)
 nlsResiduals(fitc)
 nls_boot_c <- nlsBoot(fitc, niter = 999)

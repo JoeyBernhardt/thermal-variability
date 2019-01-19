@@ -358,7 +358,7 @@ resp_topt <- resp_topt %>%
 results5 <- read_csv("Tetraselmis_experiment/data-processed/results5.csv")
 predicted_growth_temperature2 <- read_csv("Tetraselmis_experiment/data-processed/predicted_growth_temperature2.csv")
 
-pred_var <- predicted_growth_temperature2 %>% 
+  pred_var <- predicted_growth_temperature2 %>% 
   select(isolate.code, predicted_growth_variable)
 
 
@@ -638,7 +638,7 @@ ggsave("Tetraselmis_experiment/figures/r_diff_map.pdf", width = 6.5, height = 4)
 tc2 <- tc %>% 
   mutate(lat = round(lat, digits = 1)) %>% 
   mutate(lon = round(lon, digits = 1)) %>% 
-  filter(isolate.code == 49) %>% 
+  # filter(isolate.code == 49) %>% 
   group_by(isolate.code) %>% 
   unite(lat_long_isolate, c("lat", "lon", "isolate.code"), sep = ".", remove = FALSE) %>% 
   mutate(region = ifelse(abs(lat) > 30, "temperate", "tropical")) %>% 
@@ -706,6 +706,11 @@ thomas_growth <- left_join(isolates_temps, thomas3) %>%
 temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code") %>% 
   # filter(isolate.code != 1) %>% 
   mutate(skew_dir = ifelse(rel.curveskew.y > 0, "positive", "negative"))
+
+thomas_tpcs <- temps_growth %>% 
+  select(isolate.code, temp, growth_rate)
+
+write_csv(thomas_tpcs, "Tetraselmis_experiment/data-processed/thomas-tpcs.csv")
 
 isol1 <- temps_growth %>% 
   filter(isolate.code ==1) %>% 
