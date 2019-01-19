@@ -710,8 +710,10 @@ temps_growth <- left_join(thomas_growth, tc_all, by = "isolate.code") %>%
 thomas_tpcs <- temps_growth %>% 
   select(isolate.code, temp, growth_rate)
 
-write_csv(thomas_tpcs, "Tetraselmis_experiment/data-processed/thomas-tpcs.csv")
+thomas_tpcs2 <- left_join(thomas_tpcs, thomas3, by  = "isolate.code")
 
+write_csv(thomas_tpcs, "Tetraselmis_experiment/data-processed/thomas-tpcs.csv")
+write_csv(thomas3, "Tetraselmis_experiment/data-processed/thomas3.csv")
 isol1 <- temps_growth %>% 
   filter(isolate.code ==1) %>% 
   select(frequency, growth_rate, everything())
