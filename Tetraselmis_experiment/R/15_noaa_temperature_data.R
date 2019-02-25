@@ -464,14 +464,15 @@ ggplot(global_data) +
   geom_sf(aes(color = SD)) +
   scale_color_viridis(discrete = FALSE, option = "inferno") +
   geom_sf(data = world1, color = "transparent", fill = "darkgrey") +
-  geom_sf(data = topt_data, geom = "point", aes(color = sst_sd), size = 3)+
-  geom_sf(data = topt_data, geom = "point", shape = 1, color = "black", size = 3)+
+  # geom_sf(data = topt_data, geom = "point", aes(color = sst_sd), size = 3)+
+  # geom_sf(data = topt_data, geom = "point", shape = 1, color = "black", size = 3)+
   theme_bw()+
   theme(panel.grid = element_blank(),
         line = element_blank(),
         rect = element_blank(),
         text = element_text(size=14))
 ggsave("Tetraselmis_experiment/figures/global_monthly_sst_ssdb.pdf", width = 6.5, height = 4)
+ggsave("Tetraselmis_experiment/figures/global_monthly_sst_sd_temps_only.pdf", width = 6.5, height = 4)
 
 ggplot(filter(topt_data, topt_change>0)) +
   # scale_color_gradient2(low = "#2c7bb6", mid = "#ffffbf", high = "#fdae61", name = "") +
